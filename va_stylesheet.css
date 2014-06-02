@@ -1,0 +1,14 @@
+div {
+	border:2px solid;
+	background-color: grey;
+	margin: 3px;
+}
+
+#company_logo{
+	width: 100px;
+	float: left;
+}
+
+#Total_Consumption{
+	width: 50%;
+}

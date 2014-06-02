@@ -1,0 +1,162 @@
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href="va_stylesheet.css">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawConsumptionChart);
+      google.setOnLoadCallback(drawEmissionChart);
+      
+      function drawConsumptionChart() {
+   		var data = google.visualization.arrayToDataTable([
+        ['Genre', 'Natural Gas', 'Electricity', { role: 'annotation' } ],
+        ['2007', 0, 4857, ''],
+        ['2008', 0, 7234, ''],
+        ['2009', 6000, 5000, ''],
+      	]);
+
+      	var options = {
+        width: 600,
+        height: 400,
+        vAxis: {title: 'Energy (kWh) 1000', titleTextStyle: {color: 'black'}},
+        legend: { position: 'top', maxLines: 3 },
+		bar: { groupWidth: '75%' },
+        isStacked: true,
+      	};
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('tc_chart'));
+        chart.draw(data, options);
+      }
+
+      function drawEmissionChart() {
+   		var data = google.visualization.arrayToDataTable([
+        ['Genre', 'Natural Gas', 'Electricity', { role: 'annotation' } ],
+        ['2007', 0, 4857, ''],
+        ['2008', 0, 7234, ''],
+        ['2009', 6000, 5000, ''],
+      	]);
+
+      	var options = {
+        width: 600,
+        height: 400,
+        vAxis: {title: 'Energy (kWh) 1000', titleTextStyle: {color: 'black'}},
+        legend: { position: 'top', maxLines: 3 },
+		bar: { groupWidth: '75%' },
+        isStacked: true,
+      	};
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('te_chart'));
+        chart.draw(data, options);
+      }
+
+
+
+
+</script>
+
+
+
+</head>
+
+<body>
+
+
+<div id="General_Info">
+<div>
+<div id="company_logo">Company Logo</div>
+<div id="dhl_logo">DHL Logo</div>
+</div>
+<table>
+<tr><th colspan = "6">Energy Certificate</th></tr>
+<tr>
+<td> Facility Name:</td>
+<td> Lego Jimy Main</td>
+<td></td>
+<td></td>
+<td>Certification Year</td>
+<td>2009</td>
+</tr>
+<tr><th colspan = "6">Building and Facility Information</th></tr>
+<tr>
+<td> Street:</td>
+<td> etnaohuo</td>
+<td> Warehouse Floor Area:</td>
+<td> 9023847 m2</td>
+<td> Office Floor Area</td>
+<td> 8324 m2</td>
+</tr>
+<tr>
+<td> City:</td>
+<td> Jteoh</td>
+<td> Warehouse Heated:</td>
+<td> Yes</td>
+<td> Office Heated</td>
+<td> Yes</td>
+</tr>
+<tr>
+<td> Postal Code:</td>
+<td> 23847</td>
+<td> Warehouse Cooled</td>
+<td> No </td>
+<td> Office Cooled</td>
+<td> No</td>
+</tr>
+<tr>
+<td> Country:</td>
+<td> Singapore</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+
+<tr></tr>
+<tr></tr>
+</tr>
+<tr>
+<td> Business Unit:</td>
+<td> D & C</td>
+<td> </td>
+<td> </td>
+<td> Date Issued: </td>
+<td> Oct -10 </td>
+</tr>
+</tr>
+<tr>
+<td> Facility Contact:</td>
+<td> Coral</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+
+
+</table>
+
+</div>
+
+<div id="Charts">
+	<div id="Eff_Rating">entoahu</div>
+	<div id="Total Consumption">
+		<h1>Total Consumption (kWh)</h1>
+		<div id="tc_chart"></div>
+	</div>
+	<div id="Total_Emmission">
+		<h1>Total Emission (tonnes CO2)</h1>
+		<div id="te_chart"></div>
+	</div>
+</div>
+
+
+
+<div id="Add_Info">
+
+
+</div>
+
+
+</body>
+</html>
