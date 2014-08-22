@@ -1,0 +1,41 @@
+@font-face
+{
+font-family: bebasneue;
+src: url(../fonts/bebas-neue-bold.otf);
+}
+
+*{font-family:Rockwell;}
+
+.header{font-family:bebasneue;font-size:450%;text-align: center;padding: 25px;color:#b0232a;}
+
+.page-header{font-family:bebasneue;font-size:250%;}
+.page-header-red {font-family:bebasneue;font-size:250%;color:#b0232a;}
+
+.past_quest_table {display: inline-flex;width:100%;}
+.past_quest_table_1 {display: inline-flex;width:60%;}
+
+.past_quest_table .col1, .past_quest_table .col4 {height:50px;width:25.5%;font-weight:bold;}
+.past_quest_table .col2, .past_quest_table .col5 {height:50px;width:20%;text-indent:3em;}
+.past_quest_table .col3 {height:50px;width:9%;}
+
+.past_quest_table .col6 {height:50px;width:14.285%;font-weight:bold;text-align: center;}
+.past_quest_table .col7 {height:50px;width:14.285%;text-align: center;}
+
+.past_quest_table .col8 {height:50px;width:100%;font-weight:bold;}
+
+.past_quest_table .col9 {height:50px;width:33.3%;font-weight:bold;text-align: center;}
+.past_quest_table .col10 {height:50px;width:33.3%;text-align: center;}
+
+.past_quest_table .col11 {height:80px;width:25.5%;font-weight:bold;}
+.past_quest_table .col12 {height:80px;width:20%;text-indent:3em;}
+
+.past_quest_table_1 .col13 {height:50px;width:30%;font-weight:bold;text-align: center;}
+.past_quest_table_1 .col14 {height:50px;width:40%;font-weight:bold;text-align: center;}
+.past_quest_table_1 .col15 {height:50px;width:40%;text-align: center;}
+
+.past_quest_table .col16 {height:25px;width:30%;font-weight:bold;vertical-align:middle;color:#b0232a;}
+.past_quest_table .col17 {height:25px;width:70%;text-indent:3em;vertical-align:middle;color:#b0232a;}
+
+.past_quest_table .col18 {width:50%;}
+
+.quest_subtitle {font-size:150%;color:#b0232a;}

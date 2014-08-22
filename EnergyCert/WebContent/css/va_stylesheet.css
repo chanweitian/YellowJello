@@ -1,0 +1,229 @@
+
+h1 {
+	font-family: BebasNeue, Rockwell;
+}
+
+body {
+	font-family: Rockwell, Arial, Helvetica, Sans-Serif;
+	font-size: 13px;
+	margin: 20px;
+}
+
+#main {
+	width: 85%;
+	margin: 0px auto;
+	border: solid 1px #b2b3b5;
+	-moz-border-radius: 10px;
+	padding: 20px;
+	background-color: #f6f6f6;
+}
+
+#logo_container{
+	height: 23px;
+}
+
+#dhl_logo {
+	float: right;
+}
+
+#general_info_table{
+	width: 100%
+}
+
+#additional_info_table{
+	width: 100%
+}
+
+#Add_Info{
+	margin-bottom: 10pt;
+}
+
+#Charts{
+	margin-bottom: 20px;
+}
+
+#Eff_Rating{
+	width: 55%;
+	float: left;
+}
+
+
+#google_charts{
+	width: 45%;
+	float: right;
+	margin-bottom: 20pt;
+}
+
+
+th {
+	text-align: center !important;
+}
+
+.blank_row{
+    height: 10px !important; /* Overwrite any previous rules */
+}
+
+.field_name {
+	text-align: right;
+}
+
+.field_info{
+	text-align: left;
+}
+
+.energybar{
+	height: 50pt;
+	width: 80pt;
+	margin-bottom: 10pt;
+	margin-top: 10pt;
+	background-color: #b0c4de;
+	padding: 2pt;
+	padding-left: 10pt;
+	color: white;
+}
+
+.rating{
+	width: 60pt;
+	font-size: 45pt;	
+}
+
+#a_bar{
+	width:75pt;
+	background-color: #1e9a50;
+}
+
+#b_bar{
+	width:95pt;
+	background-color: #75bb54;
+}
+
+#c_bar{
+	width:115pt;
+	background-color: #fadd49;
+}
+
+#d_bar{
+	width:135pt;
+	background-color: #f6c64a;
+}
+
+#e_bar{
+	width:155pt;
+	background-color: #f79d57;
+}
+
+#f_bar{
+	width:175pt;
+	background-color: #f76532;
+}
+
+#g_bar{
+	width:195pt;
+	background-color: #d9001a;
+}
+
+#currentRating{
+	font-size: 45pt;
+	color: #d9001a;
+}
+
+.rating_container{
+	display: inline-flex;
+}
+
+#ratingPointer {
+	position:absolute;
+	z-index: 99;
+}
+
+
+@media print{
+
+#main{
+	margin-top: -60pt;
+}	
+	
+	
+.energybar {            
+    -webkit-print-color-adjust: exact;
+    height: 35pt;
+	margin-bottom: 10pt;
+	margin-top: 10pt;
+	background-color: #b0c4de;
+	padding: 2pt;
+	padding-left: 10pt;
+	color: white; 
+}
+
+#share_button{
+	display: none;
+}
+
+.rating{
+	width: 55pt;
+	font-size: 30pt;	
+}
+
+#Eff_Rating{
+	width: 35%;
+	float: left;
+
+}
+
+h2 {
+	font-size: 20pt;
+}
+
+
+
+#google_charts{
+	width: 40%;
+	float: left;
+	margin-bottom: 20pt;
+	margin-left:50pt;
+
+}
+
+
+#a_bar{
+	width:60pt;
+	background-color: #1e9a50;
+}
+
+#b_bar{
+	width:75pt;
+	background-color: #75bb54;
+}
+
+#c_bar{
+	width:90pt;
+	background-color: #fadd49;
+}
+
+#d_bar{
+	width:105pt;
+	background-color: #f6c64a;
+}
+
+#e_bar{
+	width:120pt;
+	background-color: #f79d57;
+}
+
+#f_bar{
+	width:135pt;
+	background-color: #f76532;
+}
+
+#g_bar{
+	width:150pt;
+	background-color: #d9001a;
+}
+	
+}
+
+
+
+
+
+
