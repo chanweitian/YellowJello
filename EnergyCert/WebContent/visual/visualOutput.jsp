@@ -238,6 +238,9 @@ function initChart() {
 		
 		$("#whatifButton").click(function() {
 			//new rating
+			
+			alert("Hello World");
+			
 			var newRating = calculateNewRating();
 
 			var leftOffset = getLeftOffset(newRating);
@@ -399,12 +402,56 @@ function getLightingMultiplier(){
 	</div> 
 <br/>
 
+
+
 <div class="navigation" id ="whatif" style="float:right">
 		<button class="btn btn-info" data-toggle="modal" data-target="#whatIfModel">What If</button>
 </div>
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="whatIfModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">What If</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+							<label class="col-md-5 control-label">Cooling Factor</label>
+							<div class="col-md-5">
+								<input type="text" class="form-control" name="coolFac" id="coolFac" />
+							</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-md-5 control-label">Lighting Factor</label>
+							<div class="col-md-5">
+								<input type="text" class="form-control" name="lightFac" id="lightFac"/>
+							</div>
+						</div>
+						<div class="form-group">
+						
+							<label class="col-md-5 control-label">Heating Factor</label>
+							<div class="col-md-5">
+								<input type="text" class="form-control" name=""heatFac"" id="heatFac"/>
+							</div>
+						</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info" data-dismiss="modal" id="whatifButton">What If!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 	<%-- Modal for Whatif --%>
-	<div class="modal fade" id="whatIfModel" tabindex="-1" role="dialog"
+	<div class="modal fade"  tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" style="left: 0px">
 			<div class="modal-content">
@@ -415,28 +462,13 @@ function getLightingMultiplier(){
 				</div>
 
 				<div class="modal-body">
-						<div class="form-group">
-							<label class="col-md-5 control-label">Cooling Factor</label>
-							<div class="col-md-5">
-								<input type="text" class="form-control" name="coolFac" id="coolFac" />
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-5 control-label">Lighting Factor</label>
-							<div class="col-md-5">
-								<input type="text" class="form-control" name="lightFac" id="lightFac"/>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-5 control-label">Heating Factor</label>
-							<div class="col-md-5">
-								<input type="text" class="form-control" name=""heatFac"" id="heatFac"/>
-							</div>
-						</div>
 						
-						<button class="btn btn-info" id="whatIfButton">What If</button>
-
-					</form>
+							
+						
+						
+						
+						
+						
 				</div>
 			</div>
 		</div>
