@@ -73,65 +73,80 @@ public class ProcessCreateAcctServlet extends HttpServlet {
 		} else if (email.trim().length()==0) {
 			createAcctMsg = "Please input email";
 		} else {
-			
-			boolean isUnique = false;
-			String userid = null;
-			while (!isUnique) {
-				userid = tempCompany + Long.toHexString(Double.doubleToLongBits(Math.random()));
-				userid = userid.substring(0, 13);
-				ResultSet rs = SQLManager.retrieveRecords("account", "userid=\'"+userid+"\'");
-				boolean unique = true;
-				try {
-					while (rs.next()) {
-						unique = false;
-					}
-					if (unique) {
-						isUnique = true;
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			String password = "" + Long.toHexString(Double.doubleToLongBits(Math.random()));
-			password = password.substring(0,13);
-			String values = "\'" + userid + "\',\'" + password + "\',\'" + email + "\',\'" + type + "\',\'" + company + "\',\'" + description + "\'";
-			SQLManager.insertRecord("account", values);
-			createAcctMsg = "Account has been created. Userid: " + userid;
-			
-			final String username = "gtl.fypeia@gmail.com";
-			final String pwd = "pa55w0rd#";
-	 
-			Properties props = new Properties();
-			props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.smtp.host", "smtp.gmail.com");
-			props.put("mail.smtp.port", "587");
-	 
-			Session session = Session.getInstance(props,
-			  new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(username, pwd);
-				}
-			  });
-	 
+			ResultSet rs = SQLManager.retrieveRecords("account", "email=\'"+email+"\'");
+			boolean uniqueEmail = true;
 			try {
-	 
-				Message message = new MimeMessage(session);
-				message.setFrom(new InternetAddress("karchiankoh@gmail.com"));
-				message.setRecipients(Message.RecipientType.TO,
-					InternetAddress.parse(email));
-				message.setSubject("Your account has been created");
-				message.setText("Dear User,"
-					+ "\n\n Your userid is " + userid
-					+ "\n Your password is " + password);
-	 
-				Transport.send(message);
-	 
-				System.out.println("Done");
-	 
-			} catch (MessagingException e) {
-				createAcctMsg = "Email doesn't exist";
+				while (rs.next()) {
+					uniqueEmail = false;
+					break;
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (!uniqueEmail) {
+				createAcctMsg = "Duplicate email. Please input unique email.";
+			} else {
+				
+				boolean isUnique = false;
+				String userid = null;
+				while (!isUnique) {
+					userid = tempCompany + Long.toHexString(Double.doubleToLongBits(Math.random()));
+					userid = userid.substring(0, 13);
+					rs = SQLManager.retrieveRecords("account", "userid=\'"+userid+"\'");
+					boolean unique = true;
+					try {
+						while (rs.next()) {
+							unique = false;
+						}
+						if (unique) {
+							isUnique = true;
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				String password = "" + Long.toHexString(Double.doubleToLongBits(Math.random()));
+				password = password.substring(0,13);
+				String values = "\'" + userid + "\',\'" + password + "\',\'" + email + "\',\'" + type + "\',\'" + company + "\',\'" + description + "\'";
+				SQLManager.insertRecord("account", values);
+				createAcctMsg = "Account has been created. Userid: " + userid;
+				
+				final String username = "gtl.fypeia@gmail.com";
+				final String pwd = "pa55w0rd#";
+		 
+				Properties props = new Properties();
+				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.starttls.enable", "true");
+				props.put("mail.smtp.host", "smtp.gmail.com");
+				props.put("mail.smtp.port", "587");
+		 
+				Session session = Session.getInstance(props,
+				  new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(username, pwd);
+					}
+				  });
+		 
+				try {
+		 
+					Message message = new MimeMessage(session);
+					message.setFrom(new InternetAddress("karchiankoh@gmail.com"));
+					message.setRecipients(Message.RecipientType.TO,
+						InternetAddress.parse(email));
+					message.setSubject("Your account has been created");
+					message.setText("Dear User,"
+						+ "\n\n Your userid is " + userid
+						+ "\n Your password is " + password);
+		 
+					Transport.send(message);
+		 
+					System.out.println("Done");
+		 
+				} catch (MessagingException e) {
+					createAcctMsg = "Email doesn't exist";
+				}
 			}
 		}
 		

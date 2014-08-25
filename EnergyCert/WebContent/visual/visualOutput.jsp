@@ -65,7 +65,7 @@
 			+ extLightingConsumption +hotWaterConsumption+mheConsumption+operationsConsumption;
 	
 	int rating = (int)(100 * actualConsumption / benchmark); 
-	
+	SQLManager.updateRecords("questionnaire", "energy_rating="+rating, "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
 	
 	// for google charts
 	int year1 = Integer.parseInt((String)request.getAttribute("consumptionYear"));

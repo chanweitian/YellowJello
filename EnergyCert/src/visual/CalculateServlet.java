@@ -383,8 +383,8 @@ public class CalculateServlet extends HttpServlet {
 	
 	private String getEmissionFactor(String country, String type) throws SQLException{
 		
-		rs = SQLManager.retrieveRecords("emission", "country=\'"
-				+ country + "\' AND type=\'"+type+"\'");
+		rs = SQLManager.retrieveRecords("emission", "country LIKE \'%"
+				+ country + "%\' AND type=\'"+type+"\'");
 		
 		if (!rs.next()) {
 			if(rs != null) rs.close();
