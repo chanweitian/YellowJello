@@ -63,10 +63,10 @@
   	session.removeAttribute("addWhCity");
   	session.removeAttribute("addWhPostal");
     %>
-
+	<div class="header">Add Warehouse</div>
     <div class="container theme-showcase" role="main">
 		
-      <h2 class="heading">Add warehouse</h2><p>
+      <%-- <h2 class="heading">Add warehouse</h2><p>--%>
       <form class="form-horizontal" role="form" action="processaddwh">
 		  
 		  <div class="form-group">

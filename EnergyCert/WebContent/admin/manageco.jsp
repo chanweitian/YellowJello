@@ -77,10 +77,10 @@
 	}
   	%>
 
-    
+    <div class="header">Manage company account</div>
     <div class="container theme-showcase" role="main">
 
-      <h2 class="heading">Manage company account</h2><p>
+      <%-- <h2 class="heading">Manage company account</h2><p>--%>
       
       <form action="processdeletion" method="post">
       		<input type="hidden" name="userid" value="<%=userid %>">

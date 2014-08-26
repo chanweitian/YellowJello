@@ -55,10 +55,10 @@
   	session.removeAttribute("creationCompany");
   	session.removeAttribute("creationEmail");
     %>
-
+	<div class="header">Create company account</div>
     <div class="container theme-showcase" role="main">
 
-      <h2 class="heading">Create company account</h2><p>
+      <%-- <h2 class="heading">Create company account</h2><p>--%>
       <form class="form-horizontal" role="form" method="post" action="processcreation">
       
 		  <div class="form-group">

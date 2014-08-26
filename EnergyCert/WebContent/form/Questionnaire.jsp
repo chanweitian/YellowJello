@@ -3,6 +3,10 @@
 <%
 String link = request.getParameter("link");
 boolean fromLink = false;
+//to know what sections to display if it is from link
+String sections = "";
+String quest_id = "";
+
 if (link != null) { %>
 	
 	<% String where_link = "questionnaire_link = \'" + link + "\'";
@@ -28,8 +32,9 @@ if (link != null) { %>
 		    <jsp:forward page="ExpiredLink.jsp" ></jsp:forward>
 		<% 
 		} else {
-			String quest_id = rs_link.getString("questionnaire_id");
-			session.setAttribute("quest_id", quest_id);
+			String q_id = rs_link.getString("questionnaire_id");
+			session.setAttribute("quest_id", q_id);
+			sections = rs_link.getString("sections");
 			fromLink = true;
 		}
 	}
@@ -114,17 +119,17 @@ if (link != null) { %>
 		String fromEdit = request.getParameter("fromEdit");
 		//if fromEdit is null AND fromLink is false means it's a new questionnaire		
 		if (fromEdit == null && fromLink == false) {
-			String quest_id = (SQLManager.getRowCount("questionnaire") + 1) + "";
+			quest_id = (SQLManager.getRowCount("questionnaire") + 1) + "";
 			
 			//store in QUESTIONNAIRE table
 			String values_quest = "";
 			values_quest = values_quest + "\'" + quest_id  + "\',";
 			values_quest = values_quest + "\'" + request.getParameter("site_id")  + "\',";
 			values_quest = values_quest + "\'" + previousYear  + "\',";
-			for (int i = 0; i < 75; i++) {
+			for (int i = 0; i < 76; i++) {
 				values_quest = values_quest + "\'\',";
 			}
-			values_quest = values_quest + "\'\'";
+			values_quest = values_quest + "0";
 			SQLManager.insertRecord("questionnaire",values_quest);
 			
 			if (session.getAttribute("fromLink") == null) {
@@ -209,7 +214,6 @@ if (link != null) { %>
 		
 		//if fromEdit is not null OR fromLink is not null means need to put values from db for the saved questionnaire
 		} else {
-			String quest_id = "";
 			if (!fromLink) {
 				quest_id = request.getParameter("quest_id");
 				session.setAttribute("quest_id",quest_id);	
@@ -268,15 +272,42 @@ if (link != null) { %>
 		zone_details = zone_details.substring(0,zone_details.length()-2);
 		%>
 		<input type="hidden" name="zone_details" value="<%=zone_details%>" />
-		
-		<% Thread.sleep(10000); //QN: What is this thread sleep for?%>
-			
+		<%-- Thread.sleep(10000); //QN: What is this thread sleep for?--%>
 			<ul class="nav nav-tabs" role="tablist" id="myTab">
 			  <li class="active"><a href="#sitedef" role="tab" data-toggle="tab">1. Site Definition</a></li>
-			  <li><a href="#siteinfo" role="tab" data-toggle="tab">2. Site Information</a></li>
-			  <li><a href="#usage" role="tab" data-toggle="tab">3. Usage</a></li>
-			  <% 
-			  	int tab_count = 4;
+			<%
+			
+			int tab_count = 2;
+			
+			if (!sections.equals("")) { 
+				String[] sectionArray = sections.split("\\*");
+				for (String sec : sectionArray) {
+					if (sec.equals("a")) { 
+			%>
+						<li><a href="#siteinfo" role="tab" data-toggle="tab"><%=tab_count%>. Site Information</a></li>
+			<% 	
+						tab_count++;
+					}
+					if (sec.equals("b")) {
+			%>
+						<li><a href="#usage" role="tab" data-toggle="tab"><%=tab_count%>. Usage</a></li>
+			<% 
+						tab_count++;
+					}
+				}
+			} else { %>
+				<li><a href="#siteinfo" role="tab" data-toggle="tab"><%=tab_count%>. Site Information</a></li>
+			<%
+				tab_count++;
+			%>	
+				<li><a href="#usage" role="tab" data-toggle="tab"><%=tab_count%>. Usage</a></li>
+			<%	
+				tab_count++;
+			}
+			%>
+			  
+			<%
+			if (!fromLink) {
 				  for (int i = 0; i < zone_list.size(); i++) {
 					String[] this_zone = zone_list.get(i).split(",");
 					
@@ -290,17 +321,62 @@ if (link != null) { %>
 			<%		
 				  	tab_count++;
 				  }
+			} else {
+				if (!sections.equals("")) { 
+					String[] sectionArray = sections.split("\\*");
+					for (int i = 0; i < zone_list.size(); i++) {
+						String[] this_zone = zone_list.get(i).split(",");
+						
+						String building_name = this_zone[0];
+						String zone_name = this_zone[1];
+						
+						String tab_title = tab_count + ". " + building_name + "_" + zone_name;
+						String tab_id = building_name + "_" + zone_name;
+						for (String sec : sectionArray) {
+							if (sec.equals(i+"")) {
+						%>
+								<li><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%></a></li>
+						<%		
+							}
+						}
+					}
+				}
+			}
 			  %>
 			</ul>
 			
 			<%-- Include SiteDef (fields disabled), SiteInfo and Usage parts in Questionnaire.jsp --%>
 			
 			<div class="tab-content">
-			  <div class="tab-pane active" id="sitedef"><%@include file="SiteDef.jsp" %></div>
-			  <div class="tab-pane" id="siteinfo"><%@include file="SiteInfo.jsp" %></div>
-			  <div class="tab-pane" id="usage"><%@include file="Usage.jsp" %></div>
+				<div class="tab-pane active" id="sitedef"><%@include file="SiteDef.jsp" %></div>
+			<%-- 
+			<% 
+			if (!sections.equals("")) { 
+				String[] sectionArray = sections.split("\\*");
+				for (String sec : sectionArray) {
+					if (sec.equals("a")) { 
+			%>
+						<div class="tab-pane" id="siteinfo"><%@include file="SiteInfo.jsp" %></div>	
+			<% 	
+					}
+					if (sec.equals("b")) {
+			%>
+						<div class="tab-pane" id="usage"><%@include file="Usage.jsp" %></div>
+			<% 
+					}
+				}
+			} else { 
+			%>
+			--%>
+				<div class="tab-pane" id="siteinfo"><%@include file="SiteInfo.jsp" %></div>	
+				<div class="tab-pane" id="usage"><%@include file="Usage.jsp" %></div>
+			<%	
+			//}
+			%>
 			  
 			  <%
+				//if (!fromLink) {
+			  
 					for (int i = 0; i < zone_list.size(); i++) {
 						String[] this_zone = zone_list.get(i).split(",");
 						
@@ -335,7 +411,51 @@ if (link != null) { %>
 								<%					
 							}
 						}
-					}		
+					}
+				/*} else {
+					if (!sections.equals("")) { 
+						String[] sectionArray = sections.split("\\*");
+						for (int i = 0; i < zone_list.size(); i++) {
+							String[] this_zone = zone_list.get(i).split(",");
+							
+							for (String sec : sectionArray) {
+								if (sec.equals(i+"")) {
+									String building_name = this_zone[0];
+									String zone_name = this_zone[1];
+									String zone_type = this_zone[2];
+									
+									String tab_id = building_name + "_" + zone_name;
+									
+									session.setAttribute("building_name",building_name);
+									session.setAttribute("zone_name",zone_name);
+									
+									if (!zone_type.isEmpty()){
+										if (zone_type.equals("wh_mezzanine")){
+											%>
+												<div class="tab-pane" id="<%=tab_id%>"><%@include file="Zone_Mezzanine_Form.jsp" %></div>
+											<%
+											
+										} else if (zone_type.equals("wh_ground_to_roof")){
+											%>
+												<div class="tab-pane" id="<%=tab_id%>"><%@include file="Zone_Ground_Roof_Form.jsp" %></div>
+											<%
+											
+										} else if (zone_type.equals("wh_value_add")){
+											%>
+												<div class="tab-pane" id="<%=tab_id%>"><%@include file="Zone_Warehouse_Value_Add _Form.jsp" %></div>
+											<%
+											
+										} else if (zone_type.equals("offices")){
+											%>
+												<div class="tab-pane" id="<%=tab_id%>"><%@include file="Zone_Office_Form.jsp" %></div>
+											<%					
+										}
+									}	
+								}
+							}
+						}
+					}
+				}*/
 			%>
   
 			</div>
@@ -367,7 +487,9 @@ if (link != null) { %>
 			
 			<div>
 		        <div class="col-md-offset-9">
+		            <% if (!fromLink) {%>
 		            <button type="submit" class="btn btn-primary" name="action" value="submit">Submit Questionnaire</button>
+					<% } %>
 				</div>
 				<br><br>
 			</div>
@@ -377,17 +499,18 @@ if (link != null) { %>
 		</form>
 	</div>
 	
-	<div class="navigation" style="position:fixed; right:100px; top:115px;">
-		<button class="btn btn-info" data-toggle="modal" data-target="#assignModal">Assign Questions</button>
-	    <%-- <a data-toggle="modal" data-target="#assignModal">Assign Questions</a> --%>
-	</div>
-	
+	<% if (!fromLink) {%>
+		<div class="navigation" style="position:fixed; right:100px; top:115px;">
+			<button class="btn btn-info" data-toggle="modal" data-target="#assignModal">Assign Questions</button>
+		    <%-- <a data-toggle="modal" data-target="#assignModal">Assign Questions</a> --%>
+		</div>
+	<% } %>
 	<%-- Modal for Assign Questions --%>
 	<div class="modal fade" id="assignModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	    <div class="modal-dialog" style="left:0px">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 	                <h4 class="modal-title">Assign Questions</h4>
 	            </div>
 	
@@ -411,7 +534,30 @@ if (link != null) { %>
 					        <div class="col-md-5">
 					            <textarea class="form-control" name="message"></textarea>
 					        </div>
-					    </div>                   
+					    </div>    
+					    <div class="form-group">
+							<label class="col-lg-5 control-label" for="sections_assigned">Sections Assigned</label>
+							<div class="col-lg-6">
+								<div class="checkbox">
+									<label><input type="checkbox" name="sections_assigned" value="a" />Site Information</label><br>
+									<label><input type="checkbox" name="sections_assigned" value="b" />Site Usage</label><br>
+									<% 
+									for (int i = 0; i < zone_list.size(); i++) {
+										String[] this_zone = zone_list.get(i).split(",");
+										
+										String building_name = this_zone[0];
+										String zone_name = this_zone[1];
+										
+										String tab_title = building_name + "_" + zone_name;
+										
+									%>
+										<label><input type="checkbox" name="sections_assigned" value="<%=i%>" /><%=tab_title%></label><br>
+									<%
+									}
+									%>
+								</div>
+							</div>
+						</div>               
 					    <div class="form-group">
 					        <div class="col-md-5 col-md-offset-5">
 					            <button type="submit" class="btn btn-primary">Send Email</button>

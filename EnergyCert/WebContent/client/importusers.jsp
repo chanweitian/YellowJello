@@ -50,10 +50,10 @@
   <% String importMsg = (String) session.getAttribute("importMsg");
 	session.removeAttribute("importMsg");
   %>
-
+	<div class="header">Import users</div>
     <div class="container theme-showcase" role="main">
 		
-      <h2 class="heading">Import users</h2><p>
+      <%--<h2 class="heading">Import users</h2><p>--%>
       <form class="form-horizontal" role="form" action="processimport" method="POST" enctype="multipart/form-data" >
 		  <div class="form-group">
 		    <label for="inputFile" class="col-sm-1 control-label">Input file</label>

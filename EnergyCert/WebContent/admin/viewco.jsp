@@ -54,10 +54,10 @@
     String deletionFlag = (String) session.getAttribute("deletionFlag");
     session.removeAttribute("deletionFlag");
   	%>
-
+	<div class="header">View company accounts</div>
     <div class="container theme-showcase" role="main">
 
-      <h2 class="heading">View company accounts</h2><p>
+      <%-- <h2 class="heading">View company accounts</h2><p> --%>
       <p>
       	<% if (deletionFlag!=null) { %>
       	<div class="alert alert-warning">

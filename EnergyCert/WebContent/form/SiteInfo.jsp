@@ -1,5 +1,5 @@
 <%
-String quest_id = (String) session.getAttribute("quest_id");
+quest_id = (String) session.getAttribute("quest_id");
 
 String where_info = "questionnaire_id = \'" + quest_id + "\'";
 ResultSet rs = SQLManager.retrieveRecords("questionnaire", where_info);
@@ -147,6 +147,8 @@ while (rs.next()) {
 							<div class="demo">
 							<br>
 							<h4 class="expand">Site Data and User Information</h4>
+							<%--for ProcessMasterServlet to know if SiteInfo.jsp is included--%>
+							<input type="hidden" class="form-control" name="site_info" value="exists"></input>
 							<div class="collapse">
 								<div class="form-group">
 								<label class="col-lg-5 control-label" for="site_info_name">What is the name of the site? <font color="red">*</font></label>
