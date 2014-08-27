@@ -1,5 +1,5 @@
 <%
-String quest_id = (String) session.getAttribute("quest_id");
+quest_id = (String) session.getAttribute("quest_id");
 
 String where_info = "questionnaire_id = \'" + quest_id + "\'";
 ResultSet rs = SQLManager.retrieveRecords("questionnaire", where_info);

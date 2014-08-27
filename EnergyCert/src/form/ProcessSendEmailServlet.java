@@ -68,6 +68,16 @@ public class ProcessSendEmailServlet extends HttpServlet {
 		String receiver_name = request.getParameter("receiver_name");
 		String receiver_email = request.getParameter("receiver_email");
 		String receiver_msg = request.getParameter("message");
+		String[] sections_array = request.getParameterValues("sections_assigned");
+				String sections_string = "";
+				if (sections_array != null) {
+					for (String section : sections_array) {
+						sections_string = sections_string + section + "*";
+					}
+				}
+				if (sections_string.length() != 0) {
+					sections_string = sections_string.substring(0,sections_string.length()-1);
+				}
  
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -104,7 +114,7 @@ public class ProcessSendEmailServlet extends HttpServlet {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 			String date = sdf.format(new Date()); 
 			
-			String site_def_values = "\'" + quest_id + "\',\'" + uuid + "\',\'" + date + "\'";
+			String site_def_values = "\'" + quest_id + "\',\'" + uuid + "\',\'" + date + "\',\'" + sections_string + "\'";
 			SQLManager.insertRecord("questionnaire_link",site_def_values);
 			
 			System.out.println("Done");

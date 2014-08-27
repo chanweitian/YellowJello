@@ -26,7 +26,7 @@
     <!-- Custom styles for this template -->
     <style>
 	    body {
-		  padding-top: 70px;
+		  padding-top: 40px;
 		  padding-bottom: 30px;
 		}
 		
@@ -61,10 +61,10 @@
   	session.removeAttribute("changeMsg");
     %>
 
-    <div class="container theme-showcase" role="main">
-
-      <form class="form-horizontal" role="form" method="post" action="processchange">
-      <h2 class="form-horizontal-heading">Change Password</h2><p>
+    <div class="header">Change Password</div>
+     <div class="container theme-showcase" role="main">
+ 
+       <form class="form-horizontal" role="form" method="post" action="processchange">
       	<div class="row" id="pwd-container">
 		  <div class="form-group">
 		    <label for="current_password" class="col-sm-5 control-label">Current Password</label>

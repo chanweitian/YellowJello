@@ -12,11 +12,11 @@ public class FormulaManager {
 private static HashMap<String,Double> formulaHM = new HashMap<String,Double>();
 	
 	static {
-		formulaHM.clear();
 		pullFormula();
 	}
 	
 	private static void pullFormula() {
+		formulaHM.clear();
 		ResultSet rs = SQLManager.retrieveAll("formula");
 	  	try {
 			while (rs.next()) { 
@@ -44,8 +44,9 @@ private static HashMap<String,Double> formulaHM = new HashMap<String,Double>();
     	while (iter.hasNext()) {
 	        Map.Entry<String,Double> pairs = (Map.Entry<String,Double>)iter.next();
 	        String field = pairs.getKey();
-	        Double input = pairs.getValue();
-	        if (formulaHM.get(field)!=input) { 
+	        double input = pairs.getValue();
+	        double storedInput = formulaHM.get(field);
+	        if (storedInput!=input) { 
 		        String toSet = "Value=" + input;
 		    	String whereClause = "Variable=\'" + field + "\'";
 		    	SQLManager.updateRecords(tableName, toSet, whereClause);

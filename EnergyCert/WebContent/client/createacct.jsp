@@ -25,7 +25,7 @@
     <!-- Custom styles for this template -->
     <style>
 	    body {
-		  padding-top: 70px;
+		  padding-top: 40px;
 		  padding-bottom: 30px;
 		}
 		
@@ -104,8 +104,8 @@
   	session.removeAttribute("createAcctEmail");
     %>
 
-    <div class="container theme-showcase" role="main">
-      <h2 class="heading">Create account</h2><p>
+    <div class="header">Create account</div>
+     <div class="container theme-showcase" role="main">
       <form class="form-horizontal" role="form" action="processcreateacct">
 		  <div class="form-group">
 		    <label for="type" class="col-sm-1 control-label">Type</label>

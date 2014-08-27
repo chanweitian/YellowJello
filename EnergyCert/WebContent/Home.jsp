@@ -33,6 +33,7 @@
   	<div class="main">
 		<div class="header">
             GTL Energy Certificate Home Page
+            <img src="img/dhl-home.jpg" height="60%" width="60%" />
         </div>
 	</div>	
 		

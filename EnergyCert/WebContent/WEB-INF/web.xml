@@ -101,6 +101,14 @@
     <url-pattern>/admin/processedit</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>ProcessEditWeatherServlet</servlet-name>
+    <servlet-class>admin.ProcessEditWeatherServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessEditWeatherServlet</servlet-name>
+    <url-pattern>/admin/processeditweather</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>ProcessCreateAcctServlet</servlet-name>
     <servlet-class>client.ProcessCreateAcctServlet</servlet-class>
   </servlet>
@@ -147,5 +155,13 @@
   <servlet-mapping>
     <servlet-name>ProcessManagePeriodServlet</servlet-name>
     <url-pattern>/client/processmanageperiod</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ProcessImportDataServlet</servlet-name>
+    <servlet-class>db.ProcessImportDataServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessImportDataServlet</servlet-name>
+    <url-pattern>/processimportdata</url-pattern>
   </servlet-mapping>
 </web-app>

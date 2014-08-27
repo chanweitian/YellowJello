@@ -25,7 +25,7 @@
     <!-- Custom styles for this template -->
     <style>
 	    body {
-		  padding-top: 70px;
+		  padding-top: 40px;
 		  padding-bottom: 30px;
 		}
 		
@@ -55,9 +55,8 @@
     session.removeAttribute("deletionFlag");
   	%>
 
-    <div class="container theme-showcase" role="main">
-
-      <h2 class="heading">View company accounts</h2><p>
+    <div class="header">View company accounts</div>
+     <div class="container theme-showcase" role="main">
       <p>
       	<% if (deletionFlag!=null) { %>
       	<div class="alert alert-warning">

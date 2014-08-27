@@ -25,7 +25,7 @@
     <!-- Custom styles for this template -->
     <style>
 	    body {
-		  padding-top: 70px;
+		  padding-top: 40px;
 		  padding-bottom: 30px;
 		}
 		
@@ -126,9 +126,8 @@
     }
   	%>
     
-    <div class="container theme-showcase" role="main">
-
-      <h2 class="heading">Manage account</h2><p>
+    <div class="header">Manage account</div>
+     <div class="container theme-showcase" role="main">
       
       <form action="processdeleteacct" method="post">
       		<input type="hidden" name="userid" value="<%=userid %>">
