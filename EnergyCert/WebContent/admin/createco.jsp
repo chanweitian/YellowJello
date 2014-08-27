@@ -24,7 +24,7 @@
     <!-- Custom styles for this template -->
     <style>
 	    body {
-		  padding-top: 70px;
+		  padding-top: 40px;
 		  padding-bottom: 30px;
 		}
 		
@@ -55,10 +55,16 @@
   	session.removeAttribute("creationCompany");
   	session.removeAttribute("creationEmail");
     %>
+<<<<<<< HEAD
 	<div class="header">Create company account</div>
     <div class="container theme-showcase" role="main">
 
       <%-- <h2 class="heading">Create company account</h2><p>--%>
+=======
+
+    <div class="header">Create company account</div>
+     <div class="container theme-showcase" role="main">
+>>>>>>> FETCH_HEAD
       <form class="form-horizontal" role="form" method="post" action="processcreation">
       
 		  <div class="form-group">

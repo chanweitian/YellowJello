@@ -10,11 +10,11 @@ public class PeriodManager {
 private static HashMap<String,String> periodHM = new HashMap<String,String>();
 	
 	static {
-		periodHM.clear();
 		pullPeriods();
 	}
 	
 	private static void pullPeriods() {
+		periodHM.clear();
 		ResultSet rs = SQLManager.retrieveAll("period");
 	  	try {
 			while (rs.next()) { 

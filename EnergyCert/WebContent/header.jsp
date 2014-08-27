@@ -53,6 +53,7 @@
 	            <li><a href="/EnergyCert/admin/createco.jsp">Create Company Account</a></li>
 	            <li><a href="/EnergyCert/admin/viewco.jsp">View Companies</a></li>
 	            <li><a href="/EnergyCert/admin/editformula.jsp">Edit Formula</a></li>
+	            <li><a href="/EnergyCert/admin/editweather.jsp">Edit Weather</a></li>
 	          </ul>
 	        </li>  
 	        <% } else { %>

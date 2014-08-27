@@ -66,6 +66,10 @@ while (rs_usage.next()) {
 					<div id="wrapper">
 						<div id="content">
 						<h5><font color="red">* Required</font></h5>
+<<<<<<< HEAD
+=======
+						
+>>>>>>> FETCH_HEAD
 							<input type="hidden" class="form-control" name="site_usage" value="exists"></input>
 							<div class="demo">
 								<br>

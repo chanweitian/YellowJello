@@ -25,7 +25,7 @@
     <!-- Custom styles for this template -->
     <style>
 	    body {
-		  padding-top: 70px;
+		  padding-top: 40px;
 		  padding-bottom: 30px;
 		}
 		
@@ -69,10 +69,16 @@
 	}
   	String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
   	%>
+<<<<<<< HEAD
     <div class="header">Select the start month of your company's year</div>
     <div class="container theme-showcase" role="main">
 
       <%-- <h2 class="heading">Select the start month of your company's year:</h2><p> --%>
+=======
+    
+    <div class="header">Select the start month of your company's year</div>
+     <div class="container theme-showcase" role="main">
+>>>>>>> FETCH_HEAD
 
       <p>
       <form class="form-horizontal" role="form" action="processmanageperiod">

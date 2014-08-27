@@ -1,4 +1,4 @@
-<%@page import="java.util.*,db.*,java.lang.Thread,java.sql.ResultSet,java.text.SimpleDateFormat;" %>
+<%@page import="java.util.*,db.*,java.lang.Thread,java.sql.ResultSet,java.text.SimpleDateFormat,utility.PeriodManager" %>
 
 <%
 String link = request.getParameter("link");
@@ -91,7 +91,16 @@ if (link != null) { %>
 		<form id="master_form" action="processmaster" class="form-horizontal" method="post">
 		
 		<%-- Get previous year --%>
-		<%int previousYear = Calendar.getInstance().get(Calendar.YEAR) - 1;%>
+		<%String company = (String) session.getAttribute("company");
+		int month = PeriodManager.getMonthInt(company);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MONTH,month);
+		cal.set(Calendar.DATE,1);
+		Calendar today = Calendar.getInstance();
+		int previousYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
+		if (today.before(cal)) {
+			previousYear -= 1;
+		}%>
 		
 		<%
 		//initialise array to get values from SiteDef form
@@ -129,7 +138,11 @@ if (link != null) { %>
 			for (int i = 0; i < 76; i++) {
 				values_quest = values_quest + "\'\',";
 			}
+<<<<<<< HEAD
 			values_quest = values_quest + "0";
+=======
+			values_quest = values_quest + "\'0\'";
+>>>>>>> FETCH_HEAD
 			SQLManager.insertRecord("questionnaire",values_quest);
 			
 			if (session.getAttribute("fromLink") == null) {
@@ -272,10 +285,19 @@ if (link != null) { %>
 		zone_details = zone_details.substring(0,zone_details.length()-2);
 		%>
 		<input type="hidden" name="zone_details" value="<%=zone_details%>" />
+<<<<<<< HEAD
 		<%-- Thread.sleep(10000); //QN: What is this thread sleep for?--%>
 			<ul class="nav nav-tabs" role="tablist" id="myTab">
 			  <li class="active"><a href="#sitedef" role="tab" data-toggle="tab">1. Site Definition</a></li>
 			<%
+=======
+		
+		<%-- Thread.sleep(10000); //QN: What is this thread sleep for?--%>
+			
+			<ul class="nav nav-tabs" role="tablist" id="myTab">
+			  <li class="active"><a href="#sitedef" role="tab" data-toggle="tab">1. Site Definition</a></li>
+			  <%
+>>>>>>> FETCH_HEAD
 			
 			int tab_count = 2;
 			
@@ -326,17 +348,30 @@ if (link != null) { %>
 					String[] sectionArray = sections.split("\\*");
 					for (int i = 0; i < zone_list.size(); i++) {
 						String[] this_zone = zone_list.get(i).split(",");
+<<<<<<< HEAD
 						
 						String building_name = this_zone[0];
 						String zone_name = this_zone[1];
 						
+=======
+				
+						String building_name = this_zone[0];
+						String zone_name = this_zone[1];
+				
+>>>>>>> FETCH_HEAD
 						String tab_title = tab_count + ". " + building_name + "_" + zone_name;
 						String tab_id = building_name + "_" + zone_name;
 						for (String sec : sectionArray) {
 							if (sec.equals(i+"")) {
+<<<<<<< HEAD
 						%>
 								<li><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%></a></li>
 						<%		
+=======
+							%>
+								<li><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%></a></li>
+								<%		
+>>>>>>> FETCH_HEAD
 							}
 						}
 					}
@@ -348,7 +383,11 @@ if (link != null) { %>
 			<%-- Include SiteDef (fields disabled), SiteInfo and Usage parts in Questionnaire.jsp --%>
 			
 			<div class="tab-content">
+<<<<<<< HEAD
 				<div class="tab-pane active" id="sitedef"><%@include file="SiteDef.jsp" %></div>
+=======
+			  <div class="tab-pane active" id="sitedef"><%@include file="SiteDef.jsp" %></div>
+>>>>>>> FETCH_HEAD
 			<%-- 
 			<% 
 			if (!sections.equals("")) { 
@@ -373,9 +412,15 @@ if (link != null) { %>
 			<%	
 			//}
 			%>
+<<<<<<< HEAD
 			  
 			  <%
 				//if (!fromLink) {
+=======
+
+			  <%
+			  	//if (!fromLink) {
+>>>>>>> FETCH_HEAD
 			  
 					for (int i = 0; i < zone_list.size(); i++) {
 						String[] this_zone = zone_list.get(i).split(",");
@@ -411,6 +456,7 @@ if (link != null) { %>
 								<%					
 							}
 						}
+<<<<<<< HEAD
 					}
 				/*} else {
 					if (!sections.equals("")) { 
@@ -456,6 +502,53 @@ if (link != null) { %>
 						}
 					}
 				}*/
+=======
+					}		
+					/* } else {
+						if (!sections.equals("")) { 
+							String[] sectionArray = sections.split("\\*");
+							for (int i = 0; i < zone_list.size(); i++) {
+								String[] this_zone = zone_list.get(i).split(",");
+					
+								for (String sec : sectionArray) {
+									if (sec.equals(i+"")) {
+										String building_name = this_zone[0];
+										String zone_name = this_zone[1];
+										String zone_type = this_zone[2];
+					
+										String tab_id = building_name + "_" + zone_name;
+					
+										session.setAttribute("building_name",building_name);
+										session.setAttribute("zone_name",zone_name);
+					
+										if (!zone_type.isEmpty()){
+											if (zone_type.equals("wh_mezzanine")){
+											%>
+												<div class="tab-pane" id="<%=tab_id%>"><%@include file="Zone_Mezzanine_Form.jsp" %></div>
+												<%
+					
+											} else if (zone_type.equals("wh_ground_to_roof")){
+											%>
+												<div class="tab-pane" id="<%=tab_id%>"><%@include file="Zone_Ground_Roof_Form.jsp" %></div>
+												<%
+					
+											} else if (zone_type.equals("wh_value_add")){
+											%>
+												<div class="tab-pane" id="<%=tab_id%>"><%@include file="Zone_Warehouse_Value_Add _Form.jsp" %></div>
+												<%
+					
+											} else if (zone_type.equals("offices")){
+											%>
+												<div class="tab-pane" id="<%=tab_id%>"><%@include file="Zone_Office_Form.jsp" %></div>
+												<%					
+											}
+										}	
+									}
+								}
+							}
+						}
+					} */
+>>>>>>> FETCH_HEAD
 			%>
   
 			</div>
@@ -487,7 +580,11 @@ if (link != null) { %>
 			
 			<div>
 		        <div class="col-md-offset-9">
+<<<<<<< HEAD
 		            <% if (!fromLink) {%>
+=======
+		        	<% if (!fromLink) {%>
+>>>>>>> FETCH_HEAD
 		            <button type="submit" class="btn btn-primary" name="action" value="submit">Submit Questionnaire</button>
 					<% } %>
 				</div>
@@ -505,6 +602,10 @@ if (link != null) { %>
 		    <%-- <a data-toggle="modal" data-target="#assignModal">Assign Questions</a> --%>
 		</div>
 	<% } %>
+<<<<<<< HEAD
+=======
+
+>>>>>>> FETCH_HEAD
 	<%-- Modal for Assign Questions --%>
 	<div class="modal fade" id="assignModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	    <div class="modal-dialog" style="left:0px">
@@ -534,7 +635,11 @@ if (link != null) { %>
 					        <div class="col-md-5">
 					            <textarea class="form-control" name="message"></textarea>
 					        </div>
+<<<<<<< HEAD
 					    </div>    
+=======
+					    </div>             
+>>>>>>> FETCH_HEAD
 					    <div class="form-group">
 							<label class="col-lg-5 control-label" for="sections_assigned">Sections Assigned</label>
 							<div class="col-lg-6">
@@ -557,7 +662,11 @@ if (link != null) { %>
 									%>
 								</div>
 							</div>
+<<<<<<< HEAD
 						</div>               
+=======
+						</div>                    
+>>>>>>> FETCH_HEAD
 					    <div class="form-group">
 					        <div class="col-md-5 col-md-offset-5">
 					            <button type="submit" class="btn btn-primary">Send Email</button>

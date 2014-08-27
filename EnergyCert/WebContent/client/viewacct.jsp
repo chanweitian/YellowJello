@@ -25,7 +25,7 @@
     <!-- Custom styles for this template -->
     <style>
 	    body {
-		  padding-top: 70px;
+		  padding-top: 40px;
 		  padding-bottom: 30px;
 		}
 		
@@ -56,10 +56,16 @@
     String deleteAcctFlag = (String) session.getAttribute("deleteAcctFlag");
     session.removeAttribute("deleteAcctFlag");
   	%>
+<<<<<<< HEAD
 	<div class="header">View accounts</div>
     <div class="container theme-showcase" role="main">
 
       <%-- <h2 class="heading">View accounts</h2><p>--%>
+=======
+
+    <div class="header">View accounts</div>
+     <div class="container theme-showcase" role="main">
+>>>>>>> FETCH_HEAD
       <p>
       	<% if (deleteAcctFlag!=null) { %>
       	<div class="alert alert-warning">

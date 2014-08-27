@@ -25,7 +25,7 @@
     <!-- Custom styles for this template -->
     <style>
 	    body {
-		  padding-top: 70px;
+		  padding-top: 40px;
 		  padding-bottom: 30px;
 		}
 		
@@ -54,10 +54,16 @@
   	String whereClause = "Company=\'" + (String) session.getAttribute("company") + "\'"; 
   	ResultSet rs = SQLManager.retrieveRecords("site", whereClause);
   	%>
+<<<<<<< HEAD
 	<div class="header">View warehouses</div>
     <div class="container theme-showcase" role="main">
 
       <%-- <h2 class="heading">View warehouses</h2><p> --%>
+=======
+
+    <div class="header">View warehouses</div>
+     <div class="container theme-showcase" role="main">
+>>>>>>> FETCH_HEAD
       <p>
       	
       	<table class="table table-hover">

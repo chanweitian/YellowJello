@@ -24,7 +24,7 @@
     <!-- Custom styles for this template -->
     <style>
 	    body {
-		  padding-top: 70px;
+		  padding-top: 40px;
 		  padding-bottom: 30px;
 		}
 		
@@ -63,10 +63,16 @@
   	session.removeAttribute("addWhCity");
   	session.removeAttribute("addWhPostal");
     %>
+<<<<<<< HEAD
 	<div class="header">Add Warehouse</div>
     <div class="container theme-showcase" role="main">
 		
       <%-- <h2 class="heading">Add warehouse</h2><p>--%>
+=======
+
+    <div class="header">Add Warehouse</div>
+     <div class="container theme-showcase" role="main">
+>>>>>>> FETCH_HEAD
       <form class="form-horizontal" role="form" action="processaddwh">
 		  
 		  <div class="form-group">

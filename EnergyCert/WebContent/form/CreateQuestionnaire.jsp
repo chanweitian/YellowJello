@@ -47,7 +47,7 @@ cal.set(Calendar.MONTH,month);
 cal.set(Calendar.DATE,1);
 Calendar today = Calendar.getInstance();
 int previousYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
-if (!today.before(cal)) {
+if (today.before(cal)) {
 	previousYear -= 1;
 }
 %>		  

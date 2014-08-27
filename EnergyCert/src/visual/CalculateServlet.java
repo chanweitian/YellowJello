@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import utility.FormulaManager;
+import utility.WeatherManager;
 
 import db.SQLManager;
 
@@ -612,13 +613,14 @@ System.out.println("Hello "+area);
 			double total = h_roof + h_wall + h_floor + h_window + inflitration;
 
 			String loc = siteInfoMap.get("site_info_address_city");
+			String country = siteInfoMap.get("site_info_address_country");
 			
 			for (int month = 1; month <= 12; month++) {
 
 				String monthStr = getMonth(month);
 				
 				// 
-				double externalTemp = getWeatherData(loc, monthStr, consumptionYear); 
+				double externalTemp = getWeatherData(loc, monthStr,country); 
 			
 
 				// Create a calendar object and set year and month
@@ -684,24 +686,21 @@ System.out.println("Hello "+area);
 	}
 	
 	
-	private double getWeatherData(String loc, String month, int year) throws SQLException {
+	private double getWeatherData(String loc, String month, String country) throws SQLException {
 		
 
 		month = month.substring(0,3);
 		
-		System.out.println("Calling weather"+loc+month+year);
+		System.out.println("Calling weather"+loc+month);
 		
-		rs = SQLManager.retrieveRecords("weather", "loc=\'"
-				+ loc + "\' AND month=\'"+month+"\' AND year=\'"+year+"\'");
-		
-		if(!rs.next()){
-			if(rs != null) rs.close();;
-			
-			System.out.println("No weather :(");
-			return 0.0;
+		double temp = 9999;
+		temp = WeatherManager.getTemp(loc, month);
+		if (temp == 9999) {
+			temp = WeatherManager.getCountryTemp(country, month);
+			if (temp == 9999) {
+				temp = 0;
+			}
 		}
-		
-		double temp = rs.getDouble("temp");
 		
 		System.out.println("Temp for "+month+":"+temp);
 		

@@ -1,4 +1,3 @@
-<%@include file="../protectclientad.jsp" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,22 +8,22 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Import Users</title>
+    <title>Import Data</title>
 
 	<!-- Bootstrap -->
-	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
 	
 	<%-- JQuery script --%>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	
 	<%-- Questionnaire.jsp --%>
-	<link href="../css/questionnaire.css" rel="stylesheet">
+	<link href="css/questionnaire.css" rel="stylesheet">
     
     <!-- Custom styles for this template -->
     <style>
 	    body {
-		  padding-top: 40px;
+		  padding-top: 70px;
 		  padding-bottom: 30px;
 		}
 		
@@ -45,22 +44,16 @@
   </head>
 
   <body role="document">
-  <%@include file="../header.jsp" %>
+  <%@include file="header.jsp" %>
   
-  <% String importMsg = (String) session.getAttribute("importMsg");
-	session.removeAttribute("importMsg");
+  <% String testImportMsg = (String) session.getAttribute("testImportMsg");
+	session.removeAttribute("testImportMsg");
   %>
-<<<<<<< HEAD
-	<div class="header">Import users</div>
+
     <div class="container theme-showcase" role="main">
 		
-      <%--<h2 class="heading">Import users</h2><p>--%>
-=======
-
-    <div class="header">Import users</div>
-     <div class="container theme-showcase" role="main">
->>>>>>> FETCH_HEAD
-      <form class="form-horizontal" role="form" action="processimport" method="POST" enctype="multipart/form-data" >
+      <h2 class="heading">Import</h2><p>
+      <form class="form-horizontal" role="form" action="processimportdata" method="POST" enctype="multipart/form-data" >
 		  <div class="form-group">
 		    <label for="inputFile" class="col-sm-1 control-label">Input file</label>
 		    <div class="col-sm-4">
@@ -70,8 +63,8 @@
 		  <div class="form-group">
 		    <div class="col-sm-offset-1 col-sm-4">
 		      <button type="submit" class="btn btn-default">Upload</button></p>
-		      <% if (importMsg!=null) { %>
-	        	<font color="maroon"><label><%=importMsg %></font></label>
+		      <% if (testImportMsg!=null) { %>
+	        	<font color="maroon"><label><%=testImportMsg %></font></label>
 	        <% } %>
 		    </div>
 		  </div>
