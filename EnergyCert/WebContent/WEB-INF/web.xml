@@ -164,4 +164,12 @@
     <servlet-name>ProcessImportDataServlet</servlet-name>
     <url-pattern>/processimportdata</url-pattern>
   </servlet-mapping>
+      <servlet>
+    <servlet-name>ManageWarehouse</servlet-name>
+    <servlet-class>visual.ManageWarehouse</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ManageWarehouse</servlet-name>
+    <url-pattern>/visual/portfolio</url-pattern>
+  </servlet-mapping>
 </web-app>
