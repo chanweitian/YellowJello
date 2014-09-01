@@ -77,17 +77,11 @@
 	}
   	%>
 
-<<<<<<< HEAD
     <div class="header">Manage company account</div>
     <div class="container theme-showcase" role="main">
 
       <%-- <h2 class="heading">Manage company account</h2><p>--%>
-=======
     
-    <div class="header">Manage company account</div>
-     <div class="container theme-showcase" role="main">
->>>>>>> FETCH_HEAD
-      
       <form action="processdeletion" method="post">
       		<input type="hidden" name="userid" value="<%=userid %>">
       		<button class="btn btn-danger btn-sm" type="submit" style="margin-left:350px">Delete account</button></p>

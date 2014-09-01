@@ -79,16 +79,13 @@
     }
   	%>
 
-<<<<<<< HEAD
   	<div class="header">Edit Formula</div>
     <div class="container theme-showcase" role="main">
 
       <%--<h2 class="heading">Edit Formula</h2><p>--%>
-=======
+
   
-    <div class="header">Edit Formula</div>
-     <div class="container theme-showcase" role="main">
->>>>>>> FETCH_HEAD
+
       
       <form class="form-horizontal" role="form" method="post" action="processedit">
       

@@ -60,19 +60,16 @@
 	String changeMsg = (String) session.getAttribute("changeMsg");
   	session.removeAttribute("changeMsg");
     %>
-<<<<<<< HEAD
+
 	<div class="header">Change Password</div>
     <div class="container theme-showcase" role="main">
 
       <form class="form-horizontal" role="form" method="post" action="processchange">
       <%-- <h2 class="form-horizontal-heading">Change Password</h2><p>--%>
-=======
 
-    <div class="header">Change Password</div>
-     <div class="container theme-showcase" role="main">
+
  
-       <form class="form-horizontal" role="form" method="post" action="processchange">
->>>>>>> FETCH_HEAD
+
       	<div class="row" id="pwd-container">
 		  <div class="form-group">
 		    <label for="current_password" class="col-sm-5 control-label">Current Password</label>

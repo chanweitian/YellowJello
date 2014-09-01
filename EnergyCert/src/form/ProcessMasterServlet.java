@@ -490,10 +490,6 @@ public class ProcessMasterServlet extends HttpServlet {
 			values = values + "usage_district_cooling_use_source = \'" + request.getParameter("usage_district_cooling_use_source") + "\',";
 			values = values + "usage_district_cooling_cost = \'" + request.getParameter("usage_district_cooling_cost") + "\'";
 		//}
-<<<<<<< HEAD
-=======
-	
->>>>>>> FETCH_HEAD
 		//retrieve values from session
 		HttpSession session = request.getSession();
 		String quest_id = (String) session.getAttribute("quest_id");
