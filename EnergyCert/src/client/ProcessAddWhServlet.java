@@ -54,9 +54,10 @@ public class ProcessAddWhServlet extends HttpServlet {
 	
 	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String warehouse = request.getParameter("warehouse");
 		String site = request.getParameter("site");
 		String country = request.getParameter("country");
+		String[] arr = country.split(";");
+		country = arr[1];
 		String region = request.getParameter("region");
 		String street = request.getParameter("street");
 		String city = request.getParameter("city");
@@ -122,7 +123,6 @@ public class ProcessAddWhServlet extends HttpServlet {
 		}
 		
 		session.setAttribute("addWhMsg", addWhMsg);
-		session.setAttribute("addWhWarehouse", warehouse);
 		session.setAttribute("addWhSite", site);
 		session.setAttribute("addWhCountry", country);
 		session.setAttribute("addWhRegion", region);

@@ -13,13 +13,13 @@ import java.util.Properties;
 public class ConnectionManager {
 
     // Localhost Settings! 
-	
+	/*
     private static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     private static String JDBC_URL = "jdbc:mysql://localhost:3306/gtl";
     private static String JDBC_USER = "root";
     private static String JDBC_PASSWORD = "root";
     private static Properties props = new Properties();
-    
+    */
     
     // Openshift Settings!!!
 	/*
@@ -31,16 +31,16 @@ public class ConnectionManager {
     */
 	
 	// Digital Ocean Settings
-    /*
+    
 	private static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     private static String JDBC_URL = "jdbc:mysql://greentransformationlab.com:3306/gtl";
     private static String JDBC_USER = "root";
     private static String JDBC_PASSWORD = "root";
     private static Properties props = new Properties();
-	*/
+	
     
-    private static Connection[] connArr = new Connection[250];
-    private static int counter = 0;
+    private static Connection[] connArr = new Connection[150];
+    private static int counter = -1;
     
     static {
         try {
@@ -57,7 +57,7 @@ public class ConnectionManager {
      * @throws SQLException if an error occurs when connecting
      */
     public static Connection getConnection() throws SQLException {
-    	counter = (counter + 1) % 250;
+    	counter = (counter + 1) % 150;
     	if (connArr[counter]!=null) {
     		connArr[counter].close();
     	}

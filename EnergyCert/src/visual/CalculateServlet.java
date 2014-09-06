@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import utility.FormulaManager;
+import utility.PeriodManager;
 import utility.WeatherManager;
 
 import db.SQLManager;
@@ -123,6 +124,7 @@ public class CalculateServlet extends HttpServlet {
 		
 	protected void processView(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
 		RequestDispatcher rd = request.getRequestDispatcher("visualOutput.jsp");
 		
 		 heatConsumption = 0.0;
@@ -155,6 +157,18 @@ public class CalculateServlet extends HttpServlet {
 		siteInfoMap = new HashMap<String, String>();
 
 		HttpSession session = request.getSession();
+		
+		String company = (String) session.getAttribute("company");
+		int month = PeriodManager.getMonthInt(company);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MONTH,month);
+		cal.set(Calendar.DATE,1);
+		Calendar today = Calendar.getInstance();
+		int previousYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
+		if (today.before(cal)) {
+			previousYear -= 1;
+		}
+		
 		String utype = (String) session.getAttribute("usertype");
 	
 		

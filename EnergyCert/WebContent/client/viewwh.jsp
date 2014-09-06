@@ -53,6 +53,8 @@
   	<% 
   	String whereClause = "Company=\'" + (String) session.getAttribute("company") + "\'"; 
   	ResultSet rs = SQLManager.retrieveRecords("site", whereClause);
+  	String deleteWhFlag = (String) session.getAttribute("deleteWhFlag");
+    session.removeAttribute("deleteWhFlag");
   	%>
 
 	<div class="header">View warehouses</div>
@@ -63,6 +65,11 @@
 
 
       <p>
+      	<% if (deleteWhFlag!=null) { %>
+      	<div class="alert alert-warning">
+        <strong>Site has been deleted successfully.</strong>
+      	</div>
+		<% } %>
       	
       	<table class="table table-hover">
 	        <thead>
@@ -87,6 +94,9 @@
 			            <td><%=rs.getString("site_info_address_street") %></td>
 			            <td><%=rs.getString("site_info_address_city") %></td>
 			            <td><%=rs.getString("site_info_address_postal") %>
+			            <td>
+			            	<a class="btn btn-default" href="managewh.jsp?siteid=<%=rs.getString("Site_ID") %>">Manage</a>
+			            </td>
 			          </tr>
 				<% }
 	          } catch (SQLException e) {

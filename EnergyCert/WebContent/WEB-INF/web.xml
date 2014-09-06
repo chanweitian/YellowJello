@@ -149,6 +149,22 @@
     <url-pattern>/client/processaddwh</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>ProcessDeleteWhServlet</servlet-name>
+    <servlet-class>client.ProcessDeleteWhServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessDeleteWhServlet</servlet-name>
+    <url-pattern>/client/processdeletewh</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ProcessManageWhServlet</servlet-name>
+    <servlet-class>client.ProcessManageWhServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessManageWhServlet</servlet-name>
+    <url-pattern>/client/processmanagewh</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>ProcessManagePeriodServlet</servlet-name>
     <servlet-class>client.ProcessManagePeriodServlet</servlet-class>
   </servlet>
@@ -164,7 +180,7 @@
     <servlet-name>ProcessImportDataServlet</servlet-name>
     <url-pattern>/processimportdata</url-pattern>
   </servlet-mapping>
-      <servlet>
+  <servlet>
     <servlet-name>ManageWarehouse</servlet-name>
     <servlet-class>visual.ManageWarehouse</servlet-class>
   </servlet>

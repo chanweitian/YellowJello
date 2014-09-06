@@ -64,8 +64,8 @@
 	            <li><a href="/EnergyCert/client/createacct.jsp">Create Account</a></li>
 	            <li><a href="/EnergyCert/client/viewacct.jsp">View Accounts</a></li>
 	            <li><a href="/EnergyCert/client/importusers.jsp">Import Users</a></li>
-	            <li><a href="/EnergyCert/client/addwh.jsp">Add Warehouse</a></li>
-	            <li><a href="/EnergyCert/client/viewwh.jsp">View Warehouse</a></li>
+	            <li><a href="/EnergyCert/client/addwh.jsp">Add Warehouses</a></li>
+	            <li><a href="/EnergyCert/client/viewwh.jsp">View Warehouses</a></li>
 	            <li><a href="/EnergyCert/client/manageperiod.jsp">Manage Period</a></li>
 	          </ul>
 	        </li>  

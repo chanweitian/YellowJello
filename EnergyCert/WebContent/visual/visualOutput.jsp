@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
-<%@ page import="db.*,java.util.*,java.sql.*,java.text.*" %>
+<%@ page import="db.*,java.util.*,java.sql.*,java.text.*,utility.PeriodManager" %>
 
 
 <% 
@@ -64,13 +64,25 @@
 	double benchmark = heatConsumption + coolConsumption + lightingConsumption 
 			+ extLightingConsumption +hotWaterConsumption+mheConsumption+operationsConsumption;
 	
-	int rating = (int)(100 * actualConsumption / benchmark); 
-	SQLManager.updateRecords("questionnaire", "energy_rating="+rating, "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
+	String company = (String) session.getAttribute("company");
+	int month = PeriodManager.getMonthInt(company);
+	Calendar cal = Calendar.getInstance();
+	cal.set(Calendar.MONTH,month);
+	cal.set(Calendar.DATE,1);
+	Calendar today = Calendar.getInstance();
+	int previousYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
+	if (today.before(cal)) {
+		previousYear -= 1;
+	}
 	
-	// for google charts
+	int rating = 0;
+	
 	int year1 = Integer.parseInt((String)request.getAttribute("consumptionYear"));
 	int year2 = year1-1;
 	int year3 = year2-1;
+	
+	
+
 	
 	/*
 	ResultSet year1_rs = SQLManager.retrieveRecords("QUESTIONAIRE", "year="+year1+"AND site_id="+"'"+site_id+"'");
@@ -102,6 +114,21 @@
 	double natGasPerVol = year1_nat_gas_use / totalVolume;
 
 	DecimalFormat df = new DecimalFormat("#.##");
+	
+	if (year1<previousYear) {
+		ResultSet rs0 = SQLManager.retrieveRecords("questionnaire", "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
+		while (rs0.next()) {
+			rating = rs0.getInt("energy_rating");
+		}
+	} else {
+		rating = (int)(100 * actualConsumption / benchmark); 
+		
+		double emission_electrical_use = year1_electrical_use * emission_factor_electrical_use;
+		double emission_nat_gas_use = year1_nat_gas_use * emission_factor_nat_gas_use;
+		
+		SQLManager.updateRecords("questionnaire", "emission_electrical_use="+emission_electrical_use, "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
+		SQLManager.updateRecords("questionnaire", "emission_nat_gas_use="+emission_nat_gas_use, "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
+	}
 	
 	
 %>
@@ -239,8 +266,6 @@ function initChart() {
 		$("#whatifButton").click(function() {
 			//new rating
 			
-			alert("Hello World");
-			
 			var newRating = calculateNewRating();
 
 			var leftOffset = getLeftOffset(newRating);
@@ -367,7 +392,7 @@ function getLightingMultiplier(){
 <br/>
 <br/>
 <br/>
-<div class="navigation" id ="share_button" style="float:right">
+<div class="navigation" style="position:fixed; right:100px; top:70px;">
 		<button class="btn btn-info" data-toggle="modal" data-target="#shareModel">Share</button>
 </div>
 
@@ -377,8 +402,7 @@ function getLightingMultiplier(){
 		<div class="modal-dialog" style="left: 0px">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">X</button>
+		 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 					<h4 class="modal-title">Share</h4>
 				</div>
 
@@ -404,7 +428,7 @@ function getLightingMultiplier(){
 
 
 
-<div class="navigation" id ="whatif" style="float:right">
+<div class="navigation" style="position:fixed; right:170px; top:70px;">
 		<button class="btn btn-info" data-toggle="modal" data-target="#whatIfModel">What If</button>
 </div>
 
@@ -440,7 +464,6 @@ function getLightingMultiplier(){
 						</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-info" data-dismiss="modal" id="whatifButton">What If!</button>
       </div>
     </div>
@@ -491,7 +514,7 @@ function getLightingMultiplier(){
 <td></td>
 <td></td>
 <td class="field_name"> Certification Year:</td>
-<td class="field_info"> <%= new java.text.SimpleDateFormat("yyyy").format(new java.util.Date()) %></td>
+<td class="field_info"> <%= year1 %></td>
 </tr>
 <tr><th colspan = "6">Building and Facility Information</th></tr>
 <tr>
