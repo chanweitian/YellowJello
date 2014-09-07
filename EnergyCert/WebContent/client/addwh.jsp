@@ -155,10 +155,10 @@
 			    			addWhCountry = arr[1];
 			    		}
 		    			if (addWhCountry.equals(arr[1])) { %>
-		    				<option value="<%=arr[0] %>" selected><%=arr[1] %></option>
-		    				countryCode = arr[0];
-		    			<% } else { %>
-		    				<option value="<%=arr[0] %>"><%=arr[1] %></option>
+		    				<option value="<%=arr[0]+";"+arr[1] %>" selected><%=arr[1] %></option>
+		    				<% countryCode = arr[0];
+		    			} else { %>
+		    				<option value="<%=arr[0]+";"+arr[1] %>"><%=arr[1] %></option>
 		    			<% }
 			    	} %>
 			    	</select>
@@ -195,28 +195,28 @@
 		     
 		     <% 
 		      try {
-			    URL url = new URL("getCity.jsp?q="+countryCode);
+		    	String urlString = request.getRequestURL().toString();
+		    	urlString = urlString.substring(0,urlString.length()-9)+"getcity.jsp?q="+countryCode;
+			    URL url = new URL(urlString);
 			    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-			    String strTemp = "";
-			    while (null != br.readLine()) {
+			    String strTemp = ""; %>
+			    <select class="form-control" id="city" name="city" required>
+			    <% while (null != br.readLine()) {
 			    	strTemp = br.readLine();
 			    	String[] cityArr = strTemp.split(";");
-			    	%>
-			    	<select class="form-control" id="city" name="city" required>
-			    	<% for (String s: cityArr) {
-			    		if (addWhCity!=null&&addWhCity.equals(s)) { %>
+			    	for (String s: cityArr) {
+			    		if (s.equals(addWhCity)) { %>
 		    				<option value="<%=s %>" selected><%=s %></option>
-		    			<% } else { %>
+		    			<% } else if (s.length()>1) { %>
 		    				<option value="<%=s %>"><%=s %></option>
 		    			<% }
-			    	} %>
-			    	</select>
-			    <% }
-			} catch (Exception ex) {
+			    	}
+			    } %>
+			    </select>
+			<% } catch (Exception ex) {
 			    ex.printStackTrace();
 			}
 		      %>
-		     </select>
 		    </div>
 		  </div>
 		  <div class="form-group">

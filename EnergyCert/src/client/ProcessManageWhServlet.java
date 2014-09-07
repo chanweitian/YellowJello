@@ -46,6 +46,8 @@ public class ProcessManageWhServlet extends HttpServlet {
 		String siteid = request.getParameter("siteid");
 		String site = request.getParameter("site");
 		String country = request.getParameter("country");
+		String[] arr = country.split(";");
+		country = arr[1];
 		String region = request.getParameter("region");
 		String street = request.getParameter("street");
 		String city = request.getParameter("city");

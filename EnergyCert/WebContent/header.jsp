@@ -53,6 +53,7 @@
 	            <li><a href="/EnergyCert/admin/createco.jsp">Create Company Account</a></li>
 	            <li><a href="/EnergyCert/admin/viewco.jsp">View Companies</a></li>
 	            <li><a href="/EnergyCert/admin/editformula.jsp">Edit Formula</a></li>
+	            <li><a href="/EnergyCert/admin/addweather.jsp">Add Weather</a></li>
 	            <li><a href="/EnergyCert/admin/editweather.jsp">Edit Weather</a></li>
 	          </ul>
 	        </li>  
@@ -64,7 +65,7 @@
 	            <li><a href="/EnergyCert/client/createacct.jsp">Create Account</a></li>
 	            <li><a href="/EnergyCert/client/viewacct.jsp">View Accounts</a></li>
 	            <li><a href="/EnergyCert/client/importusers.jsp">Import Users</a></li>
-	            <li><a href="/EnergyCert/client/addwh.jsp">Add Warehouses</a></li>
+	            <li><a href="/EnergyCert/client/addwh.jsp">Add Warehouse</a></li>
 	            <li><a href="/EnergyCert/client/viewwh.jsp">View Warehouses</a></li>
 	            <li><a href="/EnergyCert/client/manageperiod.jsp">Manage Period</a></li>
 	          </ul>

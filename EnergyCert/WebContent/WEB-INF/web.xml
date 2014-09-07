@@ -109,6 +109,14 @@
     <url-pattern>/admin/processeditweather</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>ProcessAddWeatherServlet</servlet-name>
+    <servlet-class>admin.ProcessAddWeatherServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessAddWeatherServlet</servlet-name>
+    <url-pattern>/admin/processaddweather</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>ProcessCreateAcctServlet</servlet-name>
     <servlet-class>client.ProcessCreateAcctServlet</servlet-class>
   </servlet>

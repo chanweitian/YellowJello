@@ -113,4 +113,29 @@ private static HashMap<String,ArrayList<String>> countryHM = new HashMap<String,
 		}
 		return (sum/cities.size());
 	}
+	
+	public static void addWeather(String country, String city, HashMap<String,Double> tempHM) {
+		if (weatherHM.size()==0) {
+			pullWeather();
+		}
+		String tableName = "weather";
+		Iterator iter = tempHM.entrySet().iterator();
+		ArrayList<String> valuesList = new ArrayList<String>();
+    	while (iter.hasNext()) {
+	        Map.Entry<String,Double> pairs = (Map.Entry<String,Double>)iter.next();
+	        String month = pairs.getKey();
+	        double temp = pairs.getValue();
+	        valuesList.add("\'"+city+"\',\'"+month+"\',\'"+temp+"\',\'"+country+"\'");
+	        weatherHM.put(city+";"+month, temp);
+	    }
+    	ArrayList<String> list = null;
+    	if (countryHM.containsKey(country)) {
+    		list = countryHM.get(country);
+    	} else {
+    		list = new ArrayList<String>();
+    	}
+    	list.add(city);
+		countryHM.put(country,list);
+    	SQLManager.insertRecords(tableName, valuesList);
+	}
 }

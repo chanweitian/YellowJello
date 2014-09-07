@@ -1,4 +1,4 @@
-<%@page import="db.SQLManager,java.util.*,java.sql.*;" %>
+<%@page import="db.SQLManager,java.util.*,java.sql.*,java.net.*,java.io.*;" %>
 <%@include file="../protectclientad.jsp" %>
 
 <!DOCTYPE html>
@@ -48,6 +48,50 @@
 		}
 	</style>
 	
+	<script>
+	function showValues(str)
+	{
+	var xmlhttp;    
+	if (str=="")
+	  {
+	  document.getElementById("txtHint").innerHTML="";
+	  return;
+	  }
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	    {
+		  var res = xmlhttp.responseText;
+		  var values = res.split(";");
+		  var select = document.getElementById("city"), option = null, next_desc = null;
+		  var len = select.options.length;
+		 
+		  for (var i = 0; i < len; i++)
+          {
+              select.remove(0);
+          }
+          
+		  for(x in values) {
+		        option = document.createElement("option");
+		        next_desc = values[x];
+		        option.value = next_desc;
+		        option.innerHTML = next_desc;
+		        select.appendChild(option);
+		    }
+	    }
+	  }
+	xmlhttp.open("GET","getcity.jsp?q="+str,true);
+	xmlhttp.send();
+	}
+	</script>
   </head>
 
   <body role="document">
@@ -67,6 +111,7 @@
   	session.removeAttribute("manageWhStreet");
   	session.removeAttribute("manageWhCity");
   	session.removeAttribute("manageWhPostal");
+  	String countryCode = null;
     		
   	String siteid = request.getParameter("siteid");
     if (siteid==null) {
@@ -114,7 +159,40 @@
 		  <div class="form-group">
 		    <label for="country" class="col-sm-1 control-label">Country</label>
 		    <div class="col-sm-4">
-	    		<input type="text" class="form-control" id="country" name="country" value="<%=manageWhCountry %>" required>
+	    		<% 
+		      try {
+			    URL url = new URL("http://www.westclicks.com/webservices/?f=json");
+			    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+			    String strTemp = "";
+			    while (null != br.readLine()) {
+			    	strTemp = br.readLine();
+			    	strTemp = strTemp.substring(1,strTemp.length()-1);
+			    	%>
+			    	<select class="form-control" id="country" name="country" onchange="showValues(this.value)" required>
+			    	<% while (strTemp.length()>0) {
+			    		int index = strTemp.indexOf("\",");
+			    		String temp;
+			    		if (index>-1) {
+			    			temp = strTemp.substring(0,index+1).replaceAll("\"","");
+			    			strTemp = strTemp.substring(index+2);
+			    		} else {
+			    			temp = strTemp.replaceAll("\"","");
+			    			strTemp = "";
+			    		}
+			    		String[] arr = temp.split(":");
+		    			if (manageWhCountry.equals(arr[1])) { %>
+		    				<option value="<%=arr[0]+";"+arr[1] %>" selected><%=arr[1] %></option>
+		    				<% countryCode = arr[0];
+		    			} else { %>
+		    				<option value="<%=arr[0]+";"+arr[1] %>"><%=arr[1] %></option>
+		    			<% }
+			    	} %>
+			    	</select>
+			    <% }
+			} catch (Exception ex) {
+			    ex.printStackTrace();
+			}
+		      %>
 		    </div>
 		  </div>
 		  <div class="form-group">
@@ -132,7 +210,30 @@
 		  <div class="form-group">
 		    <label for="city" class="col-sm-1 control-label">City</label>
 		    <div class="col-sm-4">
-	    		<input type="text" class="form-control" id="city" name="city" value="<%=manageWhCity %>" required>
+	    		<% 
+		      try {
+		    	String urlString = request.getRequestURL().toString();
+		    	urlString = urlString.substring(0,urlString.length()-12)+"getcity.jsp?q="+countryCode;
+			    URL url = new URL(urlString);
+			    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+			    String strTemp = ""; %>
+			    <select class="form-control" id="city" name="city" required>
+			    <% while (null != br.readLine()) {
+			    	strTemp = br.readLine();
+			    	String[] cityArr = strTemp.split(";");
+			    	for (String s: cityArr) {
+			    		if (s.equals(manageWhCity)) { %>
+		    				<option value="<%=s %>" selected><%=s %></option>
+		    			<% } else if (s.length()>1) { %>
+		    				<option value="<%=s %>"><%=s %></option>
+		    			<% }
+			    	}
+			    } %>
+			    </select>
+			<% } catch (Exception ex) {
+			    ex.printStackTrace();
+			}
+		      %>
 		    </div>
 		  </div>
 		  <div class="form-group">
