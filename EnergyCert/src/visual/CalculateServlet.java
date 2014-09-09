@@ -238,13 +238,6 @@ public class CalculateServlet extends HttpServlet {
 
 		}
 		
-		
-		
-		
-		
-		
-		
-		
 		try {
 			HashMap<String,Double> formulaHM = FormulaManager.getFormulaHM();
 			WINDOW_RATIO =  formulaHM.get("WindowRatio");
@@ -284,9 +277,9 @@ public class CalculateServlet extends HttpServlet {
 			BOILER_SYS_EFFICIENCY = formulaHM.get("BoilerSysEfficiency");
 			SPECIFIC_HEAT_OF_WATER = formulaHM.get("SpecificHeatOfWater");
 
-			CONVERSION_FACTOR = formulaHM.get("EnergyConsumption");
+			CONVERSION_FACTOR = formulaHM.get("ConversionFactor");
 
-			ENERGY_CONSUMPTION_PER_PERSON = formulaHM.get("ExtLight");
+			ENERGY_CONSUMPTION_PER_PERSON = formulaHM.get("EnergyConsumption");
 
 			fetchQuestionnareData(questionnaire_id);
 			fetchSiteData();
@@ -747,7 +740,7 @@ System.out.println("Hello "+area);
 		int count = 0;
 		double sum = 0;
 		for (int i = 0; i < arr.length; i++) {
-			if (arr[i] != 0) {
+			if (arr[i] > 0) {
 				count++;
 				sum += arr[i];
 			}

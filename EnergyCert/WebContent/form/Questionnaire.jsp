@@ -130,6 +130,7 @@ if (link != null) { %>
 				values_quest = values_quest + "\'\',";
 			}
 			values_quest = values_quest + "0";
+			values_quest = values_quest + ",\'\',\'\'";
 			SQLManager.insertRecord("questionnaire",values_quest);
 			
 			if (session.getAttribute("fromLink") == null) {
