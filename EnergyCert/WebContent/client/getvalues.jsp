@@ -1,7 +1,8 @@
-<%@page import="db.SQLManager,java.sql.*,java.util.*" %>
+<%@page import="db.*,java.sql.*,java.util.*" %>
 <%
 String whereClause = "Company=\'" + session.getAttribute("company") + "\'";
-ResultSet rs = SQLManager.retrieveRecords("site", whereClause);
+RetrievedObject ro = SQLManager.retrieveRecords("site", whereClause);
+ResultSet rs = ro.getResultSet();
 HashMap<String,String> hm = new HashMap<String,String>();
 String values = "";
 String type = request.getParameter("q");
@@ -29,6 +30,6 @@ try {
 	// TODO Auto-generated catch block
 	e1.printStackTrace();
 }
-
+ro.close();
 %>
 <%=values%>

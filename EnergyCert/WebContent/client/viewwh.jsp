@@ -1,4 +1,4 @@
-<%@page import="db.SQLManager,java.util.ArrayList,java.sql.*;" %>
+<%@page import="db.*,java.util.ArrayList,java.sql.*;" %>
 <%@include file="../protectclientad.jsp" %>
 
 <!DOCTYPE html>
@@ -52,7 +52,8 @@
   
   	<% 
   	String whereClause = "Company=\'" + (String) session.getAttribute("company") + "\'"; 
-  	ResultSet rs = SQLManager.retrieveRecords("site", whereClause);
+  	RetrievedObject ro = SQLManager.retrieveRecords("site", whereClause);
+  	ResultSet rs = ro.getResultSet();
   	String deleteWhFlag = (String) session.getAttribute("deleteWhFlag");
     session.removeAttribute("deleteWhFlag");
   	%>
@@ -102,7 +103,8 @@
 	          } catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}%>
+			}
+			ro.close();%>
 	        </tbody>
 	      </table>
       </p>

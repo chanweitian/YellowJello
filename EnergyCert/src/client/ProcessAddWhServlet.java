@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 /**
@@ -96,7 +97,8 @@ public class ProcessAddWhServlet extends HttpServlet {
 						warehouseID = warehouseID.substring(0,28);
 					}
 					warehouseID = warehouseID + temp;
-					ResultSet rs = SQLManager.retrieveRecords("site", "Site_ID=\'"+warehouseID+"\'");
+					RetrievedObject ro = SQLManager.retrieveRecords("site", "Site_ID=\'"+warehouseID+"\'");
+					ResultSet rs = ro.getResultSet();
 					boolean unique = true;
 					try {
 						while (rs.next()) {
@@ -110,6 +112,7 @@ public class ProcessAddWhServlet extends HttpServlet {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					ro.close();
 				}
 
 				String values = "\'" + warehouseID + "\',\'" + company + "\',\'" + site + "\',\'" + country + "\',\'" + region 

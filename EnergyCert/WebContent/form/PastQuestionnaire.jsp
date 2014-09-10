@@ -46,7 +46,8 @@
 	session.setAttribute("quest_id",quest_id);
 			
 	String where_past = "questionnaire_id = \'" + quest_id + "\'";
-	ResultSet past_quest_rs = SQLManager.retrieveRecords("questionnaire", where_past);
+	RetrievedObject past_quest_ro = SQLManager.retrieveRecords("questionnaire", where_past);
+	ResultSet past_quest_rs = past_quest_ro.getResultSet();
 	/*
 	String site_id = past_quest_rs.getString("site_id");
 	String where_site = "site_id = \'" + quest_id + "\'";
@@ -590,7 +591,8 @@
 			
 			<%
 			where_past = "questionnaire_id = \'" + quest_id + "\'";
-			ResultSet past_site_def_rs = SQLManager.retrieveRecords("site_definition", where_past);
+			RetrievedObject past_site_def_ro = SQLManager.retrieveRecords("site_definition", where_past);
+			ResultSet past_site_def_rs = past_site_def_ro.getResultSet();
 			
 			//store all the zone_ids
 			ArrayList<String> site_def_info_list = new ArrayList<String>();
@@ -623,6 +625,7 @@
 					}
 				}
 			}
+			past_site_def_ro.close();
 			
 			for (int i = 0; i < site_def_activity_list.size(); i++) {
 				
@@ -654,6 +657,7 @@
 			</div>
 		</form>
 		<% } 
+        past_quest_ro.close();
       		//remove session attribute zone_id and quest_id
 			session.removeAttribute("zone_id");
 			session.removeAttribute("quest_id");

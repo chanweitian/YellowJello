@@ -24,6 +24,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 import java.io.FileInputStream;
@@ -161,7 +162,8 @@ public class ProcessImportServlet extends HttpServlet {
     			while (!isUnique) {
     				userid = tempCompany + Long.toHexString(Double.doubleToLongBits(Math.random()));
     				userid = userid.substring(0, 13);
-    				ResultSet rs = SQLManager.retrieveRecords("account", "userid=\'"+userid+"\'");
+    				RetrievedObject ro = SQLManager.retrieveRecords("account", "userid=\'"+userid+"\'");
+    				ResultSet rs = ro.getResultSet();
     				boolean unique = true;
     				try {
     					while (rs.next()) {
@@ -174,6 +176,7 @@ public class ProcessImportServlet extends HttpServlet {
     					// TODO Auto-generated catch block
     					e.printStackTrace();
     				}
+    				ro.close();
     			}
             	
 	            for (int j = 0; j < list.size(); j++) {

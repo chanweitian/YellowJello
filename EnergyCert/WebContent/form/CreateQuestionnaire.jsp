@@ -71,7 +71,8 @@ if (today.before(cal)) {
 			}
 
 			String where = "company=\'"+ comp + "\' and " + type + "=\'" + desc + "\'";
-			ResultSet rs = SQLManager.retrieveRecords("site", where); 
+			RetrievedObject ro = SQLManager.retrieveRecords("site", where); 
+			ResultSet rs = ro.getResultSet();
 			%>
 			<div class="col-lg-5">
 				<select class="form-control" id="dropdown_required" name="site_id">
@@ -79,11 +80,15 @@ if (today.before(cal)) {
 				<%
 				while (rs.next()) {
 					where = "site_id=\'" + rs.getString("site_id") + "\' and year=" + previousYear;
-					ResultSet rs2 = SQLManager.retrieveRecords("questionnaire", where); 
+					RetrievedObject ro2 = SQLManager.retrieveRecords("questionnaire", where); 
+					ResultSet rs2 = ro2.getResultSet();
 					if (!rs2.next()) { %>
 					<option value="<%=rs.getString("site_id")%>"><%=rs.getString("site_id")%></option>
 				<% }
-				} %>
+					ro2.close();
+				} 
+				ro.close();
+				%>
 				</select>
 			</div>
 

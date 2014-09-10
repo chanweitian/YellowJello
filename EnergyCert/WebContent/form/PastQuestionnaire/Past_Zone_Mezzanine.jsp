@@ -1,7 +1,8 @@
 <%
 String zone_id_mez = (String) session.getAttribute("zone_id");
 String where_mez = "zone_id = \'" + zone_id_mez + "\'";
-ResultSet rs_mez = SQLManager.retrieveRecords("mezzanine_form", where_mez);
+RetrievedObject ro_mez = SQLManager.retrieveRecords("mezzanine_form", where_mez);
+ResultSet rs_mez = ro_mez.getResultSet();
 while (rs_mez.next()) {
 %>
 <div class="page-header">
@@ -70,4 +71,5 @@ while (rs_mez.next()) {
 </div>
 <%
 }
+ro_mez.close();
 %>

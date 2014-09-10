@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 /**
@@ -62,7 +63,8 @@ public class ProcessChangeServlet extends HttpServlet {
 			changeMsg = "Please input confirm password";
 		} else {
 
-			ResultSet rs = SQLManager.retrieveRecords("account", "Userid=\'"+userid+"\'");
+			RetrievedObject ro = SQLManager.retrieveRecords("account", "Userid=\'"+userid+"\'");
+			ResultSet rs = ro.getResultSet();
 			try {
 				while (rs.next()) {
 					if (!currentPassword.equals(rs.getString("Password"))) {
@@ -78,6 +80,7 @@ public class ProcessChangeServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			ro.close();
 		}
 		
 		session.setAttribute("changeMsg", changeMsg);

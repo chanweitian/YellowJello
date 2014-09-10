@@ -39,9 +39,6 @@ public class ConnectionManager {
     private static Properties props = new Properties();
 	
     
-    private static Connection[] connArr = new Connection[150];
-    private static int counter = -1;
-    
     static {
         try {
             Class.forName(JDBC_DRIVER);
@@ -57,12 +54,7 @@ public class ConnectionManager {
      * @throws SQLException if an error occurs when connecting
      */
     public static Connection getConnection() throws SQLException {
-    	counter = (counter + 1) % 150;
-    	if (connArr[counter]!=null) {
-    		connArr[counter].close();
-    	}
-    	connArr[counter] = DriverManager.getConnection(JDBC_URL,JDBC_USER,JDBC_PASSWORD);
-        return connArr[counter];
+        return DriverManager.getConnection(JDBC_URL,JDBC_USER,JDBC_PASSWORD);
     }
 
     /**

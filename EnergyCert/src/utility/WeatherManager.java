@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 public class WeatherManager {
@@ -20,7 +21,8 @@ private static HashMap<String,ArrayList<String>> countryHM = new HashMap<String,
 	private static void pullWeather() {
 		weatherHM.clear();
 		countryHM.clear();
-		ResultSet rs = SQLManager.retrieveAll("weather");
+		RetrievedObject ro = SQLManager.retrieveAll("weather");
+		ResultSet rs = ro.getResultSet();
 	  	try {
 			while (rs.next()) { 
 				weatherHM.put(rs.getString("Loc")+";"+rs.getString("Month"),rs.getDouble("Temp"));
@@ -39,6 +41,7 @@ private static HashMap<String,ArrayList<String>> countryHM = new HashMap<String,
 	  	} catch(SQLException e) {
 	  		e.printStackTrace();
 	  	}
+	  	ro.close();
 	}
 	
 	public static HashMap<String,ArrayList<String>> getCountryHM() {

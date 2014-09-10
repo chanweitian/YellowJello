@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 /**
@@ -64,7 +65,8 @@ public class ProcessCreationServlet extends HttpServlet {
 			creationMsg = "Please input email";
 		} else {
 			//TO-DO: IMPLEMENT CHECK FOR UNIQUE EMAIL
-			ResultSet rs = SQLManager.retrieveRecords("account", "email=\'"+email+"\'");
+			RetrievedObject ro = SQLManager.retrieveRecords("account", "email=\'"+email+"\'");
+			ResultSet rs = ro.getResultSet();
 			boolean uniqueEmail = true;
 			try {
 				while (rs.next()) {
@@ -75,6 +77,7 @@ public class ProcessCreationServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			ro.close();
 			if (!uniqueEmail) {
 				creationMsg = "Duplicate email. Please input unique email.";
 			} else {
@@ -83,7 +86,8 @@ public class ProcessCreationServlet extends HttpServlet {
 				while (!isUnique) {
 					userid = "admin" + Long.toHexString(Double.doubleToLongBits(Math.random()));
 					userid = userid.substring(0, 13);
-					rs = SQLManager.retrieveRecords("account", "userid=\'"+userid+"\'");
+					ro = SQLManager.retrieveRecords("account", "userid=\'"+userid+"\'");
+					rs = ro.getResultSet();
 					boolean unique = true;
 					try {
 						while (rs.next()) {
@@ -97,6 +101,7 @@ public class ProcessCreationServlet extends HttpServlet {
 						e.printStackTrace();
 					}
 				}
+				ro.close();
 				String password = "" + Long.toHexString(Double.doubleToLongBits(Math.random()));
 				password = password.substring(0,13);
 				String values = "\'" + userid + "\',\'" + password + "\',\'" + email + "\',\'Company Admin\',\'" + company + "\',\'" + company + "\'";

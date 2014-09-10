@@ -138,7 +138,8 @@
 		      <select class="form-control" id="description" name="description" required>
 			    <%
 			    String whereClause = "Company=\'" + session.getAttribute("company") + "\'";
-			    ResultSet rs = SQLManager.retrieveRecords("site", whereClause);
+			    RetrievedObject ro = SQLManager.retrieveRecords("site", whereClause);
+		    	ResultSet rs = ro.getResultSet();
 			    HashMap<String,String> hm = new HashMap<String,String>();
 			    String values = "";
 			    String type = "";
@@ -169,6 +170,7 @@
 			    	// TODO Auto-generated catch block
 			    	e1.printStackTrace();
 			    }
+			    ro.close();
 			    %>
 		      </select>
 		    </div>

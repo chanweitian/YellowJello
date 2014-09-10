@@ -21,6 +21,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 /**
@@ -64,7 +65,8 @@ public class ProcessRetrievalServlet extends HttpServlet {
 		} else {
 			
 			boolean hasUserid = false;
-			ResultSet rs = SQLManager.retrieveRecords("account", "Email=\'"+email+"\'");
+			RetrievedObject ro = SQLManager.retrieveRecords("account", "Email=\'"+email+"\'");
+			ResultSet rs = ro.getResultSet();
 			try {
 				if (rs.next()) {
 					hasUserid = true;
@@ -113,6 +115,7 @@ public class ProcessRetrievalServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			ro.close();
 		}
 		
 		HttpSession session = request.getSession();

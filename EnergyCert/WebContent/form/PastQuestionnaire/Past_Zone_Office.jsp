@@ -2,7 +2,8 @@
 <%
 String zone_id_office = (String) session.getAttribute("zone_id");
 String where_office = "zone_id = \'" + zone_id_office + "\'";
-ResultSet rs_office = SQLManager.retrieveRecords("office_form", where_office);
+RetrievedObject ro_office = SQLManager.retrieveRecords("office_form", where_office);
+ResultSet rs_office = ro_office.getResultSet();
 while (rs_office.next()) {
 %>
 <div class="page-header">
@@ -84,4 +85,5 @@ while (rs_office.next()) {
 </div>
 <%
 }
+ro_office.close();
 %>

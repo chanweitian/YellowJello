@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 public class FormulaManager {
@@ -17,7 +18,8 @@ private static HashMap<String,Double> formulaHM = new HashMap<String,Double>();
 	
 	private static void pullFormula() {
 		formulaHM.clear();
-		ResultSet rs = SQLManager.retrieveAll("formula");
+		RetrievedObject ro = SQLManager.retrieveAll("formula");
+		ResultSet rs = ro.getResultSet();
 	  	try {
 			while (rs.next()) { 
 				formulaHM.put(rs.getString("Variable"),rs.getDouble("Value"));
@@ -26,6 +28,7 @@ private static HashMap<String,Double> formulaHM = new HashMap<String,Double>();
 	  	} catch(SQLException e) {
 	  		e.printStackTrace();
 	  	}
+	  	ro.close();
 	}
 	
 	public static HashMap<String,Double> getFormulaHM() {

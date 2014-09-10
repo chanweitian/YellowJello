@@ -1,7 +1,8 @@
 <%
 //retrieveRecords(String tableName, String whereClause)
 String where = "questionnaire_id = \'" + session.getAttribute("quest_id") + "\'";
-ResultSet site_def_rs = SQLManager.retrieveRecords("site_definition", where);
+RetrievedObject site_def_ro = SQLManager.retrieveRecords("site_definition", where);
+ResultSet site_def_rs = site_def_ro.getResultSet();
 String details = "";
 String activity = "";
 String bName = "";
@@ -10,6 +11,7 @@ while (site_def_rs.next()) {
 	activity = site_def_rs.getString("site_def_activity");
 	bName = site_def_rs.getString("site_def_building_name");
 }
+site_def_ro.close();
 String[] details_array = details.split("\\^");
 String[] activity_array = activity.split("\\^");
 String[] building_name_array = bName.split("\\*");
@@ -91,7 +93,8 @@ String[] building_name_array = bName.split("\\*");
 								tableNameZone = "warehouse_value_add_form";
 							}
 							where_zone = "zone_id = \'" + zone + "\'";
-							ResultSet rs_zone = SQLManager.retrieveRecords(tableNameZone, where_zone);
+							RetrievedObject ro_zone = SQLManager.retrieveRecords(tableNameZone, where_zone);
+							ResultSet rs_zone = ro_zone.getResultSet();
 							//String building_name = "";
 							String zone_name = "";
 							String zone_activity = "";
@@ -108,6 +111,7 @@ String[] building_name_array = bName.split("\\*");
 								zone_max_temp = rs_zone.getString("zone_max_temp");
 								zone_operation = rs_zone.getString("zone_operation");
 							}
+							ro_zone.close();
 							
 						%>
 	                    <%-- 1st row of zone in table --%>

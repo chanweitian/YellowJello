@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="WebContent"/>
+	<classpathentry excluding="Home.jsp|META-INF/|WEB-INF/|account/|admin/|client/|css/|fonts/|form/|header.jsp|icons/|img/|importdata.jsp|index.jsp|js/|map/|protect.jsp|protectclientad.jsp|protectdhlad.jsp|protectusers.jsp|visual/" kind="src" path="WebContent"/>
 	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.WebProject">
 		<attributes>

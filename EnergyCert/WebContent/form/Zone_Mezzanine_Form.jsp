@@ -8,7 +8,8 @@
 	String zone_id_mez = session.getAttribute("quest_id") + identifier;
 	
 	String where_mez = "zone_id = \'" + zone_id_mez + "\'";
-	ResultSet rs_mez = SQLManager.retrieveRecords("mezzanine_form", where_mez);
+	RetrievedObject ro_mez = SQLManager.retrieveRecords("mezzanine_form", where_mez);
+	ResultSet rs_mez = ro_mez.getResultSet();
 	
 	String zone_operationalhrs_mon = "";
 	String zone_operationalhrs_tues = "";
@@ -47,6 +48,7 @@
 		zone_lightcontroltype = rs_mez.getString("zone_lightcontroltype");
 		zone_hasgoodslift = rs_mez.getString("zone_hasgoodslift");
 	}
+	ro_mez.close();
 %>
 <div class="section">
 	<div class="container">

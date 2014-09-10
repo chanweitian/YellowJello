@@ -1,4 +1,4 @@
-<%@page import="db.SQLManager,java.util.*,java.sql.*,java.net.*,java.io.*;" %>
+<%@page import="db.*,java.util.*,java.sql.*,java.net.*,java.io.*;" %>
 <%@include file="../protectclientad.jsp" %>
 
 <!DOCTYPE html>
@@ -119,7 +119,8 @@
     	session.removeAttribute("manageWhSiteid");
     }
     if (manageWhSite==null) {
-	    ResultSet rs = SQLManager.retrieveRecords("site", "Site_ID=\'"+siteid+"\'");
+	    RetrievedObject ro = SQLManager.retrieveRecords("site", "Site_ID=\'"+siteid+"\'");
+	    ResultSet rs = ro.getResultSet();
 	  	try {
 			while (rs.next()) {
 				manageWhSite = rs.getString("site_info_name");
@@ -133,6 +134,7 @@
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	  	ro.close();
     }
   	%>
 

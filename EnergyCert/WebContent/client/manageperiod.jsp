@@ -1,4 +1,4 @@
-<%@page import="db.SQLManager,java.util.*,java.sql.*;" %>
+<%@page import="db.SQLManager,java.util.*,java.sql.*,utility.*" %>
 <%@include file="../protectclientad.jsp" %>
 
 <!DOCTYPE html>
@@ -57,16 +57,7 @@
   	session.removeAttribute("managePeriodMsg");
     		
   	String company = (String) session.getAttribute("company");
-  	String month = null;
-  	ResultSet rs = SQLManager.retrieveRecords("period", "Company=\'"+company+"\'");
-  	try {
-		while (rs.next()) {
-			month = rs.getString("month");
-		}
-  	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+  	String month = PeriodManager.getMonth(company);
   	String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
   	%>
 

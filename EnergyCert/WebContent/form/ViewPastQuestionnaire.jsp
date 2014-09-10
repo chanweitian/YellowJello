@@ -58,7 +58,8 @@
 			}
 
 			String where = "company=\'"+ comp + "\' and " + type + "=\'" + desc + "\'";
-			ResultSet rs = SQLManager.retrieveRecords("site", where); 
+			RetrievedObject ro = SQLManager.retrieveRecords("site", where); 
+			ResultSet rs = ro.getResultSet();
 			%>
 			
 			<% String company = (String) session.getAttribute("company");
@@ -81,12 +82,15 @@
 					<%
 					while (rs.next()) {
 						where = "site_id=\'" + rs.getString("site_id") + "\' and year<" + previousYear;
-						ResultSet rs2 = SQLManager.retrieveRecords("questionnaire", where); 
+						RetrievedObject ro2 = SQLManager.retrieveRecords("questionnaire", where); 
+						ResultSet rs2 = ro2.getResultSet();
 						while (rs2.next()) {
 					%>
 						<option value="<%=rs2.getString("questionnaire_id")%>"><%=rs2.getString("questionnaire_id")+" - " + rs2.getString("site_id")%></option>
 					<% }
-					}%>
+						ro2.close();
+					}
+					ro.close();%>
 					</select>
 				</div>
 		        <div class="col-md-offset-9">

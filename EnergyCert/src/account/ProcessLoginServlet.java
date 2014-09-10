@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 /**
@@ -63,7 +64,8 @@ public class ProcessLoginServlet extends HttpServlet {
 			
 			boolean hasUserid = false;
 			
-			ResultSet rs = SQLManager.retrieveRecords("account", "Userid=\'"+userid+"\'");
+			RetrievedObject ro = SQLManager.retrieveRecords("account", "Userid=\'"+userid+"\'");
+			ResultSet rs = ro.getResultSet();
 			try {
 				while (rs.next()) {
 					hasUserid = true;
@@ -82,6 +84,7 @@ public class ProcessLoginServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			ro.close();
 		}
 		
 		HttpSession session = request.getSession();

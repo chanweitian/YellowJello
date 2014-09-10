@@ -1,4 +1,4 @@
-<%@page import="db.SQLManager,java.util.ArrayList,java.sql.*;" %>
+<%@page import="db.*,java.util.ArrayList,java.sql.*;" %>
 <%@include file="../protectdhlad.jsp" %>
 
 <!DOCTYPE html>
@@ -63,7 +63,8 @@
     	userid = (String) session.getAttribute("mgmtUserid");
     	session.removeAttribute("mgmtUserid");
     }
-  	ResultSet rs = SQLManager.retrieveRecords("account", "Userid=\'"+userid+"\'");
+  	RetrievedObject ro = SQLManager.retrieveRecords("account", "Userid=\'"+userid+"\'");
+  	ResultSet rs = ro.getResultSet();
     String company = null;
     String email = null;
   	try {
@@ -75,6 +76,7 @@
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
+  	ro.close();
   	%>
 
     <div class="header">Manage company account</div>

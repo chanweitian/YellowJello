@@ -10,7 +10,8 @@ String quest_id = "";
 if (link != null) { %>
 	
 	<% String where_link = "questionnaire_link = \'" + link + "\'";
-	ResultSet rs_link = SQLManager.retrieveRecords("questionnaire_link", where_link);
+	RetrievedObject ro_link = SQLManager.retrieveRecords("questionnaire_link", where_link);
+	ResultSet rs_link = ro_link.getResultSet();
 	while (rs_link.next()) {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
@@ -38,6 +39,7 @@ if (link != null) { %>
 			fromLink = true;
 		}
 	}
+	ro_link.close();
 	
 } else { %>
 	<%@include file="../protectusers.jsp" %>
@@ -224,7 +226,8 @@ if (link != null) { %>
 			
 			String where = "questionnaire_id = \'" + quest_id + "\'";
 			
-			ResultSet site_def_rs = SQLManager.retrieveRecords("site_definition", where);
+			RetrievedObject site_def_ro = SQLManager.retrieveRecords("site_definition", where);
+			ResultSet site_def_rs = site_def_ro.getResultSet();
 			
 			//store all the zones' building names and zone names
 			ArrayList<String> building_zone_names_list = new ArrayList<String>();
@@ -267,6 +270,7 @@ if (link != null) { %>
 					zone_details = zone_details + building_zone_name + "," + activity + "//";
 				}
 			}
+			site_def_ro.close();
 		}
 		
 		//set zone_details as a hidden field to pass to process_master.jsp 

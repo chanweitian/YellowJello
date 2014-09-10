@@ -430,7 +430,7 @@ public class SQLManager {
 	�	tableName � the name of the table
 	�	returns an instance of java.sql.ResultSet
 	*/
-	public static ResultSet retrieveAll(String tableName){
+	public static RetrievedObject retrieveAll(String tableName){
 		
 		Connection conn = null;
         Statement stmt = null;
@@ -447,7 +447,7 @@ public class SQLManager {
         } /* finally {
             ConnectionManager.close(conn, stmt, rs);
         }*/
-        return rs;
+        return new RetrievedObject(conn,stmt,rs);
 		
 	}
 	
@@ -486,7 +486,7 @@ public class SQLManager {
 	�	whereClause � the condition that is to be met for retrieval
 	�	returns an instance of java.sql.ResultSet
 	*/
-	public static ResultSet retrieveRecords(String tableName, String whereClause){
+	public static RetrievedObject retrieveRecords(String tableName, String whereClause){
 		
 		Connection conn = null;
         Statement stmt = null;
@@ -503,7 +503,7 @@ public class SQLManager {
         } /* finally {
             ConnectionManager.close(conn, stmt, rs);
         }*/
-        return rs;
+        return new RetrievedObject(conn,stmt,rs);
 		
 	}
 

@@ -8,7 +8,8 @@
 	String zone_id_office = session.getAttribute("quest_id") + identifier;
 	
 	String where_office = "zone_id = \'" + zone_id_office + "\'";
-	ResultSet rs_office = SQLManager.retrieveRecords("office_form", where_office);
+	RetrievedObject ro_office = SQLManager.retrieveRecords("office_form", where_office);
+	ResultSet rs_office = ro_office.getResultSet();
 	
 	String zone_operationalhrs_mon = "";
 	String zone_operationalhrs_tues = "";
@@ -53,6 +54,7 @@
 		zone_lightcontroltype = rs_office.getString("zone_lightcontroltype");
 		zone_externalglazingtype = rs_office.getString("zone_externalglazingtype");
 	}
+	ro_office.close();
 %>
 <div class="section">
 	<div class="container">

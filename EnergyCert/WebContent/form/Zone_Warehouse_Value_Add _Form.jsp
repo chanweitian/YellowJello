@@ -11,7 +11,8 @@
 	String zone_id_wva = session.getAttribute("quest_id") + identifier;
 	
 	String where_wva = "zone_id = \'" + zone_id_wva + "\'";
-	ResultSet rs_wva = SQLManager.retrieveRecords("warehouse_value_add_form", where_wva);
+	RetrievedObject ro_wva = SQLManager.retrieveRecords("warehouse_value_add_form", where_wva);
+	ResultSet rs_wva = ro_wva.getResultSet();
 	
 	String zone_operationalhrs_mon = "";
 	String zone_operationalhrs_tues = "";
@@ -54,6 +55,7 @@
 		zone_t8_ballasttype = rs_wva.getString("zone_t8_ballasttype");
 		zone_lightcontroltype = rs_wva.getString("zone_lightcontroltype");
 	}
+	ro_wva.close();
 	
 %>
 <div class="section">

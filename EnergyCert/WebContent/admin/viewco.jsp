@@ -1,4 +1,4 @@
-<%@page import="db.SQLManager,java.util.ArrayList,java.sql.*;" %>
+<%@page import="db.*,java.util.ArrayList,java.sql.*;" %>
 <%@include file="../protectdhlad.jsp" %>
 
 <!DOCTYPE html>
@@ -50,7 +50,8 @@
   <body role="document">
   <%@include file="../header.jsp" %>
   
-  	<% ResultSet rs = SQLManager.retrieveAll("account");
+  	<% RetrievedObject ro = SQLManager.retrieveAll("account");
+  	ResultSet rs = ro.getResultSet();
     String deletionFlag = (String) session.getAttribute("deletionFlag");
     session.removeAttribute("deletionFlag");
   	%>
@@ -92,7 +93,8 @@
 	          } catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}%>
+			}
+			ro.close();%>
 	        </tbody>
 	      </table>
       </p>

@@ -1,4 +1,4 @@
-<%@page import="db.SQLManager,java.util.*,java.sql.*;" %>
+<%@page import="db.*,java.util.*,java.sql.*;" %>
 <%@include file="../protectclientad.jsp" %>
 
 <!DOCTYPE html>
@@ -112,7 +112,8 @@
     	session.removeAttribute("manageAcctUserid");
     }
     if (manageAcctType==null) {
-	  	ResultSet rs = SQLManager.retrieveRecords("account", "Userid=\'"+userid+"\'");
+	  	RetrievedObject ro = SQLManager.retrieveRecords("account", "Userid=\'"+userid+"\'");
+	  	ResultSet rs = ro.getResultSet();
 	  	try {
 			while (rs.next()) {
 				manageAcctType = rs.getString("Type");
@@ -123,6 +124,7 @@
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	  	ro.close();
     }
   	%>
 
@@ -169,7 +171,8 @@
 		      <select class="form-control" id="description" name="description" required>
 			    <%
 			    String whereClause = "Company=\'" + session.getAttribute("company") + "\'";
-			    ResultSet rs = SQLManager.retrieveRecords("site", whereClause);
+			    RetrievedObject ro = SQLManager.retrieveRecords("site", whereClause);
+		    	ResultSet rs = ro.getResultSet();
 			    HashMap<String,String> hm = new HashMap<String,String>();
 			    String values = "";
 			    String type = "";
@@ -200,6 +203,7 @@
 			    	// TODO Auto-generated catch block
 			    	e1.printStackTrace();
 			    }
+			    ro.close();
 			    %>
 		      </select>
 		    </div>

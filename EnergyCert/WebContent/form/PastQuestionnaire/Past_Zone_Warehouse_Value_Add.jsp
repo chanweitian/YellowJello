@@ -1,7 +1,8 @@
 <%
 String zone_id_wva = (String) session.getAttribute("zone_id");
 String where_wva = "zone_id = \'" + zone_id_wva + "\'";
-ResultSet rs_wva = SQLManager.retrieveRecords("warehouse_value_add_form", where_wva);
+RetrievedObject ro_wva = SQLManager.retrieveRecords("warehouse_value_add_form", where_wva);
+ResultSet rs_wva = ro_wva.getResultSet();
 while (rs_wva.next()) {
 %>
 <div class="page-header">
@@ -77,4 +78,5 @@ while (rs_wva.next()) {
 </div>
 <%
 }
+ro_wva.close();
 %>

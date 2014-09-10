@@ -116,10 +116,12 @@
 	DecimalFormat df = new DecimalFormat("#.##");
 	
 	if (year1<previousYear) {
-		ResultSet rs0 = SQLManager.retrieveRecords("questionnaire", "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
+		RetrievedObject ro0= SQLManager.retrieveRecords("questionnaire", "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
+		ResultSet rs0 = ro0.getResultSet();
 		while (rs0.next()) {
 			rating = rs0.getInt("energy_rating");
 		}
+		ro0.close();
 	} else {
 		rating = (int)(100 * actualConsumption / benchmark); 
 		
@@ -586,12 +588,12 @@ function getLightingMultiplier(){
 		More energy efficient
 		<!--  ActualConsumption: <%=actualConsumption %> -->
 		 Benchmark: <%=benchmark %><br/>
-		 Heat: <%=heatConsumption %><br/>
-		 Cool: <%=coolConsumption %><br/>
-		 Lighting: <%=lightingConsumption %><br/>
-		 EXT: <%=extLightingConsumption %><br/>
-		 hotWaterConsumption: <%=hotWaterConsumption %><br/>
-		 operationsConsumption: <%=operationsConsumption %><br/>
+		 <!-- Heat: <%=heatConsumption %><br/> -->
+		 <!-- Cool: <%=coolConsumption %><br/> -->
+		 <!-- Lighting: <%=lightingConsumption %><br/> -->
+		 <!-- EXT: <%=extLightingConsumption %><br/> -->
+		 <!-- hotWaterConsumption: <%=hotWaterConsumption %><br/> -->
+		 <!-- operationsConsumption: <%=operationsConsumption %><br/> -->
 		 
 		 
 		<br/>

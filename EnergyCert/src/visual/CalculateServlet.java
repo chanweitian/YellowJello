@@ -20,6 +20,7 @@ import utility.FormulaManager;
 import utility.PeriodManager;
 import utility.WeatherManager;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 /**
@@ -100,7 +101,7 @@ public class CalculateServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-
+	private RetrievedObject ro;
 	private ResultSet rs;
 	private String site_id = "";
 	double actualConsumption = 0.0;
@@ -187,7 +188,8 @@ public class CalculateServlet extends HttpServlet {
 		if (link != null) { 
 			
 			String where_link = "questionnaire_link = \'" + link + "\'";
-			ResultSet rs_link = SQLManager.retrieveRecords("questionnaire_link", where_link);
+			RetrievedObject ro_link = SQLManager.retrieveRecords("questionnaire_link", where_link);
+			ResultSet rs_link = ro_link.getResultSet();
 			
 			boolean empty = true;
 			try {
@@ -207,6 +209,7 @@ public class CalculateServlet extends HttpServlet {
 					}
 				}
 			}
+			ro_link.close();
 
 			
 			
@@ -284,7 +287,8 @@ public class CalculateServlet extends HttpServlet {
 			fetchQuestionnareData(questionnaire_id);
 			fetchSiteData();
 			String where = "questionnaire_id = \'" + questionnaire_id + "\'";
-			ResultSet site_def_rs = SQLManager.retrieveRecords("site_definition", where);
+			RetrievedObject site_def_ro = SQLManager.retrieveRecords("site_definition", where);
+			ResultSet site_def_rs = site_def_ro.getResultSet();
 			String activity = "";
 			while (site_def_rs.next()) {
 				activity = site_def_rs.getString("site_def_activity");
@@ -300,6 +304,7 @@ public class CalculateServlet extends HttpServlet {
             	}
             	
 			}
+			site_def_ro.close();
 			//calculateTotalConsumption("offices", questionnaire_id);
 			//calculateTotalConsumption("wh_ground_to_roof", questionnaire_id);
 			//calculateTotalConsumption("wh_mezzanine", questionnaire_id);
@@ -379,7 +384,7 @@ public class CalculateServlet extends HttpServlet {
 		} finally {
 			try {
 				if (rs != null) {
-					rs.close();
+					ro.close();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -391,18 +396,19 @@ public class CalculateServlet extends HttpServlet {
 	
 	private String getEmissionFactor(String country, String type) throws SQLException{
 		
-		rs = SQLManager.retrieveRecords("emission", "country LIKE \'%"
+		ro = SQLManager.retrieveRecords("emission", "country LIKE \'%"
 				+ country + "%\' AND type=\'"+type+"\'");
+		rs = ro.getResultSet();
 		
 		if (!rs.next()) {
-			if(rs != null) rs.close();
+			if(rs != null) ro.close();
 			return "0";
 			
 		} 
 
 		String factor =  rs.getDouble("gCO2")+"";
 		
-		if(rs != null) rs.close();
+		ro.close();
 		
 		return factor;
 		
@@ -411,18 +417,19 @@ public class CalculateServlet extends HttpServlet {
 	
 	private String getElectricalUsage(int consumptionYear) throws SQLException{
 		
-		rs = SQLManager.retrieveRecords("questionnaire", "site_id=\'"
+		ro = SQLManager.retrieveRecords("questionnaire", "site_id=\'"
 				+ site_id + "\' AND year=\'"+consumptionYear+"\'");
+		rs = ro.getResultSet();
 		
 		if (!rs.next()) {
-			if(rs != null) rs.close();
+			if(rs != null) ro.close();
 			return "0";
 			
 		} 
 
 		String usage =  rs.getString("usage_electricity_use");
 		
-		if(rs != null) rs.close();
+		ro.close();
 		
 		return usage;
 		
@@ -430,11 +437,12 @@ public class CalculateServlet extends HttpServlet {
 	
 	private String getNatGasUsage(int year) throws SQLException{
 		
-		rs = SQLManager.retrieveRecords("questionnaire", "site_id=\'"
+		ro = SQLManager.retrieveRecords("questionnaire", "site_id=\'"
 				+ site_id + "\' AND year=\'"+year+"\'");
+		rs = ro.getResultSet();
 		
 		if (!rs.next()) {
-			if(rs != null) rs.close();
+			if(rs != null) ro.close();
 			return "0";
 			
 		} 
@@ -443,7 +451,7 @@ public class CalculateServlet extends HttpServlet {
 		
 		System.out.println("Year Nat Gas:"+year +":"+usage);
 		
-		if(rs != null) rs.close();
+		ro.close();
 		
 		return usage;
 		
@@ -454,8 +462,9 @@ public class CalculateServlet extends HttpServlet {
 			throws SQLException {
 
 		
-		rs = SQLManager.retrieveRecords("questionnaire", "Questionnaire_ID=\'"
+		ro = SQLManager.retrieveRecords("questionnaire", "Questionnaire_ID=\'"
 				+ questionnaire_id + "\'");
+		rs = ro.getResultSet();
 
 		if (!rs.next()) {
 			System.out.println("Qustionnare_id NOT FOUND");
@@ -477,13 +486,14 @@ public class CalculateServlet extends HttpServlet {
 			
 		}
 		
-		if(rs != null) rs.close();
+		ro.close();
 
 	}
 
 	private void fetchSiteData() throws SQLException {
 
-		rs = SQLManager.retrieveRecords("site", "site_id=\'" + site_id + "\'");
+		ro = SQLManager.retrieveRecords("site", "site_id=\'" + site_id + "\'");
+		rs = ro.getResultSet();
 
 		if (!rs.next()) {
 			System.out.println("site_id NOT FOUND: " + site_id);
@@ -512,7 +522,7 @@ public class CalculateServlet extends HttpServlet {
 
 		}
 
-		if(rs != null) rs.close();
+		ro.close();
 	}
 
 
@@ -542,9 +552,10 @@ public class CalculateServlet extends HttpServlet {
 		}
 
 		
-		rs = SQLManager.retrieveRecords(tableName, "questionnaire_id=\'"
+		ro = SQLManager.retrieveRecords(tableName, "questionnaire_id=\'"
 				+ questionnaire_id + "\'");
-
+		rs = ro.getResultSet();
+		
 		if (!rs.next()) {
 			System.out.println("questionare_id is NOT FOUND: "
 					+ questionnaire_id);
@@ -688,7 +699,7 @@ System.out.println("Hello "+area);
 		}
 		
 		
-			
+		ro.close();
 
 	}
 	

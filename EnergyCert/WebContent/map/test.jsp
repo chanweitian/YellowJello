@@ -21,7 +21,7 @@ xmlhttp.onreadystatechange=function()
 		  var arr = values[x].split(",");
 		  siteArray[x] = arr;
 	  }
-	  document.write(x);
+	  document.write(siteArray);
     }
   }
 xmlhttp.open("GET","getsites.jsp?company="+"China Company",true);

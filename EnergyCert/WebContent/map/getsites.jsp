@@ -1,7 +1,8 @@
 <%@page import="db.*,java.sql.*" %>
 <%
 String company = request.getParameter("company");
-ResultSet rs = SQLManager.retrieveRecords("site s, questionnaire q", "s.Site_ID = q.Site_ID and company = \'" + company + "\'");
+RetrievedObject ro = SQLManager.retrieveRecords("site s, questionnaire q", "s.Site_ID = q.Site_ID and company = \'" + company + "\'");
+ResultSet rs = ro.getResultSet();
 String toReturn = "";
 try {
 	while (rs.next()) {
@@ -13,5 +14,6 @@ try {
 } catch (SQLException e) {
 	e.printStackTrace();
 }
+ro.close();
 %>
 <%=toReturn.substring(0,toReturn.length()-1)%>

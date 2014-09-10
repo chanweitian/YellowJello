@@ -2,7 +2,8 @@
 quest_id = (String) session.getAttribute("quest_id");
 
 String where_info = "questionnaire_id = \'" + quest_id + "\'";
-ResultSet rs = SQLManager.retrieveRecords("questionnaire", where_info);
+RetrievedObject ro = SQLManager.retrieveRecords("questionnaire", where_info);
+ResultSet rs = ro.getResultSet();
 
 String site_info_reference = "";
 String site_info_business_unit = "";
@@ -123,14 +124,17 @@ while (rs.next()) {
 	} else {
 		where_info = "Site_ID=\'" + rs.getString("site_id") + "\'";
 	}
-	rs = SQLManager.retrieveRecords("site", where_info);
-	rs.next();
-	site_info_name = rs.getString("site_info_name");
-	site_info_address_street = rs.getString("site_info_address_street");
-	site_info_address_city = rs.getString("site_info_address_city");
-	site_info_address_postal = rs.getString("site_info_address_postal");
-	site_info_address_country = rs.getString("site_info_address_country");
+	RetrievedObject ro2 = SQLManager.retrieveRecords("site", where_info);
+	ResultSet rs2 = ro2.getResultSet();
+	rs2.next();
+	site_info_name = rs2.getString("site_info_name");
+	site_info_address_street = rs2.getString("site_info_address_street");
+	site_info_address_city = rs2.getString("site_info_address_city");
+	site_info_address_postal = rs2.getString("site_info_address_postal");
+	site_info_address_country = rs2.getString("site_info_address_country");
+	ro2.close();
 }
+ro.close();
 %>
 		<div class="container">
 		<div class="row">

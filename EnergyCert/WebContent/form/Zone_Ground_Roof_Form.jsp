@@ -8,7 +8,8 @@
 	String zone_id_gtr = session.getAttribute("quest_id") + identifier;
 	
 	String where_gtr = "zone_id = \'" + zone_id_gtr + "\'";
-	ResultSet rs_gtr = SQLManager.retrieveRecords("ground_to_roof_form", where_gtr);
+	RetrievedObject ro_gtr = SQLManager.retrieveRecords("ground_to_roof_form", where_gtr);
+	ResultSet rs_gtr = ro_gtr.getResultSet();
 	
 	String zone_operationalhrs_mon = "";
 	String zone_operationalhrs_tues = "";
@@ -67,6 +68,7 @@
 		zone_ismanuallyturnedoff = rs_gtr.getString("zone_ismanuallyturnedoff");
 		zone_hasradiantheaters = rs_gtr.getString("zone_hasradiantheaters");
 	}
+	ro_gtr.close();
 %>
 <div class="section">
 	<div class="container">

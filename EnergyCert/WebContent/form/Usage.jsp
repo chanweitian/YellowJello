@@ -1,6 +1,7 @@
 <%
 String where_usage = "questionnaire_id = \'" + quest_id + "\'";
-ResultSet rs_usage = SQLManager.retrieveRecords("questionnaire", where_usage);
+RetrievedObject ro_usage = SQLManager.retrieveRecords("questionnaire", where_usage);
+ResultSet rs_usage = ro_usage.getResultSet();
 
 String usage_electricity_use = "";
 String usage_electricity_use_source = "";
@@ -53,6 +54,7 @@ while (rs_usage.next()) {
 	usage_district_cooling_use_source = rs_usage.getString("usage_district_cooling_use_source");
 	usage_district_cooling_cost = rs_usage.getString("usage_district_cooling_cost");
 }
+ro_usage.close();
 %>
 <div class="section">
 	<div class="container">

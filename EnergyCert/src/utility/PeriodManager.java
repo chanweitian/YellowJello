@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 public class PeriodManager {
@@ -15,7 +16,8 @@ private static HashMap<String,String> periodHM = new HashMap<String,String>();
 	
 	private static void pullPeriods() {
 		periodHM.clear();
-		ResultSet rs = SQLManager.retrieveAll("period");
+		RetrievedObject ro = SQLManager.retrieveAll("period");
+		ResultSet rs = ro.getResultSet();
 	  	try {
 			while (rs.next()) { 
 				periodHM.put(rs.getString("Company"),rs.getString("Month"));
@@ -24,6 +26,7 @@ private static HashMap<String,String> periodHM = new HashMap<String,String>();
 	  	} catch(SQLException e) {
 	  		e.printStackTrace();
 	  	}
+	  	ro.close();
 	}
 	
 	public static String getMonth(String company) {
