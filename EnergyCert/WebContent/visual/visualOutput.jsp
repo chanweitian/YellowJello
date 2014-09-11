@@ -586,11 +586,11 @@ function getLightingMultiplier(){
 	<div id="Eff_Rating">
 		<h2>Energy Efficiency Rating (<%= year1 %>)</h2>
 		More energy efficient
-		<!--  ActualConsumption: <%=actualConsumption %> -->
+		ActualConsumption: <%=actualConsumption %>
 		 Benchmark: <%=benchmark %><br/>
 		 <!-- Heat: <%=heatConsumption %><br/> -->
-		 <!-- Cool: <%=coolConsumption %><br/> -->
-		 <!-- Lighting: <%=lightingConsumption %><br/> -->
+		 <!-- Cool: <%=coolConsumption %><br/> --> 
+		 <!-- Lighting: <%=lightingConsumption %><br/> --> 
 		 <!-- EXT: <%=extLightingConsumption %><br/> -->
 		 <!-- hotWaterConsumption: <%=hotWaterConsumption %><br/> -->
 		 <!-- operationsConsumption: <%=operationsConsumption %><br/> -->

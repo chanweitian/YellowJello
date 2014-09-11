@@ -64,7 +64,7 @@ public class EmailServlet extends HttpServlet {
  
 			Transport.send(message);
  
-			String site_def_values = "\'" + quest_id + "\',\'" + uuid + "\',\'\'";
+			String site_def_values = "\'" + quest_id + "\',\'" + uuid + "\',\'\',\'\'";
 			
 			System.out.println(site_def_values);
 			

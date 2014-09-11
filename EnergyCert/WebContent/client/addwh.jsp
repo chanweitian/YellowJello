@@ -195,8 +195,14 @@
 		     
 		     <% 
 		      try {
-		    	String urlString = request.getRequestURL().toString();
-		    	urlString = urlString.substring(0,urlString.length()-9)+"getcity.jsp?q="+countryCode;
+		    	  String serverName = request.getServerName();
+			    	String urlString;
+			    	if (serverName.equals("apps")) {
+			    		urlString = "http://apps.greentransformationlab.com/EnergyCert/admin/addwh.jsp";
+			    	} else {
+			    		urlString = request.getRequestURL().toString();
+			    	}
+		    	urlString = urlString.replace("addwh.jsp","getcity.jsp?q="+countryCode);
 			    URL url = new URL(urlString);
 			    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 			    String strTemp = ""; %>

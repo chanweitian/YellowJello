@@ -180,8 +180,14 @@
 		    <div class="col-sm-4">
 		    <% 
 		      try {
-		    	String urlString = request.getRequestURL().toString();
-		    	urlString = urlString.substring(0,urlString.length()-14)+"getcity.jsp?q="+countryCode;
+		    	String serverName = request.getServerName();
+		    	String urlString;
+		    	if (serverName.equals("apps")) {
+		    		urlString = "http://apps.greentransformationlab.com/EnergyCert/admin/addweather.jsp";
+		    	} else {
+		    		urlString = request.getRequestURL().toString();
+		    	}
+		    	urlString = urlString.replace("addweather.jsp","getcity.jsp?q="+countryCode);
 			    URL url = new URL(urlString);
 			    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 			    String strTemp = ""; %>
@@ -190,6 +196,7 @@
 			    	strTemp = br.readLine();
 			    	String[] cityArr = strTemp.split(";");
 			    	for (String s: cityArr) {
+			    		
 			    		if (WeatherManager.getTemp(s, "Jan")==9999) {
 				    		if (s.equals(addWeatherCity)) { %>
 			    				<option value="<%=s %>" selected><%=s %></option>

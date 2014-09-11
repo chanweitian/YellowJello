@@ -1,4 +1,4 @@
-<%@page import="java.net.*,java.io.*,utility.WeatherManager" %>
+<%@page import="java.net.*,java.io.*,utility.WeatherManager,java.util.*" %>
 <% String countryCode = request.getParameter("q");
 String[] arr0 = countryCode.split(";");
 String toReturn = "";
@@ -20,8 +20,12 @@ try {
     			strTemp = "";
     		}
     		String[] arr = temp.split(":");
-    		if (WeatherManager.getTemp(arr[1], "Jan")==9999) {
-        		toReturn += arr[1] + ";";
+    		String city = arr[1];
+    		Properties p = new Properties();
+    		p.load(new StringReader("key="+city));
+    		city = p.getProperty("key");
+    		if (WeatherManager.getTemp(city, "Jan")==9999) {
+        		toReturn += city + ";";
     		}
     	} %>
     <% }

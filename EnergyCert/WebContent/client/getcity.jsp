@@ -1,4 +1,4 @@
-<%@page import="java.net.*,java.io.*" %>
+<%@page import="java.net.*,java.io.*,java.util.*" %>
 <% String countryCode = request.getParameter("q");
 String[] arr0 = countryCode.split(";");
 String toReturn = "";
@@ -20,7 +20,11 @@ try {
     			strTemp = "";
     		}
     		String[] arr = temp.split(":");
-        	toReturn += arr[1] + ";";
+    		String city = arr[1];
+    		Properties p = new Properties();
+    		p.load(new StringReader("key="+city));
+    		city = p.getProperty("key");
+        	toReturn += city + ";";
     	} %>
     <% }
 } catch (Exception ex) {
