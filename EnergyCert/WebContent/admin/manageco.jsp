@@ -84,11 +84,30 @@
 
       <%-- <h2 class="heading">Manage company account</h2><p>--%>
     
-      <form action="processdeletion" method="post">
-      		<input type="hidden" name="userid" value="<%=userid %>">
-      		<button class="btn btn-danger btn-sm" type="submit" style="margin-left:350px">Delete account</button></p>
-      </form>
+      	<button class="btn btn-danger btn-sm" style="margin-left:350px" data-toggle="modal" data-target="#deleteModal">Delete account</button></p>
       
+      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="left: 0px">
+			<div class="modal-content">
+				<div class="modal-header">
+		 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Delete account</h4>
+				</div>
+
+				<div class="modal-body">
+					<form action="processdeletion" method="post">
+						<center>Are you sure you want to delete the account?<br /><br />
+			      		<input type="hidden" name="userid" value="<%=userid %>">
+			      		<button class="btn" type="submit">Yes</button>
+			      		<button class="btn" data-dismiss="modal">No</button>
+			      		</center>
+			      </form>
+				</div>
+			</div>
+		</div>
+	</div> 
+	
       <p>
       <form class="form-horizontal" role="form" method="post" action="processmgmt">
       	<input type="hidden" name="userid" value="<%=userid %>">

@@ -97,7 +97,11 @@
 		      <button type="submit" class="btn btn-default">Save changes</button></p>
 		      <% if (changeMsg!=null) { %>
 		       	<font color="maroon"><label><%=changeMsg %></font></label>
-		       	<% } %> 
+		       	<% if (changeMsg.equals("Password changed successfully")) { %>
+		       		<script>alert("<%=changeMsg%>")</script>
+		       	<% }
+		      }
+		       	%> 
 		    </div>
 		  </div>
 		 </div>

@@ -192,11 +192,16 @@
 			    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 			    String strTemp = ""; %>
 			    <select class="form-control" id="city" name="city" required>
-			    <% while (null != br.readLine()) {
+			    <%
+			    if (addWeatherMsg!=null) {
+	    			if (addWeatherMsg.equals("Weather added successfully")) { %>
+    				<option value="<%=addWeatherCity %>" selected><%=addWeatherCity %></option>
+    			<% }
+	    		}
+			    while (null != br.readLine()) {
 			    	strTemp = br.readLine();
 			    	String[] cityArr = strTemp.split(";");
 			    	for (String s: cityArr) {
-			    		
 			    		if (WeatherManager.getTemp(s, "Jan")==9999) {
 				    		if (s.equals(addWeatherCity)) { %>
 			    				<option value="<%=s %>" selected><%=s %></option>

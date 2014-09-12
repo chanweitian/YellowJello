@@ -115,18 +115,24 @@
 
 	DecimalFormat df = new DecimalFormat("#.##");
 	
+	double emission_electrical_use;
+	double emission_nat_gas_use;
+			
 	if (year1<previousYear) {
 		RetrievedObject ro0= SQLManager.retrieveRecords("questionnaire", "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
 		ResultSet rs0 = ro0.getResultSet();
 		while (rs0.next()) {
 			rating = rs0.getInt("energy_rating");
+			emission_electrical_use = rs0.getDouble("emission_electrical_use");
+			emission_nat_gas_use = rs0.getDouble("emission_nat_gas_use");
 		}
 		ro0.close();
 	} else {
 		rating = (int)(100 * actualConsumption / benchmark); 
+		SQLManager.updateRecords("questionnaire", "energy_rating="+rating, "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
 		
-		double emission_electrical_use = year1_electrical_use * emission_factor_electrical_use;
-		double emission_nat_gas_use = year1_nat_gas_use * emission_factor_nat_gas_use;
+		emission_electrical_use = year1_electrical_use * emission_factor_electrical_use;
+		emission_nat_gas_use = year1_nat_gas_use * emission_factor_nat_gas_use;
 		
 		SQLManager.updateRecords("questionnaire", "emission_electrical_use="+emission_electrical_use, "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
 		SQLManager.updateRecords("questionnaire", "emission_nat_gas_use="+emission_nat_gas_use, "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
