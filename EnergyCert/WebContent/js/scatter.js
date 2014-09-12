@@ -12,11 +12,10 @@
 		this.init();
 		
 	}
-		Scatter.prototype.init = function() {
-			console.log(this.element);
-			width = options.width || 960, 
-			height = options.height || 400, 
-			oMargin = options.margin;
+		Scatter.prototype.init = function(){
+			width = this.options.width || 720, 
+			height = this.options.height || 400, 
+			oMargin = this.options.margin;
 			
 			//default margin
 			var margin = {
@@ -34,10 +33,11 @@
 			this.height = height - margin.top - margin.bottom;
 			
 			//update the amended width & height within options
-			options.width = width, 
-			options.height = height,
-			options.margin = margin;
-			options.color = d3.scale.category10();
+			this.options.width = width, 
+			this.options.height = height,
+			this.options.margin = margin;
+			console.log(this.options.color);
+			this.options.color = d3.scale.category10();
 			
 			this.x = d3.scale.linear()
 		    	.range([0, width]);
@@ -68,11 +68,15 @@
 			svg = this.svg,
 			xAxis = this.xAxis,
 			yAxis = this.yAxis,
-			yValue = options.yValue || '', 
-			xValue = options.xValue || '',
-			color = options.color,
-			series = options.series;
+			yValue = this.options.yValue || '', 
+			xValue = this.options.xValue || '',
+			color = this.options.color,
+			series = this.options.series;
 			this.data = data;
+			
+			console.log(this.options.color);
+			var self = this;
+			console.log(self.options.color);
 			
 			x.domain(d3.extent(data, function(d) { return d[xValue]; })).nice();
 			y.domain(d3.extent(data, function(d) { return d[yValue]; })).nice();
@@ -94,7 +98,7 @@
 		      .attr("r", 3.5)
 		      .attr("cx", function(d) { return x(d[xValue]); })
 		      .attr("cy", function(d) { return y(d[yValue]); })
-		      .style("fill", function(d) { return options.color(d[series]); })
+		      .style("fill", function(d) { return self.options.color(d[series]); })
 		      .on("mouseover", function(d) {
 		    	  this.tooltip.transition()
 	               .duration(200)
@@ -121,19 +125,19 @@
 		
 		Scatter.prototype.legend = function() {
 			var legend = svg.selectAll(".legend")
-		      .data(options.color.domain())
+		      .data(this.options.color.domain())
 		      .enter().append("g")
 		      .attr("class", "legend")
 		      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 		
 			legend.append("rect")
-		      .attr("x", options.width - 18)
+		      .attr("x", this.options.width - 18)
 		      .attr("width", 18)
 		      .attr("height", 18)
-		      .style("fill", options.color);
+		      .style("fill", this.options.color);
 		
 			legend.append("text")
-		      .attr("x", options.width - 24)
+		      .attr("x", this.options.width - 24)
 		      .attr("y", 9)
 		      .attr("dy", ".35em")
 		      .style("text-anchor", "end")
@@ -143,8 +147,8 @@
 		Scatter.prototype.title = function(titleText) {
 			svg.append("text")
 			.attr("class", "chartTitle")
-	        .attr("x", (options.width / 2))             
-	        .attr("y", 0 - (options.margin.top / 2))
+	        .attr("x", (this.options.width / 2))             
+	        .attr("y", 0 - (this.options.margin.top / 2))
 	        .attr("text-anchor", "middle")
 	        .text(titleText);
 		};
@@ -152,8 +156,8 @@
 		Scatter.prototype.xlabel = function(xLabel) {
 			svg.append("text")
 			  .attr("class", "axisLabel")
-			  .attr("x", options.width/2)
-			  .attr("y", (options.height + 35))
+			  .attr("x", this.options.width/2)
+			  .attr("y", (this.options.height + 35))
 			  .text(xLabel);
 		};
 		
@@ -161,7 +165,7 @@
 			svg.append("text")
 		      .attr("class", "axisLabel")
 		      .attr("transform", "rotate(-90)")
-		      .attr("dy", 15 - options.margin.left)
-		      .attr("dx", -(options.height - options.margin.top) /2)
+		      .attr("dy", 15 - this.options.margin.left)
+		      .attr("dx", -(this.options.height - this.options.margin.top) /2)
 		      .text(yLabel);
 		};
