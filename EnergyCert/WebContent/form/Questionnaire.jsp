@@ -545,7 +545,7 @@ if (link != null) { %>
 							<div class="col-lg-6">
 								<div class="checkbox">
 									<label><input type="checkbox" name="sections_assigned" value="a" />Site Information</label><br>
-									<label><input type="checkbox" name="sections_assigned" value="b" />Site Usage</label><br>
+									<label><input type="checkbox" name="sections_assigned" value="b" />Usage</label><br>
 									<% 
 									for (int i = 0; i < zone_list.size(); i++) {
 										String[] this_zone = zone_list.get(i).split(",");
@@ -570,7 +570,7 @@ if (link != null) { %>
 					    </div>
 					    <div class="form-group">
 					        <div class="col-md-5 col-md-offset-5">
-					        	<div id="result"></div>
+					        	<font color="maroon"><div id="result"></div></font>
 					        </div>
 					    </div>
 					</form>
