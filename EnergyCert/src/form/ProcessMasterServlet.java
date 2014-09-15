@@ -293,7 +293,7 @@ public class ProcessMasterServlet extends HttpServlet {
 				ampere_hours_string = ampere_hours_string.substring(0,ampere_hours_string.length()-2);
 			}
 			values = values + "ampere_hours = \'" + ampere_hours_string + "\',";
-		
+			
 			//Convert voltage[] values into a string delimited by *
 			String[] voltage_array = request.getParameterValues("voltage[]");
 			String voltage_string = "";

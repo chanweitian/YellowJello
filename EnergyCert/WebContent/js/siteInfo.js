@@ -21,21 +21,21 @@ $(document).ready(function() {
 
 	    var $templateEle = $('#elect_handling_equipment_row'),
 	        $row         = $templateEle.clone().removeAttr('id').insertBefore($templateEle).removeClass('hide'),
-	        $el1         = $row.find('input').eq(0).attr('name', 'ampere_hours[]');
-	    	$el2         = $row.find('input').eq(1).attr('name', 'voltage[]');
-	    	$el3         = $row.find('input').eq(2).attr('name', 'total_charges[]');
-	    	$el4         = $row.find('input').eq(3).attr('name', 'total_charge_duration[]');
+	        $el1         = $row.find('input').eq(0).attr('id','integer').attr('name', 'ampere_hours[]').attr('data-bv-field','integer');
+	    	$el2         = $row.find('input').eq(1).attr('id','integer').attr('name', 'voltage[]').attr('data-bv-field','integer');
+	    	$el3         = $row.find('input').eq(2).attr('id','integer').attr('name', 'total_charges[]').attr('data-bv-field','integer');
+	    	$el4         = $row.find('input').eq(3).attr('id','integer').attr('name', 'total_charge_duration[]').attr('data-bv-field','integer');
 	    
-	    $('#questionnaire').bootstrapValidator('addField', $el1);
-	    $('#questionnaire').bootstrapValidator('addField', $el2);
-	    $('#questionnaire').bootstrapValidator('addField', $el3);
-	    $('#questionnaire').bootstrapValidator('addField', $el4);
+	    $('#master_form').bootstrapValidator('addField', $el1);
+	    $('#master_form').bootstrapValidator('addField', $el2);
+	    $('#master_form').bootstrapValidator('addField', $el3);
+	    $('#master_form').bootstrapValidator('addField', $el4);
 	
 	    $row.on('click', '.remove_EHE_Button', function(e) {
-	        $('#questionnaire').bootstrapValidator('removeField', $el1);
-	        $('#questionnaire').bootstrapValidator('removeField', $el2);
-	        $('#questionnaire').bootstrapValidator('removeField', $el3);
-	        $('#questionnaire').bootstrapValidator('removeField', $el4);
+	        $('#master_form').bootstrapValidator('removeField', $el1);
+	        $('#master_form').bootstrapValidator('removeField', $el2);
+	        $('#master_form').bootstrapValidator('removeField', $el3);
+	        $('#master_form').bootstrapValidator('removeField', $el4);
 	        $row.remove();
 	    });
 	});
@@ -49,16 +49,16 @@ $(document).ready(function() {
 	    	$el3         = $row.find('input').eq(2).attr('name', 'site_info_initiatives_done_zone[]');
 	    	$el4         = $row.find('input').eq(3).attr('name', 'site_info_initiatives_done_impact[]');
 	    
-	    $('#questionnaire').bootstrapValidator('addField', $el1);
-	    $('#questionnaire').bootstrapValidator('addField', $el2);
-	    $('#questionnaire').bootstrapValidator('addField', $el3);
-	    $('#questionnaire').bootstrapValidator('addField', $el4);
+	    $('#master_form').bootstrapValidator('addField', $el1);
+	    $('#master_form').bootstrapValidator('addField', $el2);
+	    $('#master_form').bootstrapValidator('addField', $el3);
+	    $('#master_form').bootstrapValidator('addField', $el4);
 	
 	    $row.on('click', '.remove_ERI_done_Button', function(e) {
-	        $('#questionnaire').bootstrapValidator('removeField', $el1);
-	        $('#questionnaire').bootstrapValidator('removeField', $el2);
-	        $('#questionnaire').bootstrapValidator('removeField', $el3);
-	        $('#questionnaire').bootstrapValidator('removeField', $el4);
+	        $('#master_form').bootstrapValidator('removeField', $el1);
+	        $('#master_form').bootstrapValidator('removeField', $el2);
+	        $('#master_form').bootstrapValidator('removeField', $el3);
+	        $('#master_form').bootstrapValidator('removeField', $el4);
 	        $row.remove();
 	    });
 	});
@@ -72,16 +72,16 @@ $(document).ready(function() {
 	    	$el3         = $row.find('input').eq(2).attr('name', 'site_info_initiatives_planned_zone[]');
 	    	$el4         = $row.find('input').eq(3).attr('name', 'site_info_initiatives_planned_impact[]');
 	    
-	    $('#questionnaire').bootstrapValidator('addField', $el1);
-	    $('#questionnaire').bootstrapValidator('addField', $el2);
-	    $('#questionnaire').bootstrapValidator('addField', $el3);
-	    $('#questionnaire').bootstrapValidator('addField', $el4);
+	    $('#master_form').bootstrapValidator('addField', $el1);
+	    $('#master_form').bootstrapValidator('addField', $el2);
+	    $('#master_form').bootstrapValidator('addField', $el3);
+	    $('#master_form').bootstrapValidator('addField', $el4);
 	
 	    $row.on('click', '.remove_ERI_planned_Button', function(e) {
-	        $('#questionnaire').bootstrapValidator('removeField', $el1);
-	        $('#questionnaire').bootstrapValidator('removeField', $el2);
-	        $('#questionnaire').bootstrapValidator('removeField', $el3);
-	        $('#questionnaire').bootstrapValidator('removeField', $el4);
+	        $('#master_form').bootstrapValidator('removeField', $el1);
+	        $('#master_form').bootstrapValidator('removeField', $el2);
+	        $('#master_form').bootstrapValidator('removeField', $el3);
+	        $('#master_form').bootstrapValidator('removeField', $el4);
 	        $row.remove();
 	    });
 	});

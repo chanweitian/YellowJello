@@ -380,6 +380,17 @@ $(document).ready(function() {
                         message: 'This is not a valid date'
                     }
                 }
+            },
+            integer: {
+            	selector: '[id="integer"]',
+                validators: {
+                	notEmpty: {
+                        message: 'This field is required'
+                    },
+                    integer: {
+                        message: 'Enter an integer'
+                    }
+                }
             }
             
         }

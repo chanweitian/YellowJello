@@ -282,7 +282,7 @@
 					</div>
 					<div class="past_quest_table">	
 						<div class="col1">How often is the main office heating system serviced?</div>
-						<div class="col2"><%=past_quest_rs.getString("site_info_serviced_heating_system")%>&nbsp;&nbsp;m</div>
+						<div class="col2"><%=past_quest_rs.getString("site_info_serviced_heating_system")%>&nbsp;&nbsp;</div>
 						<div class="col3"></div>
 						<div class="col4">What is the estimated length of uninsulated pipes in the boiler room?</div>
 						<div class="col5"><%=past_quest_rs.getString("site_info_length_uninsulated_pipes")%></div>

@@ -483,57 +483,69 @@ ro.close();
 									
 									<hr>
 									
-									<%-- INCOMPLETE --%>
 									<h5>Electric Handling Equipment</h5>
 									<div id="elect_handling_equipment">
 								
 										<%-- Headings in table --%>
 										<div class="EHE_headings" style="display:inline-flex;width:100%;">
-										<div class="form-group" style="padding-right:2em;width:23%;">
+										<div class="form-group" style="padding-right:2em;width:24.5%;">
 											<div class="col-lg-12">
-												<label>Ampere-hours (Ah)</label>
+												<label>Ampere-hours (Ah) <font color="red">*</font></label>
 											</div>
 										</div>
 										<div class="form-group" style="width:24%;">
 											<div class="col-lg-12">
-												<label>Voltage (V)</label>
+												<label>Voltage (V) <font color="red">*</font></label>
 											</div>
 										</div>
-										<div class="form-group" style="width:27%;">
+										<div class="form-group" style="width:28%;">
 											<div class="col-lg-12">
-												<label>Total number of charges <br> per week for all batteries <br> of this type</label>
+												<label>Total number of charges <br> per week for all batteries <br> of this type <font color="red">*</font></label>
 											</div>
 										</div>
 										<div class="form-group" style="width:25%;">
 												<div class="col-lg-12">
-													<label>Typical charge duration (hours)</label>
+													<label>Typical charge duration (hours) <font color="red">*</font></label>
 												</div>
 											</div>
 										</div>
-						
+										
+										<%
+										String[] ampere_hours_array = {""};
+										String[] voltage_array = {""};
+										String[] total_charges_array = {""};
+										String[] total_charge_duration_array = {""};
+										if (ampere_hours.length() != 0) {
+											ampere_hours_array = ampere_hours.split("\\*");
+											voltage_array = voltage.split("\\*");
+											total_charges_array = total_charges.split("\\*");
+											total_charge_duration_array = total_charge_duration.split("\\*");
+										}
+										%>
+																				
 										<%-- 1st row of EHE in table --%>
 										<div class="elect_handling_equipment" style="display:inline-flex;width:100%;">
 											<div class="form-group" style="padding-right:2em;">
 											<div class="col-lg-12">
-												<input name="ampere_hours[]" type="text"  placeholder="Ah" class="form-control" style="width: 160px;"/>
+												<input name="ampere_hours[]" type="text" id="integer" value="<%=ampere_hours_array[0]%>" class="form-control" style="width: 160px;"/>
 											</div>	
 											</div>
 							               
 											<div class="form-group" style="padding-right:2em;">
 											<div class="col-lg-12">
-												<input name="voltage[]" placeholder="Voltage" type="text"  class="form-control" style="width: 160px;"/>
+												<input name="voltage[]" type="text" id="integer"  value="<%=voltage_array[0]%>" class="form-control" style="width: 160px;"/>
 							               	</div>
 							               	</div>
 							               
 							               	<div class="form-group" style="padding-right:2em;">
 											<div class="col-lg-12">
-												<input name="total_charges[]" type="text"  placeholder="Total num of charges" class="form-control" style="width: 200px;"/>
+												<input name="total_charges[]" type="text" id="integer"  value="<%=total_charges_array[0]%>" class="form-control" style="width: 200px;"/>
 											</div>
 											</div>
 							
 											<div class="form-group" style="padding-right:2em;">
 											<div class="col-lg-12">
-												<input name="total_charge_duration[]" type="text"  placeholder="Total duration" class="form-control" style="width: 180px;"/>
+												<input name="total_charge_duration[]" type="text" id="integer" value="<%=total_charge_duration_array[0]%>" class="form-control" style="width: 180px;"/>
 											</div>	
 											</div>
 							
@@ -543,30 +555,72 @@ ro.close();
 							                </div>
 											</div>
 										</div>
+										
+										<% 
+										if (fromEdit != null || fromLink == true) { 
+											if (ampere_hours_array.length > 1) {
+												for (int i = 1; i < ampere_hours_array.length; i++) {
+										%>
+												<div class="elect_handling_equipment" style="display:inline-flex;width:100%;">
+													<div class="form-group" style="padding-right:2em;">
+													<div class="col-lg-12">
+														<input name="ampere_hours[]" type="text" id="integer" value="<%=ampere_hours_array[i]%>" class="form-control" style="width: 160px;"/>
+													</div>	
+													</div>
+									               
+													<div class="form-group" style="padding-right:2em;">
+													<div class="col-lg-12">
+														<input name="voltage[]" type="text" id="integer"  value="<%=voltage_array[i]%>" class="form-control" style="width: 160px;"/>
+									               	</div>
+									               	</div>
+									               
+									               	<div class="form-group" style="padding-right:2em;">
+													<div class="col-lg-12">
+														<input name="total_charges[]" type="text" id="integer"  value="<%=total_charges_array[i]%>" class="form-control" style="width: 200px;"/>
+													</div>
+													</div>
+									
+													<div class="form-group" style="padding-right:2em;">
+													<div class="col-lg-12">
+														<input name="total_charge_duration[]" type="text" id="integer" value="<%=total_charge_duration_array[i]%>" class="form-control" style="width: 180px;"/>
+													</div>	
+													</div>
+									
+									              	<div class="form-group" style="padding-right:2em;">
+									              	<div class="col-lg-4">
+									                       <button type="button" class="btn btn-default btn-sm remove_EHE_Button" id="remove_EHE_Button" style="width:70px;">Remove</button>
+									                </div>
+													</div>
+												</div>										
+										<% 
+												}
+											}
+										}
+										%>
 						             
 						             	<%-- Hidden row of zone to be used for cloning --%>
 										<div id='elect_handling_equipment_row' class="elect_handling_equipment_row hide" style="display:inline-flex;width:100%;">
 											<div class="form-group" style="padding-right:2em;">
 											<div class="col-lg-12">
-												<input name="ampere_hours[]" type="text"  placeholder="Ah" class="form-control" style="width: 160px;"/>
+												<input name="ampere_hours[]" type="text" class="form-control" style="width: 160px;"/>
 												</div>	
 											</div>
      
 											<div class="form-group" style="padding-right:2em;">
 											<div class="col-lg-12">
-												<input name="voltage[]" placeholder="Voltage" type="text"  class="form-control" style="width: 160px;"/>
+												<input name="voltage[]" type="text" class="form-control" style="width: 160px;"/>
 											</div>
 											</div>
 
 											<div class="form-group" style="padding-right:2em;">
 											<div class="col-lg-12">
-												<input name="total_charges[]" type="text"  placeholder="Total num of charges" class="form-control" style="width: 200px;"/>
+												<input name="total_charges[]" type="text" class="form-control" style="width: 200px;"/>
 											</div>
 											</div>
 						
 											<div class="form-group" style="padding-right:2em;">
 											<div class="col-lg-12">
-												<input name="total_charge_duration[]" type="text"  placeholder="Total duration" class="form-control" style="width: 180px;"/>
+												<input name="total_charge_duration[]" type="text" class="form-control" style="width: 180px;"/>
 											</div>	
 											</div>
 						              
@@ -1135,7 +1189,7 @@ ro.close();
 										<div id="energy_red_initiatives_done">
 											<%-- Headings in table --%>
 											<div class="ERI_done_headings" style="display:inline-flex;width:100%;">
-											<div class="form-group" style="padding-right:2em;width:23%;">
+											<div class="form-group" style="padding-right:2em;width:26%;">
 												<div class="col-lg-12">
 													<label>What was done?</label>
 												</div>
@@ -1227,7 +1281,7 @@ ro.close();
 										<div id="energy_red_initiatives_planned">
 											<%-- Headings in table --%>
 											<div class="ERI_planned_headings" style="display:inline-flex;width:100%;">
-											<div class="form-group" style="padding-right:2em;width:23%;">
+											<div class="form-group" style="padding-right:2em;width:26%;">
 												<div class="col-lg-12">
 													<label>What is planned?</label>
 												</div>
