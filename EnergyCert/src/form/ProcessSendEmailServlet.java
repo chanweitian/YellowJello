@@ -84,15 +84,15 @@ public class ProcessSendEmailServlet extends HttpServlet {
 		EmailValidator emailVal = new EmailValidator();
 		
 		if (receiver_name.equals("")) {
-			error_message = "Receiver Name is required";
+			error_message = "Receiver's Name is required";
 		} else if (receiver_email.equals("")) {
-			error_message = "Receiver Email is required";
+			error_message = "Receiver's Email is required";
 		} else if (!emailVal.validate(receiver_email)) {
-			error_message = "Receiver Email is invalid";
+			error_message = "Receiver's Email is invalid";
 		} else if (receiver_msg.equals("")) {
-			error_message = "Receiver Message is required";
+			error_message = "Message to Receiver is required";
 		} else if (sections_array == null || sections_array.length == 0) {
-			error_message = "Select at least one assigned section";
+			error_message = "Select at least one section";
 		}
 		
 		if (error_message.length() == 0) {
