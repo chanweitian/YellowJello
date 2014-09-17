@@ -114,6 +114,28 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    $('#payback_form').bootstrapValidator({
+    	
+    	feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+    	fields: {
+            required: {
+            	selector: '[id="required"]',
+                validators: {
+                    notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            }
+            
+        }
+    })
+});
+
+$(document).ready(function() {
     $('#master_form').bootstrapValidator({
     	excluded: [':disabled'],
     	feedbackIcons: {

@@ -30,18 +30,18 @@
 	        
             <!-- visualization dropdown -->
             <li class="dropdown">
-	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Visualization <span class="caret"></span></a>
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site Analysis <span class="caret"></span></a>
 	          <ul class="dropdown-menu" role="menu">
-	            <li><a href="/EnergyCert/visual/portfolio">Warehouse Portfolio</a></li>
-	            <li><a href="#">Something else here</a></li>
+	            <li><a href="/EnergyCert/visual/paybackOutput.jsp">Payback Analysis</a></li>
+	            <li><a href="#">View Historical Trends</a></li>
 	          </ul>
 	        </li> 
             <!-- analysis dropdown -->
             <li class="dropdown">
-	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Analysis <span class="caret"></span></a>
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Portfolio Analysis <span class="caret"></span></a>
 	          <ul class="dropdown-menu" role="menu">
-	            <li><a href="#">Another action</a></li>
-	            <li><a href="#">Something else here</a></li>
+	          	<li><a href="/EnergyCert/visual/portfolio">Manage Site Portfolio</a></li>
+	            <li><a href="#">Global Visualization of Sites</a></li>
 	          </ul>
 	        </li>  
 	        <% }
