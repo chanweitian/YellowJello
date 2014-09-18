@@ -39,3 +39,7 @@ src: url(../fonts/bebas-neue-bold.otf);
 .past_quest_table .col18 {width:50%;}
 
 .quest_subtitle {font-size:150%;color:#b0232a;}
+
+.table_inline_flex {display: inline-flex;width:100%;}
+.table_row {width:11%;text-align: center;padding-top: 5px;padding-bottom: 5px;}
+.table_row_bold {width:11%;text-align: center;font-weight:bold;padding-top: 5px;padding-bottom: 5px;}

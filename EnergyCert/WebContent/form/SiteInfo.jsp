@@ -151,9 +151,9 @@ ro.close();
 							<div class="demo">
 							<br>
 							<h4 class="expand">Site Data and User Information</h4>
+							<div class="collapse">
 							<%--for ProcessMasterServlet to know if SiteInfo.jsp is included--%>
 							<input type="hidden" class="form-control" name="site_info" value="exists"></input>
-							<div class="collapse">
 								<div class="form-group">
 								<label class="col-lg-5 control-label" for="site_info_name">What is the name of the site? <font color="red">*</font></label>
 								<div class="col-lg-6">
@@ -437,25 +437,25 @@ ro.close();
 									<div class="form-group">
 									<label class="col-lg-5 control-label" for="site_info_access_to_energy_data">Does your site have easy access to your sites energy data? <font color="red">*</font></label>
 									<div class="col-lg-6">
-										<div class="checkbox">
+										<div class="radio">
 											<% if (site_info_access_to_energy_data.equals("Not available or annual consumption data")) { %>
-												<label><input type="checkbox" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Not available or annual consumption data" checked />Not available or annual consumption data</label>
+												<label><input type="radio" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Not available or annual consumption data" checked />Not available or annual consumption data</label>
 											<% } else { %>
-												<label><input type="checkbox" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Not available or annual consumption data" />Not available or annual consumption data</label>
+												<label><input type="radio" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Not available or annual consumption data" />Not available or annual consumption data</label>
 											<% } %>
 										</div>		
-										<div class="checkbox">
+										<div class="radio">
 											<% if (site_info_access_to_energy_data.equals("Easily available monthly consumption data")) { %>
-												<label><input type="checkbox" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Easily available monthly consumption data" checked />Easily available monthly consumption data</label>
+												<label><input type="radio" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Easily available monthly consumption data" checked />Easily available monthly consumption data</label>
 											<% } else { %>
-												<label><input type="checkbox" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Easily available monthly consumption data" />Easily available monthly consumption data</label>
+												<label><input type="radio" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Easily available monthly consumption data" />Easily available monthly consumption data</label>
 											<% } %>
 										</div>
-										<div class="checkbox">
+										<div class="radio">
 											<% if (site_info_access_to_energy_data.equals("Detailed energy data (from automatic meters allowing daily profile curves)")) { %>
-												<label><input type="checkbox" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Detailed energy data (from automatic meters allowing daily profile curves)" checked />Detailed energy data (from automatic meters allowing daily profile curves)</label>
+												<label><input type="radio" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Detailed energy data (from automatic meters allowing daily profile curves)" checked />Detailed energy data (from automatic meters allowing daily profile curves)</label>
 											<% } else { %>
-												<label><input type="checkbox" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Detailed energy data (from automatic meters allowing daily profile curves)" />Detailed energy data (from automatic meters allowing daily profile curves)</label>
+												<label><input type="radio" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Detailed energy data (from automatic meters allowing daily profile curves)" />Detailed energy data (from automatic meters allowing daily profile curves)</label>
 											<% } %>
 										</div>															
 									</div>

@@ -1,3 +1,42 @@
+(function($) {
+    $.fn.bootstrapValidator.validators.valid = {
+        validate: function(validator, $field, options) {
+            var value = $field.val();
+            var re = new RegExp("^[^*\^\\,]*$");
+            if (value === '') {
+                return true;
+            }
+
+            // Check the text includes , * ^
+            if (!value.match(re)) {
+                return false;
+            }
+
+            return true;
+        }
+    };
+}(window.jQuery));
+
+(function($) {
+    $.fn.bootstrapValidator.validators.valid_spacing = {
+        validate: function(validator, $field, options) {
+            var value = $field.val();
+            var re = new RegExp("^[^*\^\s\\,]*$");
+            if (value === '') {
+                return true;
+            }
+
+            // Check the text includes , * ^ and spacing
+            if (!value.match(re)) {
+                return false;
+            }
+
+            return true;
+        }
+    };
+}(window.jQuery));
+
+
 $(document).ready(function() {
     $('#questionnaire').bootstrapValidator({
     	
@@ -12,6 +51,9 @@ $(document).ready(function() {
                 validators: {
                     notEmpty: {
                         message: 'This field is required'
+                    },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
                     }
                 }
             },
@@ -47,6 +89,9 @@ $(document).ready(function() {
                 validators: {
                 	notEmpty: {
                         message: 'This field is required'
+                    },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
                     }
                 }
             },
@@ -67,28 +112,6 @@ $(document).ready(function() {
 	.on('success.field.bv', function(e, field, $field) {
 		console.log(field, $field, '-->success');
     });
-});
-
-$(document).ready(function() {
-    $('#createQuestionnaire').bootstrapValidator({
-    	
-    	feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-    	fields: {
-            dropdown_required: {
-            	selector: '[id="dropdown_required"]',
-                validators: {
-                    notEmpty: {
-                        message: 'Please select a warehouse to proceed'
-                    }
-                }
-            }
-            
-        }
-    })
 });
 
 $(document).ready(function() {
@@ -122,9 +145,81 @@ $(document).ready(function() {
             validating: 'glyphicon glyphicon-refresh'
         },
     	fields: {
-            required: {
-            	selector: '[id="required"]',
+            site_id: {
+            	group: '.col-md-3',
                 validators: {
+                    notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            zone_id: {
+            	group: '.col-md-3',
+                validators: {
+                    notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            actual_consumption_electricity: {
+            	group: '.col-md-3',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: false,
+                        message: 'Enter a digit greater than 0'
+                    },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
+                    },
+                    notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            electricity_cost: {
+            	group: '.col-md-3',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: false,
+                        message: 'Enter a digit greater than 0'
+                    },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
+                    },
+                    notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            number: {
+            	selector: '[id="number"]',
+            	validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: false,
+                        message: 'Enter a digit greater than 0'
+                    },
+                    valid: {
+                        message: 'Omit * ^ ,'
+                    },
+                    notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            integer: {
+            	selector: '[id="integer"]',
+            	validators: {
+            		integer: {
+                        message: 'Enter an integer'
+                    },
+                	greaterThan: {
+                        value: 0,
+                        inclusive: false,
+                        message: 'Enter a digit greater than 0'
+                    },
                     notEmpty: {
                         message: 'This field is required'
                     }
@@ -169,6 +264,9 @@ $(document).ready(function() {
                     notEmpty: {
                         message: 'This field is required'
                     },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
+                    },
                     greaterThan: {
                         value: 0,
                         inclusive: true,
@@ -181,6 +279,9 @@ $(document).ready(function() {
                 validators: {
                     notEmpty: {
                         message: 'This field is required'
+                    },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
                     }
                 }
             },
@@ -191,6 +292,9 @@ $(document).ready(function() {
                         min: 0,
                         max: 24,
                         message: 'Please enter a number between 0 and 24'
+                    },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
                     },
 		            notEmpty: {
                         message: 'This field is required'
@@ -204,6 +308,9 @@ $(document).ready(function() {
                         value: 0,
                         inclusive: false,
                         message: 'Please enter a digit greater than 0'
+                    },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
                     }
                 }
             },
@@ -304,6 +411,9 @@ $(document).ready(function() {
                         max: 100,
                         message: 'Please enter a number between 0 and 100'
                     },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
+                    },
 		            notEmpty: {
                         message: 'This field is required'
                     }
@@ -355,6 +465,9 @@ $(document).ready(function() {
                     emailAddress: {
                         message: 'The value is not a valid email address'
                     },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
+                    },
                     notEmpty: {
                         message: 'This field is required'
                     }
@@ -363,6 +476,9 @@ $(document).ready(function() {
             email_optional: {
             	selector: '[id="email_optional"]',
                 validators: {
+                	valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
+                    },
                     emailAddress: {
                         message: 'The value is not a valid email address'
                     }
@@ -388,6 +504,9 @@ $(document).ready(function() {
                         min: 0,
                         max: 100,
                         message: 'Please enter a number between 0 and 100'
+                    },
+                    valid_spacing: {
+                        message: 'Omit * ^ , and spacing'
                     },
 		            notEmpty: {
                         message: 'This field is required'
