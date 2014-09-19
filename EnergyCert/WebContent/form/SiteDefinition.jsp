@@ -1,10 +1,19 @@
 <%-- Questionnaire.jsp before validation is added --%>
-<%@page import="java.util.*;" %>
+<%@page import="java.util.*,utility.*" %>
 <%@include file="../protectusers.jsp" %>
 
 <%-- Get previous year --%>
 <%
+String company = (String) session.getAttribute("company");
+int month = PeriodManager.getMonthInt(company);
+Calendar cal = Calendar.getInstance();
+cal.set(Calendar.MONTH,month);
+cal.set(Calendar.DATE,1);
+Calendar today = Calendar.getInstance();
 int previousYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
+if (today.before(cal)) {
+	previousYear -= 1;
+}
 String site_id = request.getParameter("site_id");
 %>
 
@@ -44,6 +53,7 @@ String site_id = request.getParameter("site_id");
 		
 		<%-- This is for SiteDef.jsp --%>
 		<script type="text/javascript" src="../js/siteDef.js"></script>
+
 	</head>
   
 	<body>
@@ -124,7 +134,7 @@ String site_id = request.getParameter("site_id");
 										</div>
 										<div class="form-group" style="width:16%;">
 											<div class="col-lg-12">
-												<label id="label_building_name">Months of Zone Operation in 2013 <font color="red">*</font></label>
+												<label id="label_building_name">Months of Zone Operation in <%=previousYear %> <font color="red">*</font></label>
 											</div>
 										</div>
 									</div>

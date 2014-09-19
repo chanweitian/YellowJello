@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>View Warehouses</title>
+    <title>View Sites</title>
 
     <!-- Bootstrap -->
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -58,7 +58,7 @@
     session.removeAttribute("deleteWhFlag");
   	%>
 
-	<div class="header">View warehouses</div>
+	<div class="header">View sites</div>
     <div class="container theme-showcase" role="main">
 
       <%-- <h2 class="heading">View warehouses</h2><p> --%>
@@ -75,10 +75,10 @@
       	<table class="table table-hover">
 	        <thead>
 	          <tr>
-	            <th>WarehouseID</th>
-	            <th>Site</th>
-	            <th>Country</th>
+	            <th>SiteID</th>
 	            <th>Region</th>
+	            <th>Country</th>
+	            <th>Site</th>
 	            <th>Street</th>
 	            <th>City</th>
 	            <th>Postal</th>
@@ -89,9 +89,9 @@
 				while (rs.next()) { %>
 			          <tr>
 			            <td><%=rs.getString("Site_ID") %></td>
-			            <td><%=rs.getString("site_info_name") %></td>
-			            <td><%=rs.getString("site_info_address_country") %></td>
 			            <td><%=rs.getString("Region") %>
+			            <td><%=rs.getString("site_info_address_country") %></td>
+			            <td><%=rs.getString("site_info_name") %></td>
 			            <td><%=rs.getString("site_info_address_street") %></td>
 			            <td><%=rs.getString("site_info_address_city") %></td>
 			            <td><%=rs.getString("site_info_address_postal") %>

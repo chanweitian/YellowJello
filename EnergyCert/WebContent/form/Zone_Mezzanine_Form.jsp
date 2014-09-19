@@ -298,7 +298,10 @@
 	</div>
 	<div class="btn-group" style="margin-left:77%">
 		<button class="btn" id="prevtab" type="button" onclick="prev_tab();">Previous</button>
+		<% if (session.getAttribute("last_tab")==null) { %>
     	<button class="btn" id="nexttab" type="button" onclick="next_tab();">Next</button>
+    	<% }
+		session.removeAttribute("last_tab");%>
     	
 	</div>
 </div>

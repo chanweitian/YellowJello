@@ -66,26 +66,37 @@ public class ProcessAddWeatherServlet extends HttpServlet {
 		tempHM.put("Dec", request.getParameter("Dec"));
 		String addWeatherMsg = null;
 		
-		Iterator iter = tempHM.entrySet().iterator();
 		HashMap<String,Double> hm = new HashMap<String,Double>();
-	    while (iter.hasNext()) {
-	        Map.Entry<String,String> pairs = (Map.Entry<String,String>)iter.next();
-	        String key = pairs.getKey();
-	        String input = pairs.getValue();
-	        
-	        if (input==null) {
-	        	addWeatherMsg = "Please input a number for " + key;
-	        	break;
-	        } else {
-		        try {
-		        	Double temp = Double.parseDouble(input);
-		        	hm.put(key, temp);
-		        } catch (NumberFormatException e) {
-		        	addWeatherMsg = key + " has to be a number";
+		
+		if (city.equals("Others")) {
+			city = request.getParameter("otherCity");
+			if (WeatherManager.getTemp(city, "Jan")!=9999) {
+				addWeatherMsg = "Duplicate city";
+    		}
+		}
+		
+		if (addWeatherMsg==null) {
+			Iterator iter = tempHM.entrySet().iterator();
+			
+		    while (iter.hasNext()) {
+		        Map.Entry<String,String> pairs = (Map.Entry<String,String>)iter.next();
+		        String key = pairs.getKey();
+		        String input = pairs.getValue();
+		        
+		        if (input==null) {
+		        	addWeatherMsg = "Please input a number for " + key;
 		        	break;
+		        } else {
+			        try {
+			        	Double temp = Double.parseDouble(input);
+			        	hm.put(key, temp);
+			        } catch (NumberFormatException e) {
+			        	addWeatherMsg = key + " has to be a number";
+			        	break;
+			        }
 		        }
-	        }
-	    }
+		    }
+		}
 	    
 	    if (addWeatherMsg==null) {
 	    	WeatherManager.addWeather(country,city,hm);
@@ -95,7 +106,8 @@ public class ProcessAddWeatherServlet extends HttpServlet {
 	    HttpSession session = request.getSession();
 	    session.setAttribute("addWeatherMsg", addWeatherMsg);
 		session.setAttribute("addWeatherCountry", country);
-		session.setAttribute("addWeatherCity", city);
+		session.setAttribute("addWeatherCity", request.getParameter("city"));
+		session.setAttribute("otherCity", request.getParameter("otherCity"));
 		session.setAttribute("awJan", request.getParameter("Jan"));
 		session.setAttribute("awFeb", request.getParameter("Feb"));
 		session.setAttribute("awMar", request.getParameter("Mar"));

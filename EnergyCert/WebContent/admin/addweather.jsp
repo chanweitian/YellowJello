@@ -82,10 +82,32 @@
 		        option.innerHTML = next_desc;
 		        select.appendChild(option);
 		    }
+		  option = document.createElement("option");
+	        option.value = "Others";
+	        option.innerHTML = "Others";
+	        select.appendChild(option);
 	    }
 	  }
 	xmlhttp.open("GET","getcity.jsp?q="+str,true);
 	xmlhttp.send();
+	}
+	</script>
+	
+	<script>
+	function cityChanged(str)
+	{	
+	var otherCity = document.getElementById("otherCity");
+	if (str=="Others")
+	  {
+		otherCity.disabled=false;
+		otherCity.required=true;
+	  }
+	else
+	  {
+		otherCity.value = "";
+		otherCity.disabled=true;
+		otherCity.required=false;
+	  }
 	}
 	</script>
   </head>
@@ -97,6 +119,7 @@
 	String addWeatherMsg = (String) session.getAttribute("addWeatherMsg");
   	String addWeatherCountry = (String) session.getAttribute("addWeatherCountry");
   	String addWeatherCity = (String) session.getAttribute("addWeatherCity");
+  	String otherCity = (String) session.getAttribute("otherCity");
   	String awJan = (String) session.getAttribute("awJan");
   	String awFeb = (String) session.getAttribute("awFeb");
   	String awMar = (String) session.getAttribute("awMar");
@@ -112,6 +135,7 @@
   	session.removeAttribute("addWeatherMsg");
   	session.removeAttribute("addWeatherCountry");
   	session.removeAttribute("addWeatherCity");
+  	session.removeAttribute("otherCity");
   	session.removeAttribute("awJan");
   	session.removeAttribute("awFeb");
   	session.removeAttribute("awMar");
@@ -191,7 +215,7 @@
 			    URL url = new URL(urlString);
 			    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 			    String strTemp = ""; %>
-			    <select class="form-control" id="city" name="city" required>
+			    <select class="form-control" id="city" name="city" onchange="cityChanged(this.value)" required>
 			    <%
 			    if (addWeatherMsg!=null) {
 	    			if (addWeatherMsg.equals("Weather added successfully")) { %>
@@ -210,7 +234,12 @@
 			    			<% }
 			    		}
 			    	}
-			    } %>
+			    } 
+		    	if("Others".equals(addWeatherCity)) { %>
+		    		<option value="Others" selected>Others</option>
+		    	<% } else { %>
+		    		<option value="Others">Others</option>
+		    	<% } %>
 			    </select>
 			<% } catch (Exception ex) {
 			    ex.printStackTrace();
@@ -218,7 +247,16 @@
 		      %>
 		    </div>
 		  </div>
-		
+		<div class="form-group">
+		    <label for="otherCity" class="col-sm-1 control-label">If Others:</label>
+		    <div class="col-sm-4">
+		    	<% if (otherCity==null) { %>
+		    	  <input type="text" class="form-control" id="otherCity" name="otherCity" disabled>
+		    	<% } else { %>
+		    		<input type="text" class="form-control" id="otherCity" name="otherCity" value="<%=otherCity %>" required>
+		    	<% } %>
+		    </div>
+		</div>
 		<div class="form-group">
 			<label for="temp" class="col-sm-1 control-label">Temperature</label>
 		    <div class="col-sm-9">

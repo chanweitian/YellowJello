@@ -71,7 +71,7 @@ String[] building_name_array = bName.split("\\*");
 							</div>
 							<div class="form-group" style="width:16%;">
 								<div class="col-lg-12">
-									<label>Months of Zone Operation in 2013</label>
+									<label>Months of Zone Operation in <%=previousYear %></label>
 								</div>
 							</div>
 						</div>

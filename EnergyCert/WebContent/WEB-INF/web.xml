@@ -149,6 +149,14 @@
     <url-pattern>/client/processimport</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>ProcessImportWhServlet</servlet-name>
+    <servlet-class>client.ProcessImportWhServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessImportWhServlet</servlet-name>
+    <url-pattern>/client/processimportwh</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>ProcessAddWhServlet</servlet-name>
     <servlet-class>client.ProcessAddWhServlet</servlet-class>
   </servlet>
@@ -196,7 +204,7 @@
     <servlet-name>ManageWarehouse</servlet-name>
     <url-pattern>/visual/portfolio</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>RetrieveCountryList</servlet-name>
     <servlet-class>visual.RetrieveCountryList</servlet-class>
   </servlet>
@@ -204,7 +212,7 @@
     <servlet-name>RetrieveCountryList</servlet-name>
     <url-pattern>/visual/retrieveCountry</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>RetrieveRegionList</servlet-name>
     <servlet-class>visual.RetrieveRegionList</servlet-class>
   </servlet>
@@ -212,7 +220,7 @@
     <servlet-name>RetrieveRegionList</servlet-name>
     <url-pattern>/visual/retrieveRegion</url-pattern>
   </servlet-mapping>
-      <servlet>
+  <servlet>
     <servlet-name>GenerateChart</servlet-name>
     <servlet-class>visual.GenerateChart</servlet-class>
   </servlet>

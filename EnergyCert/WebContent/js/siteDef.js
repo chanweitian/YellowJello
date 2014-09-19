@@ -186,7 +186,7 @@ function updateMinMaxTemp(selectedVal) {
 	var max_temp = $(":input:eq(" + ($(":input").index(selectedVal) + 2) + ")");
 	var html_min_temp = min_temp[0];
 	var html_max_temp = max_temp[0];
-	
+
 	if (selectedValue == "heated_20") {
 		html_min_temp.value = "20";
 		html_max_temp.value = "";

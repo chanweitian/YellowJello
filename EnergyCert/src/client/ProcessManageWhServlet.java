@@ -54,6 +54,10 @@ public class ProcessManageWhServlet extends HttpServlet {
 		String postal = request.getParameter("postal");
 		String manageWhMsg = null;
 		
+		if (city.equals("Others")) {
+			city = request.getParameter("otherCity");
+		}
+		
 		if (site.trim().length()==0) {
 			manageWhMsg = "Please input site";
 		} else if (country.trim().length()==0) {
@@ -67,15 +71,10 @@ public class ProcessManageWhServlet extends HttpServlet {
 		} else if (postal.trim().length()==0) {
 			manageWhMsg = "Please input postal";
 		} else {
-			try {
-				int postalInt = Integer.parseInt(postal);
 				String toSet = "site_info_name=\'" + site + "\',site_info_address_country=\'" + country + "\',Region=\'" + region 
 						+ "\',site_info_address_street=\'" + street + "\',site_info_address_city=\'" + city + "\',site_info_address_postal=\'" + postal + "\'";
 				SQLManager.updateRecords("site", toSet, "Site_ID=\'"+siteid+"\'");
 				manageWhMsg = "Site details have been successfully saved.";
-			} catch (NumberFormatException e) {
-				manageWhMsg = "Postal has to be a number";
-			}
 
 		}
 		
@@ -85,7 +84,8 @@ public class ProcessManageWhServlet extends HttpServlet {
 		session.setAttribute("manageWhCountry", country);
 		session.setAttribute("manageWhRegion", region);
 		session.setAttribute("manageWhStreet", street);
-		session.setAttribute("manageWhCity", city);
+		session.setAttribute("manageWhCity", request.getParameter("city"));
+		session.setAttribute("otherCity", request.getParameter("otherCity"));
 		session.setAttribute("manageWhPostal", postal);
 		response.sendRedirect("managewh.jsp?siteid="+siteid);
 		

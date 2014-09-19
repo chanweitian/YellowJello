@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Import Accounts</title>
+    <title>Import Sites</title>
 
 	<!-- Bootstrap -->
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -47,28 +47,28 @@
   <body role="document">
   <%@include file="../header.jsp" %>
   
-  <% String importMsg = (String) session.getAttribute("importMsg");
-	session.removeAttribute("importMsg");
+  <% String importWhMsg = (String) session.getAttribute("importWhMsg");
+	session.removeAttribute("importWhMsg");
   %>
 
-	<div class="header">Import accounts</div>
+	<div class="header">Import sites</div>
     <div class="container theme-showcase" role="main">
 		
       <%--<h2 class="heading">Import users</h2><p>--%>
       
 
-      <form class="form-horizontal" role="form" action="processimport" method="POST" enctype="multipart/form-data" >
+      <form class="form-horizontal" role="form" action="processimportwh" method="POST" enctype="multipart/form-data" >
 		  <div class="form-group">
 		    <label for="inputFile" class="col-sm-1 control-label">Input file</label>
 		    <div class="col-sm-4">
 		      <input type="file" id="inputFile" name="inputFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-		    </div>
+		    </div>	
 		  </div>
 		  <div class="form-group">
 		    <div class="col-sm-offset-1 col-sm-4">
 		      <button type="submit" class="btn btn-default">Upload</button></p>
-		      <% if (importMsg!=null) { %>
-	        	<font color="maroon"><label><%=importMsg %></font></label>
+		      <% if (importWhMsg!=null) { %>
+	        	<font color="maroon"><label><%=importWhMsg %></font></label>
 	        <% } %>
 		    </div>
 		  </div>

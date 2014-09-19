@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Add Warehouse</title>
+    <title>Add Site</title>
 
 	<!-- Bootstrap -->
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -81,10 +81,32 @@
 		        option.innerHTML = next_desc;
 		        select.appendChild(option);
 		    }
+		  option = document.createElement("option");
+	        option.value = "Others";
+	        option.innerHTML = "Others";
+	        select.appendChild(option);
 	    }
 	  }
 	xmlhttp.open("GET","getcity.jsp?q="+str,true);
 	xmlhttp.send();
+	}
+	</script>
+	
+	<script>
+	function cityChanged(str)
+	{	
+	var otherCity = document.getElementById("otherCity");
+	if (str=="Others")
+	  {
+		otherCity.disabled=false;
+		otherCity.required=true;
+	  }
+	else
+	  {
+		otherCity.value = "";
+		otherCity.disabled=true;
+		otherCity.required=false;
+	  }
 	}
 	</script>
   </head>
@@ -100,6 +122,7 @@
   	String addWhStreet = (String) session.getAttribute("addWhStreet");
   	String addWhCity = (String) session.getAttribute("addWhCity");
   	String addWhPostal = (String) session.getAttribute("addWhPostal");
+  	String otherCity = (String) session.getAttribute("otherCity");
   	session.removeAttribute("addWhMsg");
   	session.removeAttribute("addWhSite");
   	session.removeAttribute("addWhCountry");
@@ -107,23 +130,23 @@
   	session.removeAttribute("addWhStreet");
   	session.removeAttribute("addWhCity");
   	session.removeAttribute("addWhPostal");
+  	session.removeAttribute("otherCity");
   	String countryCode = null;
     %>
 
-	<div class="header">Add Warehouse</div>
+	<div class="header">Add site</div>
     <div class="container theme-showcase" role="main">
 		
       <%-- <h2 class="heading">Add warehouse</h2><p>--%>
 
       <form class="form-horizontal" role="form" action="processaddwh">
-		  
-		  <div class="form-group">
-		    <label for="site" class="col-sm-1 control-label">Site</label>
+      	<div class="form-group">
+		    <label for="region" class="col-sm-1 control-label">Region</label>
 		    <div class="col-sm-4">
-		      <% if (addWhSite!=null) { %>
-	    		<input type="text" class="form-control" id="site" name="site" value="<%=addWhSite %>" required>
+		      <% if (addWhRegion!=null) { %>
+	    		<input type="text" class="form-control" id="region" name="region" value="<%=addWhRegion %>" required>
 		      <% } else { %>
-		      <input type="text" class="form-control" id="site" name="site" required>
+		      <input type="text" class="form-control" id="region" name="region" required>
 		      <% } %>
 		    </div>
 		  </div>
@@ -170,12 +193,12 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label for="region" class="col-sm-1 control-label">Region</label>
+		    <label for="site" class="col-sm-1 control-label">Site</label>
 		    <div class="col-sm-4">
-		      <% if (addWhRegion!=null) { %>
-	    		<input type="text" class="form-control" id="region" name="region" value="<%=addWhRegion %>" required>
+		      <% if (addWhSite!=null) { %>
+	    		<input type="text" class="form-control" id="site" name="site" value="<%=addWhSite %>" required>
 		      <% } else { %>
-		      <input type="text" class="form-control" id="region" name="region" required>
+		      <input type="text" class="form-control" id="site" name="site" required>
 		      <% } %>
 		    </div>
 		  </div>
@@ -206,7 +229,7 @@
 			    URL url = new URL(urlString);
 			    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 			    String strTemp = ""; %>
-			    <select class="form-control" id="city" name="city" required>
+			    <select class="form-control" id="city" name="city" onchange="cityChanged(this.value)" required>
 			    <% while (null != br.readLine()) {
 			    	strTemp = br.readLine();
 			    	String[] cityArr = strTemp.split(";");
@@ -217,7 +240,12 @@
 		    				<option value="<%=s %>"><%=s %></option>
 		    			<% }
 			    	}
-			    } %>
+			    } 
+			    if("Others".equals(addWhCity)) { %>
+		    		<option value="Others" selected>Others</option>
+		    	<% } else { %>
+		    		<option value="Others">Others</option>
+		    	<% } %>
 			    </select>
 			<% } catch (Exception ex) {
 			    ex.printStackTrace();
@@ -225,6 +253,16 @@
 		      %>
 		    </div>
 		  </div>
+		  <div class="form-group">
+		    <label for="otherCity" class="col-sm-1 control-label">If Others:</label>
+		    <div class="col-sm-4">
+		    	<% if (otherCity==null) { %>
+		    	  <input type="text" class="form-control" id="otherCity" name="otherCity" disabled>
+		    	<% } else { %>
+		    		<input type="text" class="form-control" id="otherCity" name="otherCity" value="<%=otherCity %>" required>
+		    	<% } %>
+		    </div>
+		</div>
 		  <div class="form-group">
 		    <label for="postal" class="col-sm-1 control-label">Postal</label>
 		    <div class="col-sm-4">

@@ -1,4 +1,4 @@
-<%@page import="java.util.*,db.*,java.lang.Thread,java.sql.ResultSet,java.text.SimpleDateFormat;" %>
+<%@page import="java.util.*,db.*,java.lang.Thread,java.sql.ResultSet,java.text.SimpleDateFormat,utility.*" %>
 
 <%
 String link = request.getParameter("link");
@@ -93,7 +93,16 @@ if (link != null) { %>
 		<form id="master_form" action="processmaster" class="form-horizontal" method="post">
 		
 		<%-- Get previous year --%>
-		<%int previousYear = Calendar.getInstance().get(Calendar.YEAR) - 1;%>
+		<%String company = (String) session.getAttribute("company");
+		int month = PeriodManager.getMonthInt(company);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MONTH,month);
+		cal.set(Calendar.DATE,1);
+		Calendar today = Calendar.getInstance();
+		int previousYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
+		if (today.before(cal)) {
+			previousYear -= 1;
+		}%>
 		
 		<%
 		//initialise array to get values from SiteDef form
@@ -383,6 +392,10 @@ if (link != null) { %>
 				//if (!fromLink) {
 			  
 					for (int i = 0; i < zone_list.size(); i++) {
+						if (i==zone_list.size()-1) {
+							session.setAttribute("last_tab","true");
+						}
+						
 						String[] this_zone = zone_list.get(i).split(",");
 						
 						String building_name = this_zone[0];
@@ -421,6 +434,7 @@ if (link != null) { %>
 					if (!sections.equals("")) { 
 						String[] sectionArray = sections.split("\\*");
 						for (int i = 0; i < zone_list.size(); i++) {
+							
 							String[] this_zone = zone_list.get(i).split(",");
 							
 							for (String sec : sectionArray) {

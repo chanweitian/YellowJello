@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Manage Warehouse</title>
+    <title>Manage Site</title>
 
 	<!-- Bootstrap -->
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -86,10 +86,32 @@
 		        option.innerHTML = next_desc;
 		        select.appendChild(option);
 		    }
+		  option = document.createElement("option");
+	        option.value = "Others";
+	        option.innerHTML = "Others";
+	        select.appendChild(option);
 	    }
 	  }
 	xmlhttp.open("GET","getcity.jsp?q="+str,true);
 	xmlhttp.send();
+	}
+	</script>
+	
+	<script>
+	function cityChanged(str)
+	{	
+	var otherCity = document.getElementById("otherCity");
+	if (str=="Others")
+	  {
+		otherCity.disabled=false;
+		otherCity.required=true;
+	  }
+	else
+	  {
+		otherCity.value = "";
+		otherCity.disabled=true;
+		otherCity.required=false;
+	  }
 	}
 	</script>
   </head>
@@ -104,6 +126,7 @@
   	String manageWhStreet = (String) session.getAttribute("manageWhStreet");
   	String manageWhCity = (String) session.getAttribute("manageWhCity");
   	String manageWhPostal = (String) session.getAttribute("manageWhPostal");
+  	String otherCity = (String) session.getAttribute("otherCity");
   	session.removeAttribute("manageWhMsg");
   	session.removeAttribute("manageWhSite");
   	session.removeAttribute("manageWhCountry");
@@ -111,6 +134,7 @@
   	session.removeAttribute("manageWhStreet");
   	session.removeAttribute("manageWhCity");
   	session.removeAttribute("manageWhPostal");
+  	session.removeAttribute("otherCity");
   	String countryCode = null;
     		
   	String siteid = request.getParameter("siteid");
@@ -138,7 +162,7 @@
     }
   	%>
 
-    <div class="header">Manage warehouse</div>
+    <div class="header">Manage site</div>
     <div class="container theme-showcase" role="main">
 
 
@@ -169,14 +193,13 @@
       
       <p>
       <form class="form-horizontal" role="form" action="processmanagewh">
-		  <input type="hidden" name="siteid" value="<%=siteid %>">
-		  <div class="form-group">
-		    <label for="site" class="col-sm-1 control-label">Site</label>
+     	 <div class="form-group">
+		    <label for="region" class="col-sm-1 control-label">Region</label>
 		    <div class="col-sm-4">
-	    		<input type="text" class="form-control" id="site" name="site" value="<%=manageWhSite %>" required>
+	    		<input type="text" class="form-control" id="region" name="region" value="<%=manageWhRegion %>" required>
 		    </div>
 		  </div>
-		  <div class="form-group">
+      	<div class="form-group">
 		    <label for="country" class="col-sm-1 control-label">Country</label>
 		    <div class="col-sm-4">
 	    		<% 
@@ -215,12 +238,15 @@
 		      %>
 		    </div>
 		  </div>
+		  
+		  <input type="hidden" name="siteid" value="<%=siteid %>">
 		  <div class="form-group">
-		    <label for="region" class="col-sm-1 control-label">Region</label>
+		    <label for="site" class="col-sm-1 control-label">Site</label>
 		    <div class="col-sm-4">
-	    		<input type="text" class="form-control" id="region" name="region" value="<%=manageWhRegion %>" required>
+	    		<input type="text" class="form-control" id="site" name="site" value="<%=manageWhSite %>" required>
 		    </div>
 		  </div>
+		  
 		  <div class="form-group">
 		    <label for="street" class="col-sm-1 control-label">Street</label>
 		    <div class="col-sm-4">
@@ -243,18 +269,29 @@
 			    URL url = new URL(urlString);
 			    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 			    String strTemp = ""; %>
-			    <select class="form-control" id="city" name="city" required>
-			    <% while (null != br.readLine()) {
+			    <select class="form-control" id="city" name="city" onchange="cityChanged(this.value)" required>
+			    <% boolean selected = false;
+			    while (null != br.readLine()) {
 			    	strTemp = br.readLine();
 			    	String[] cityArr = strTemp.split(";");
 			    	for (String s: cityArr) {
 			    		if (s.equals(manageWhCity)) { %>
 		    				<option value="<%=s %>" selected><%=s %></option>
-		    			<% } else if (s.length()>1) { %>
+		    			<% selected = true;
+		    			} else if (s.length()>1) { %>
 		    				<option value="<%=s %>"><%=s %></option>
 		    			<% }
 			    	}
-			    } %>
+			    } 
+			    if (!selected && otherCity==null) {
+			    	otherCity = manageWhCity;
+			    	manageWhCity = "Others";
+			    }
+			    if("Others".equals(manageWhCity)) { %>
+		    		<option value="Others" selected>Others</option>
+		    	<% } else { %>
+		    		<option value="Others">Others</option>
+		    	<% } %>
 			    </select>
 			<% } catch (Exception ex) {
 			    ex.printStackTrace();
@@ -262,6 +299,16 @@
 		      %>
 		    </div>
 		  </div>
+		  <div class="form-group">
+		    <label for="otherCity" class="col-sm-1 control-label">If Others:</label>
+		    <div class="col-sm-4">
+		    	<% if (otherCity==null) { %>
+		    	  <input type="text" class="form-control" id="otherCity" name="otherCity" disabled>
+		    	<% } else { %>
+		    		<input type="text" class="form-control" id="otherCity" name="otherCity" value="<%=otherCity %>" required>
+		    	<% } %>
+		    </div>
+		</div>
 		  <div class="form-group">
 		    <label for="postal" class="col-sm-1 control-label">Postal</label>
 		    <div class="col-sm-4">

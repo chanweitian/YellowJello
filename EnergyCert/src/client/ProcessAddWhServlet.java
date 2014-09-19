@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import utility.WeatherManager;
+
 import db.RetrievedObject;
 import db.SQLManager;
 
@@ -65,6 +67,10 @@ public class ProcessAddWhServlet extends HttpServlet {
 		String postal = request.getParameter("postal");
 		String addWhMsg = null;
 		
+		if (city.equals("Others")) {
+			city = request.getParameter("otherCity");
+		}
+		
 		HttpSession session = request.getSession();
 		String company = (String) session.getAttribute("company");
 		String tempCompany = company.replaceAll("\\s+","");
@@ -86,43 +92,38 @@ public class ProcessAddWhServlet extends HttpServlet {
 		} else if (postal.trim().length()==0) {
 			addWhMsg = "Please input postal";
 		} else {
-			try {
-				int postalInt = Integer.parseInt(postal);
-				boolean isUnique = false;
-				String warehouseID = null;
-				int temp = 0;
-				while (!isUnique) {
-					warehouseID = tempCompany + site.replaceAll("\\s+","");
-					if (warehouseID.length()>28) {
-						warehouseID = warehouseID.substring(0,28);
-					}
-					warehouseID = warehouseID + temp;
-					RetrievedObject ro = SQLManager.retrieveRecords("site", "Site_ID=\'"+warehouseID+"\'");
-					ResultSet rs = ro.getResultSet();
-					boolean unique = true;
-					try {
-						while (rs.next()) {
-							unique = false;
-							temp++;
-						}
-						if (unique) {
-							isUnique = true;
-						}
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					ro.close();
+			
+			boolean isUnique = false;
+			String warehouseID = null;
+			int temp = 0;
+			while (!isUnique) {
+				warehouseID = tempCompany + site.replaceAll("\\s+","");
+				if (warehouseID.length()>28) {
+					warehouseID = warehouseID.substring(0,28);
 				}
-
-				String values = "\'" + warehouseID + "\',\'" + company + "\',\'" + site + "\',\'" + country + "\',\'" + region 
-						+ "\',\'" + street + "\',\'" + city + "\',\'" + postal + "\'";
-				SQLManager.insertRecord("site", values);
-				addWhMsg = "Warehouse added. WarehouseID: " + warehouseID;
-				
-			} catch (NumberFormatException e) {
-				addWhMsg = "Postal has to be a number";
+				warehouseID = warehouseID + temp;
+				RetrievedObject ro = SQLManager.retrieveRecords("site", "Site_ID=\'"+warehouseID+"\'");
+				ResultSet rs = ro.getResultSet();
+				boolean unique = true;
+				try {
+					while (rs.next()) {
+						unique = false;
+						temp++;
+					}
+					if (unique) {
+						isUnique = true;
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				ro.close();
 			}
+
+			String values = "\'" + warehouseID + "\',\'" + company + "\',\'" + site + "\',\'" + country + "\',\'" + region 
+					+ "\',\'" + street + "\',\'" + city + "\',\'" + postal + "\'";
+			SQLManager.insertRecord("site", values);
+			addWhMsg = "Site added. SiteID: " + warehouseID;
 		}
 		
 		session.setAttribute("addWhMsg", addWhMsg);
@@ -130,7 +131,8 @@ public class ProcessAddWhServlet extends HttpServlet {
 		session.setAttribute("addWhCountry", country);
 		session.setAttribute("addWhRegion", region);
 		session.setAttribute("addWhStreet", street);
-		session.setAttribute("addWhCity", city);
+		session.setAttribute("addWhCity", request.getParameter("city"));
+		session.setAttribute("otherCity", request.getParameter("otherCity"));
 		session.setAttribute("addWhPostal", postal);
 		response.sendRedirect("addwh.jsp");
 	}
