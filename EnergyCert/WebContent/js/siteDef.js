@@ -181,6 +181,9 @@ function updateHeatingCooling(selectedVal) {
 }
 
 function updateMinMaxTemp(selectedVal) {
+	// Revalidate the date when user change it
+    //$('#questionnaire').bootstrapValidator('revalidateField', 'b1_zone_min_temp[]');
+    //$('#questionnaire').bootstrapValidator('revalidateField', 'b1_zone_max_temp[]');
 	var selectedValue = selectedVal.value;
 	var min_temp = $(":input:eq(" + ($(":input").index(selectedVal) + 1) + ")");
 	var max_temp = $(":input:eq(" + ($(":input").index(selectedVal) + 2) + ")");
@@ -215,6 +218,10 @@ function updateMinMaxTemp(selectedVal) {
 		html_min_temp.value = "";
 		html_max_temp.value = "";		
 	}
+	//$('#questionnaire').bootstrapValidator('revalidateField', html_min_temp.name);
+	//$('#questionnaire').bootstrapValidator('revalidateField', 'b1_zone_min_temp');
+    //$('#questionnaire').bootstrapValidator('revalidateField', html_max_temp.name);
+    //alert("hih");
 	
 }
 

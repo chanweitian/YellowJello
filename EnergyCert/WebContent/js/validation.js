@@ -18,6 +18,25 @@
 }(window.jQuery));
 
 (function($) {
+    $.fn.bootstrapValidator.validators.validName = {
+        validate: function(validator, $field, options) {
+            var value = $field.val();
+            var re = new RegExp("[a-zA-Z0-9]*");
+            if (value === '') {
+                return true;
+            }
+
+            // Check the text includes , * ^
+            if (!value.match(re)) {
+                return false;
+            }
+
+            return true;
+        }
+    };
+}(window.jQuery));
+
+(function($) {
     $.fn.bootstrapValidator.validators.valid_spacing = {
         validate: function(validator, $field, options) {
             var value = $field.val();
@@ -166,8 +185,8 @@ $(document).ready(function() {
                 validators: {
                 	greaterThan: {
                         value: 0,
-                        inclusive: false,
-                        message: 'Enter a digit greater than 0'
+                        inclusive: true,
+                        message: 'Enter a positive number'
                     },
                     valid_spacing: {
                         message: 'Omit * ^ , and spacing'
@@ -182,8 +201,8 @@ $(document).ready(function() {
                 validators: {
                 	greaterThan: {
                         value: 0,
-                        inclusive: false,
-                        message: 'Enter a digit greater than 0'
+                        inclusive: true,
+                        message: 'Enter a positive number'
                     },
                     valid_spacing: {
                         message: 'Omit * ^ , and spacing'
@@ -198,8 +217,8 @@ $(document).ready(function() {
             	validators: {
                 	greaterThan: {
                         value: 0,
-                        inclusive: false,
-                        message: 'Enter a digit greater than 0'
+                        inclusive: true,
+                        message: 'Enter a positive number'
                     },
                     valid: {
                         message: 'Omit * ^ ,'
@@ -217,8 +236,8 @@ $(document).ready(function() {
                     },
                 	greaterThan: {
                         value: 0,
-                        inclusive: false,
-                        message: 'Enter a digit greater than 0'
+                        inclusive: true,
+                        message: 'Enter a positive number'
                     },
                     notEmpty: {
                         message: 'This field is required'
