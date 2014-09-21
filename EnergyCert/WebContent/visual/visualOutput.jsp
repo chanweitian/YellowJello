@@ -150,6 +150,10 @@ google.load("visualization", "1", {packages:["corechart"]});
 
 function initChart() {
 
+	$('[data-toggle="tooltip"]').tooltip({
+	    'placement': 'top'
+	});
+	
 	var consumptionData = google.visualization.arrayToDataTable([
 	                                                             ['Genre', 'Electricity', 'Natural Gas', { role: 'annotation' } ],
 	                                                             [<%="'"+year3+"'"%>, <%= year3_electrical_use%>, <%= year3_nat_gas_use  %>, ''],
@@ -387,7 +391,6 @@ function getLightingMultiplier(){
 
 
 
-
 </script>
 <title>GTL Energy Certificate Visual Output</title>
 
@@ -454,20 +457,20 @@ function getLightingMultiplier(){
         <div class="form-group">
 							<label class="col-md-5 control-label">Cooling Factor</label>
 							<div class="col-md-5">
-								<input type="text" class="form-control" name="coolFac" id="coolFac" />
+								<input type="text" class="form-control" name="coolFac" id="coolFac" data-toggle="tooltip" title="Cooling Facter refers to the factor of improvement that will be achieve after a new cooling technology is implemented." />
 							</div>
 						</div>
 						<div class="form-group">	
 								<label class="col-md-5 control-label">Lighting Factor</label>
 							<div class="col-md-5">
-								<input type="text" class="form-control" name="lightFac" id="lightFac"/>
+								<input type="text" class="form-control" name="lightFac" id="lightFac"  data-toggle="tooltip" title="Lighting Facter refers to the factor of improvement that will be achieve after a new lighting technology is implemented." />
 							</div>
 						</div>
 						<div class="form-group">
 						
 							<label class="col-md-5 control-label">Heating Factor</label>
 							<div class="col-md-5">
-								<input type="text" class="form-control" name=""heatFac"" id="heatFac"/>
+								<input type="text" class="form-control" name=""heatFac"" id="heatFac"  data-toggle="tooltip" title="Heating Facter refers to the factor of improvement that will be achieve after a new heating technology is implemented." />
 							</div>
 						</div>
       </div>
@@ -514,6 +517,13 @@ function getLightingMultiplier(){
 <div id="company_logo" style="float: left"><img src="../img/DHL_Logo.png" height="23"/></div>
 <div id="dhl_logo" ><img src="../img/DHL_Logo.png" height="23" /></div>
 </div>
+
+  
+  
+
+
+
+
 <table id="general_info_table">
 <tr><th colspan = "6">Energy Certificate</th></tr>
 <tr>
