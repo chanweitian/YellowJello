@@ -132,9 +132,8 @@ $(document).ready(function() {
                         inclusive: true,
                         message: 'Enter a positive number'
                     },
-                    regexp: {
-                        regexp: /^[0-9\.]+$/i,
-                        message: 'Digits only'
+                    numeric: {
+                        message: 'This must be a number'
                     },
                     notEmpty: {
                         message: 'This field is required'
@@ -149,9 +148,8 @@ $(document).ready(function() {
                         inclusive: true,
                         message: 'Enter a positive number'
                     },
-                    regexp: {
-                        regexp: /^[0-9\.]+$/i,
-                        message: 'Digits only'
+                    numeric: {
+                        message: 'This must be a number'
                     },
                     notEmpty: {
                         message: 'This field is required'
@@ -166,9 +164,8 @@ $(document).ready(function() {
                         inclusive: true,
                         message: 'Enter a positive number'
                     },
-                    regexp: {
-                        regexp: /^[0-9\.]+$/i,
-                        message: 'Digits only'
+                    numeric: {
+                        message: 'This must be a number'
                     },
                     notEmpty: {
                         message: 'This field is required'

@@ -64,7 +64,7 @@
 	    select.appendChild(option);
 	    setTimeout(function() {
 			$('#payback_form').bootstrapValidator('revalidateField', 'zone_id');
-		}, 300);
+		}, 500);
 	  return;
 	  }
 	if (window.XMLHttpRequest)
@@ -103,7 +103,7 @@
 	xmlhttp.send();
 	setTimeout(function() {
 		$('#payback_form').bootstrapValidator('revalidateField', 'zone_id');
-	}, 300);
+	}, 500);
 	}
 	
 	function validateFields() {
