@@ -43,6 +43,9 @@
 		  margin-bottom: 10px;
 		}
 		
+		.modal {
+		  margin-top: 50px;
+		}
 	</style>
 
   </head>
@@ -54,20 +57,31 @@
   	ResultSet rs = ro.getResultSet();
     String deletionFlag = (String) session.getAttribute("deletionFlag");
     session.removeAttribute("deletionFlag");
+    String creationMsg = (String) session.getAttribute("creationMsg");
+    session.removeAttribute("creationMsg");
   	%>
 
-	<div class="header">View company accounts</div>
+	<div class="header">Manage company accounts</div>
     <div class="container theme-showcase" role="main">
 
       <%-- <h2 class="heading">View company accounts</h2><p> --%>
 
-
-      <p>
       	<% if (deletionFlag!=null) { %>
       	<div class="alert alert-warning">
         Account has been deleted successfully.
       	</div>
 		<% } %>
+		
+		<% if (creationMsg!=null) { %>
+      	<div class="alert alert-warning">
+        <%=creationMsg %>
+      	</div>
+		<% } %>
+		
+		<p>
+			<a class="btn btn-primary" href="createco.jsp" style="margin-left:12px">Add Company</a>
+		</p>
+		
       	<table class="table table-hover">
 	        <thead>
 	          <tr>
@@ -77,18 +91,45 @@
 	          </tr>
 	        </thead>
 	        <tbody>
-	        <%try {
+	        <% int count = 0;
+	        try {
 				while (rs.next()) { 
-					if (rs.getString("Type").equals("Company Admin")) {%>
+					if (rs.getString("Type").equals("Company Admin")) {
+						count++;%>
 			          <tr>
 			            <td><%=rs.getString("Userid") %></td>
 			            <td><%=rs.getString("Email") %></td>
 			            <td><%=rs.getString("Company") %></td>
 			            <td>
-			            	<a class="btn btn-default" href="manageco.jsp?userid=<%=rs.getString("Userid") %>">Manage</a>
+			            	<a class="btn btn-default" href="manageco.jsp?userid=<%=rs.getString("Userid") %>">Modify</a>
+			            </td>
+			            <td>
+			            	<button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<%=rs.getString("Userid")%>">Delete</button>
 			            </td>
 			          </tr>
-			          <% }
+			          <div class="modal fade" id="deleteModal<%=rs.getString("Userid") %>" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog" style="left: 0px">
+								<div class="modal-content">
+									<div class="modal-header">
+							 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+										<h4 class="modal-title">Delete account</h4>
+									</div>
+					
+									<div class="modal-body">
+										<form action="processdeletion" method="post">
+											<center>Are you sure you want to delete the account?<br /><br />
+								      		<input type="hidden" name="userid" value="<%=rs.getString("Userid") %>">
+								      		<button class="btn" type="submit">Yes</button>
+								      		<button class="btn" data-dismiss="modal">No</button>
+								      		</center>
+								      </form>
+									</div>
+								</div>
+							</div>
+						</div> 
+			          <% 
+					}
 				}
 	          } catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -97,8 +138,9 @@
 			ro.close();%>
 	        </tbody>
 	      </table>
-      </p>
-
+	      <% if (count==0) { %>
+				<p><strong><font color="red">No company has been added. Click on Add Company to add one.</font></strong>
+			<% } %>
     </div> <!-- /container -->
 
 

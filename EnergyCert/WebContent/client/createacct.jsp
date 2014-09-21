@@ -98,6 +98,8 @@
   	String createAcctType = (String) session.getAttribute("createAcctType");
   	String createAcctDescription = (String) session.getAttribute("createAcctDescription");
   	String createAcctEmail = (String) session.getAttribute("createAcctEmail");
+  	String createAcctUserid = (String) session.getAttribute("createAcctUserid");
+  	session.removeAttribute("createAcctUserid");
   	session.removeAttribute("createAcctMsg");
   	session.removeAttribute("createAcctType");
   	session.removeAttribute("createAcctDescription");
@@ -108,93 +110,115 @@
     <div class="container theme-showcase" role="main">
       <%--<h2 class="heading">Create account</h2><p>--%>
 
-
-      <form class="form-horizontal" role="form" action="processcreateacct">
-		  <div class="form-group">
-		    <label for="type" class="col-sm-1 control-label">Type</label>
-		    <div class="col-sm-2">
-		    	<select class="form-control" id="type" name="type" onchange="showValues(this.value)" required>
-		    	<% if ("Site".equals(createAcctType)) { %>
-		    	  	<option value="Site" selected>Site</option>
-				<% } else { %>
-					<option value="Site">Site</option>
-				<% } %>
-				<% if ("Country".equals(createAcctType)) { %>
-		    	  	<option value="Country" selected>Country</option>
-				<% } else { %>
-					<option value="Country">Country</option>
-				<% } %>
-				<% if ("Region".equals(createAcctType)) { %>
-		    	  	<option value="Region" selected>Region</option>
-				<% } else { %>
-					<option value="Region">Region</option>
-				<% } %>
-				</select>
-		    </div>
-		  </div>
-		  <div class="form-group">
-		    <label for="description" class="col-sm-1 control-label">Description</label>
-		    <div class="col-sm-4">
-		      <select class="form-control" id="description" name="description" required>
-			    <%
-			    String whereClause = "Company=\'" + session.getAttribute("company") + "\'";
-			    RetrievedObject ro = SQLManager.retrieveRecords("site", whereClause);
-		    	ResultSet rs = ro.getResultSet();
-			    HashMap<String,String> hm = new HashMap<String,String>();
-			    String values = "";
-			    String type = "";
-			    if (createAcctType!=null) {
-			    	type = createAcctType;
-			    } else {
-			    	type = "Site";
-			    }
-			    if (type.equalsIgnoreCase("Site")) {
-			    	type = "site_info_name";
-			    } else if (type.equalsIgnoreCase("Country")) {
-			    	type = "site_info_address_country";
-			    }
-			    try {
-			    	while (rs.next()) {
-			    		hm.put(rs.getString(type),"1");
-			    	}
-			    	Set<String> keySet = hm.keySet();
-			    	for (Iterator<String> it = keySet.iterator(); it.hasNext(); ) {
-			            String s = it.next();
-			            if (s.equals(createAcctDescription)) { %>
-			            	<option value="<%=s %>" selected><%=s %></option>
-			            <% } else { %>
-			            	<option value="<%=s %>"><%=s %></option>
-			            <% }
-			        }
-			    } catch (SQLException e1) {
-			    	// TODO Auto-generated catch block
-			    	e1.printStackTrace();
-			    }
-			    ro.close();
-			    %>
-		      </select>
-		    </div>
-		    
-		  </div>
-		  <div class="form-group">
-		    <label for="inputEmail" class="col-sm-1 control-label">Email</label>
-		    <div class="col-sm-4">
-		      <% if (createAcctEmail!=null) { %>
-	    		<input type="email" class="form-control" id="email" name="email" value="<%=createAcctEmail %>" required>
-		      <% } else { %>
-		      <input type="email" class="form-control" id="email" name="email" required>
-		      <% } %>
-		    </div>
-		  </div>
-		  <div class="form-group">
-		    <div class="col-sm-offset-1 col-sm-4">
-		      <button type="submit" class="btn btn-default">Submit</button></p>
-		      <% if (createAcctMsg!=null) { %>
-	        	<font color="maroon"><label><%=createAcctMsg %></font></label>
-	        <% } %>
-		    </div>
-		  </div>
-		</form>
+	<% 
+  	String whereClause = "Company=\'" + (String) session.getAttribute("company") + "\'"; 
+  	RetrievedObject ro = SQLManager.retrieveRecords("site", whereClause);
+  	ResultSet rs = ro.getResultSet();
+  	try {
+	  	if (!rs.next()) { %>
+	  		<p><strong>There has to be at least one site to create an account. Go to Manage Sites to create a site.</strong></p>
+	  	<% } else { %>
+		      <form class="form-horizontal" role="form" action="processcreateacct">
+			      <div class="form-group">
+				    <label for="userid" class="col-sm-1 control-label">Userid</label>
+				    <div class="col-sm-4">
+			    	<% if (createAcctUserid!=null) { %>
+			    		<input type="text" class="form-control" id="userid" name="userid" value="<%=createAcctUserid %>" required>
+				      <% } else { %>
+				      <input type="text" class="form-control" id="userid" name="userid" required>
+				      <% } %>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="type" class="col-sm-1 control-label">Type</label>
+				    <div class="col-sm-2">
+				    	<select class="form-control" id="type" name="type" onchange="showValues(this.value)" required>
+				    	<% if ("Site".equals(createAcctType)) { %>
+				    	  	<option value="Site" selected>Site</option>
+						<% } else { %>
+							<option value="Site">Site</option>
+						<% } %>
+						<% if ("Country".equals(createAcctType)) { %>
+				    	  	<option value="Country" selected>Country</option>
+						<% } else { %>
+							<option value="Country">Country</option>
+						<% } %>
+						<% if ("Region".equals(createAcctType)) { %>
+				    	  	<option value="Region" selected>Region</option>
+						<% } else { %>
+							<option value="Region">Region</option>
+						<% } %>
+						</select>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="description" class="col-sm-1 control-label">Description</label>
+				    <div class="col-sm-4">
+				      <select class="form-control" id="description" name="description" required>
+					    <%
+					    whereClause = "Company=\'" + session.getAttribute("company") + "\'";
+					    ro = SQLManager.retrieveRecords("site", whereClause);
+				    	rs = ro.getResultSet();
+					    HashMap<String,String> hm = new HashMap<String,String>();
+					    String values = "";
+					    String type = "";
+					    if (createAcctType!=null) {
+					    	type = createAcctType;
+					    } else {
+					    	type = "Site";
+					    }
+					    if (type.equalsIgnoreCase("Site")) {
+					    	type = "site_info_name";
+					    } else if (type.equalsIgnoreCase("Country")) {
+					    	type = "site_info_address_country";
+					    }
+					    try {
+					    	while (rs.next()) {
+					    		hm.put(rs.getString(type),"1");
+					    	}
+					    	Set<String> keySet = hm.keySet();
+					    	for (Iterator<String> it = keySet.iterator(); it.hasNext(); ) {
+					            String s = it.next();
+					            if (s.equals(createAcctDescription)) { %>
+					            	<option value="<%=s %>" selected><%=s %></option>
+					            <% } else { %>
+					            	<option value="<%=s %>"><%=s %></option>
+					            <% }
+					        }
+					    } catch (SQLException e1) {
+					    	// TODO Auto-generated catch block
+					    	e1.printStackTrace();
+					    }
+					    ro.close();
+					    %>
+				      </select>
+				    </div>
+				    
+				  </div>
+				  <div class="form-group">
+				    <label for="inputEmail" class="col-sm-1 control-label">Email</label>
+				    <div class="col-sm-4">
+				      <% if (createAcctEmail!=null) { %>
+			    		<input type="email" class="form-control" id="email" name="email" value="<%=createAcctEmail %>" required>
+				      <% } else { %>
+				      <input type="email" class="form-control" id="email" name="email" required>
+				      <% } %>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <div class="col-sm-offset-1 col-sm-4">
+				      <button type="submit" class="btn btn-default">Submit</button></p>
+				      <% if (createAcctMsg!=null) { %>
+			        	<font color="maroon"><label><%=createAcctMsg %></font></label>
+			        <% } %>
+				    </div>
+				  </div>
+				</form>
+			<% } 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		ro.close();%>
 
     </div> <!-- /container -->
 

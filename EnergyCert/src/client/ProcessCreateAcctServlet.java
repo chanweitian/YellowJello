@@ -55,10 +55,12 @@ public class ProcessCreateAcctServlet extends HttpServlet {
 	
 	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String userid = request.getParameter("userid");
 		String type = request.getParameter("type");
 		String description = request.getParameter("description");
 		String email = request.getParameter("email");
 		String createAcctMsg = null;
+		boolean success = false;
 		
 		HttpSession session2 = request.getSession();
 		String company = (String) session2.getAttribute("company");
@@ -90,76 +92,81 @@ public class ProcessCreateAcctServlet extends HttpServlet {
 			if (!uniqueEmail) {
 				createAcctMsg = "Duplicate email. Please input unique email.";
 			} else {
-				
-				boolean isUnique = false;
-				String userid = null;
-				while (!isUnique) {
-					userid = tempCompany + Long.toHexString(Double.doubleToLongBits(Math.random()));
-					userid = userid.substring(0, 13);
-					ro = SQLManager.retrieveRecords("account", "userid=\'"+userid+"\'");
-					rs = ro.getResultSet();
-					boolean unique = true;
-					try {
-						while (rs.next()) {
-							unique = false;
-						}
-						if (unique) {
-							isUnique = true;
-						}
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					ro.close();
-				}
-				String password = "" + Long.toHexString(Double.doubleToLongBits(Math.random()));
-				password = password.substring(0,13);
-				String values = "\'" + userid + "\',\'" + password + "\',\'" + email + "\',\'" + type + "\',\'" + company + "\',\'" + description + "\'";
-				SQLManager.insertRecord("account", values);
-				createAcctMsg = "Account has been created. Userid: " + userid;
-				
-				final String username = "gtl.fypeia@gmail.com";
-				final String pwd = "pa55w0rd#";
-		 
-				Properties props = new Properties();
-				props.put("mail.smtp.auth", "true");
-				props.put("mail.smtp.starttls.enable", "true");
-				props.put("mail.smtp.host", "smtp.gmail.com");
-				props.put("mail.smtp.port", "587");
-		 
-				Session session = Session.getInstance(props,
-				  new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(username, pwd);
-					}
-				  });
-		 
+				ro = SQLManager.retrieveRecords("account", "userid=\'"+userid+"\'");
+				rs = ro.getResultSet();
+				boolean unique = true;
 				try {
-		 
-					Message message = new MimeMessage(session);
-					message.setFrom(new InternetAddress("karchiankoh@gmail.com"));
-					message.setRecipients(Message.RecipientType.TO,
-						InternetAddress.parse(email));
-					message.setSubject("Your account has been created");
-					message.setText("Dear User,"
-						+ "\n\n Your userid is " + userid
-						+ "\n Your password is " + password);
-		 
-					Transport.send(message);
-		 
-					System.out.println("Done");
-		 
-				} catch (MessagingException e) {
-					createAcctMsg = "Email doesn't exist";
+					while (rs.next()) {
+						unique = false;
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				ro.close();
+				if (!unique) {
+					createAcctMsg = "Userid is already taken. Please input another userid.";
+				} else {
+					String password = "" + Long.toHexString(Double.doubleToLongBits(Math.random()));
+					password = password.substring(0,13);
+					String values = "\'" + userid + "\',\'" + password + "\',\'" + email + "\',\'" + type + "\',\'" + company + "\',\'" + description + "\'";
+					SQLManager.insertRecord("account", values);
+					createAcctMsg = "Account has been created. Userid: " + userid;
+					success = true;
+					
+					final String username = "gtl.fypeia@gmail.com";
+					final String pwd = "pa55w0rd#";
+			 
+					Properties props = new Properties();
+					props.put("mail.smtp.auth", "true");
+					props.put("mail.smtp.starttls.enable", "true");
+					props.put("mail.smtp.host", "smtp.gmail.com");
+					props.put("mail.smtp.port", "587");
+			 
+					Session session = Session.getInstance(props,
+					  new javax.mail.Authenticator() {
+						protected PasswordAuthentication getPasswordAuthentication() {
+							return new PasswordAuthentication(username, pwd);
+						}
+					  });
+			 
+					try {
+			 
+						Message message = new MimeMessage(session);
+						message.setFrom(new InternetAddress("gtl.fypeia@gmail.com"));
+						message.setRecipients(Message.RecipientType.TO,
+							InternetAddress.parse(email));
+						message.setSubject("Login Credentials for EnergyCert");
+						message.setText("Dear User,"
+							+ "\n\n Your account has been created."
+							+ "\n \n The following are your login credentials:"
+							+ "\n Userid: " + userid
+							+ "\n Password: " + password
+							+ "\n \n This is the link for the application: "
+							+ "http://apps.greentransformationlab.com/EnergyCert/");
+			 
+						Transport.send(message);
+			 
+						System.out.println("Done");
+			 
+					} catch (MessagingException e) {
+						createAcctMsg = "Email doesn't exist";
+					}
 				}
 			}
 		}
 		
 		session2.setAttribute("createAcctMsg", createAcctMsg);
-		session2.setAttribute("createAcctType", type);
-		session2.setAttribute("createAcctDescription", description);
-		session2.setAttribute("createAcctEmail", email);
-		response.sendRedirect("createacct.jsp");
+		if (!success) {
+			session2.setAttribute("createAcctUserid", userid);
+			session2.setAttribute("createAcctType", type);
+			session2.setAttribute("createAcctDescription", description);
+			session2.setAttribute("createAcctEmail", email);
+			response.sendRedirect("createacct.jsp");
+		} else {
+			response.sendRedirect("viewacct.jsp");
+		}
 	}
 
 }

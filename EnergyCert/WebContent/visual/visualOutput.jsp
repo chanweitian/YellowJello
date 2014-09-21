@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=US-ASCII"
-    pageEncoding="US-ASCII"%>
-<%@ page import="db.*,java.util.*,java.sql.*,java.text.*,utility.PeriodManager" %>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<%@ page import="db.*,java.util.*,java.sql.*,java.text.*,utility.PeriodManager,java.io.*" %>
 
 
 <% 
@@ -534,7 +534,10 @@ function getLightingMultiplier(){
 <td class="field_info">  <%= officeFloorArea %> m<sup>2</sup></td>
 </tr>
 <tr>
-<td class="field_name"> City:</td>
+<td class="field_name"> State:</td>
+<% Properties p = new Properties();
+p.load(new StringReader("key="+site_info_address_city));
+site_info_address_city = p.getProperty("key"); %>
 <td class="field_info"> <%= site_info_address_city %></td>
 <td class="field_name"> Warehouse Heated:</td>
 <td class="field_info">  <%= warehouseHeated %></td>

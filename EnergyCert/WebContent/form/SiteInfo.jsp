@@ -249,7 +249,7 @@ ro.close();
 								</div>
 								
 								<div class="form-group">
-								<label class="col-lg-5 control-label" for="site_info_address_city">City <font color="red">*</font></label>
+								<label class="col-lg-5 control-label" for="site_info_address_city">State <font color="red">*</font></label>
 								<div class="col-lg-6">
 									<input type="text" class="form-control" id="required_value" name="site_info_address_city" style="width: 420px;" value="<%=site_info_address_city %>" disabled ></input>
 								</div>

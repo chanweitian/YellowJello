@@ -1,6 +1,17 @@
-<%@page import="java.util.*,db.*,java.lang.Thread,java.sql.ResultSet;" %>
+<%@page import="java.util.*,db.*,java.lang.Thread,java.sql.*,utility.*" %>
 <%@include file="../protectusers.jsp" %>
 
+<%String company = (String) session.getAttribute("company");
+int month = PeriodManager.getMonthInt(company);
+Calendar cal = Calendar.getInstance();
+cal.set(Calendar.MONTH,month);
+cal.set(Calendar.DATE,1);
+Calendar today = Calendar.getInstance();
+int previousYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
+if (today.before(cal)) {
+	previousYear -= 1;
+}%>
+			
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -48,11 +59,6 @@
 	String where_past = "questionnaire_id = \'" + quest_id + "\'";
 	RetrievedObject past_quest_ro = SQLManager.retrieveRecords("questionnaire", where_past);
 	ResultSet past_quest_rs = past_quest_ro.getResultSet();
-	/*
-	String site_id = past_quest_rs.getString("site_id");
-	String where_site = "site_id = \'" + quest_id + "\'";
-	ResultSet past_site_rs = SQLManager.retrieveRecords("SITE", where_site);
-	*/
 	
     %>
   	
@@ -81,45 +87,56 @@
 					<div class="quest_subtitle">
 						Site Data and User Information<br><br>
 					</div>
-					<div class="past_quest_table">
-						<div class="col1">What is the name of the site?</div>
-						<div class="col2"><%="Site Name"%></div>
-						<div class="col3"></div>
-						<div class="col4">Site Reference?</div>
-						<div class="col5"><%=past_quest_rs.getString("site_info_reference")%></div>
-					</div>
-					<div class="past_quest_table">	
-						<div class="col1">Site Business Unit?</div>
-						<div class="col2"><%=past_quest_rs.getString("site_info_business_unit")%></div>
-						<div class="col3"></div>
-						<div class="col4">Is the site under a leasehold or freehold?</div>
-						<div class="col5"><%=past_quest_rs.getString("site_info_leasehold_freehold")%></div>
-					</div>
-					<div class="past_quest_table">	
-						<div class="col1">If leasehold, when does the current lease expire?</div>
-						<div class="col2"><%=past_quest_rs.getString("site_info_lease_expire")%></div>
-						<div class="col3"></div>
-						<div class="col4">If applicable, when does the current customer contract expire?</div>
-						<div class="col5"><%=past_quest_rs.getString("site_info_contract_expire")%></div>
-					</div>	
-					<hr>
-					<div class="past_quest_table">
-						<div class="col1">What is the site address?</div>
-					</div>
-					<div class="past_quest_table">	
-						<div class="col1">Street + Number</div>
-						<div class="col2"><%="Street123"%></div>
-						<div class="col3"></div>
-						<div class="col4">City</div>
-						<div class="col5"><%="City123"%></div>	
-					</div>
-					<div class="past_quest_table">	
-						<div class="col1">Postal</div>
-						<div class="col2"><%="Postal123"%></div>
-						<div class="col3"></div>
-						<div class="col4">Country</div>
-						<div class="col5"><%="Country123"%></div>	
-					</div>
+					<% 	String site_id = past_quest_rs.getString("site_id");
+					String where_site = "Site_ID = \'" + site_id + "\'";
+					RetrievedObject past_site_ro = SQLManager.retrieveRecords("site", where_site);
+					ResultSet past_site_rs = past_site_ro.getResultSet();
+					try {
+						while(past_site_rs.next()) { %>
+							<div class="past_quest_table">
+								<div class="col1">What is the name of the site?</div>
+								<div class="col2"><%=past_site_rs.getString("site_info_name")%></div>
+								<div class="col3"></div>
+								<div class="col4">Site Reference?</div>
+								<div class="col5"><%=past_quest_rs.getString("site_info_reference")%></div>
+							</div>
+							<div class="past_quest_table">	
+								<div class="col1">Site Business Unit?</div>
+								<div class="col2"><%=past_quest_rs.getString("site_info_business_unit")%></div>
+								<div class="col3"></div>
+								<div class="col4">Is the site under a leasehold or freehold?</div>
+								<div class="col5"><%=past_quest_rs.getString("site_info_leasehold_freehold")%></div>
+							</div>
+							<div class="past_quest_table">	
+								<div class="col1">If leasehold, when does the current lease expire?</div>
+								<div class="col2"><%=past_quest_rs.getString("site_info_lease_expire")%></div>
+								<div class="col3"></div>
+								<div class="col4">If applicable, when does the current customer contract expire?</div>
+								<div class="col5"><%=past_quest_rs.getString("site_info_contract_expire")%></div>
+							</div>	
+							<hr>
+							<div class="past_quest_table">
+								<div class="col1">What is the site address?</div>
+							</div>
+							<div class="past_quest_table">	
+								<div class="col1">Street + Number</div>
+								<div class="col2"><%=past_site_rs.getString("site_info_address_street") %></div>
+								<div class="col3"></div>
+								<div class="col4">State</div>
+								<div class="col5"><%=past_site_rs.getString("site_info_address_city")%></div>	
+							</div>
+							<div class="past_quest_table">	
+								<div class="col1">Postal</div>
+								<div class="col2"><%=past_site_rs.getString("site_info_address_postal")%></div>
+								<div class="col3"></div>
+								<div class="col4">Country</div>
+								<div class="col5"><%=past_site_rs.getString("site_info_address_country")%></div>	
+							</div>
+							<% }
+						} catch(SQLException e) {
+							e.printStackTrace();
+						} 
+						past_site_ro.close();%>
 					<hr>
 					<div class="past_quest_table">
 						<div class="col1">What is your contact information?</div>

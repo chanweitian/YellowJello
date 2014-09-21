@@ -93,7 +93,7 @@
 	</script>
 	
 	<script>
-	function cityChanged(str)
+	function Changed(str)
 	{	
 	var otherCity = document.getElementById("otherCity");
 	if (str=="Others")
@@ -148,6 +148,7 @@
 		      <% } else { %>
 		      <input type="text" class="form-control" id="region" name="region" required>
 		      <% } %>
+		      <i>E.g. APAC, Europe</i>
 		    </div>
 		  </div>
 		  <div class="form-group">
@@ -213,7 +214,7 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label for="city" class="col-sm-1 control-label">City</label>
+		    <label for="city" class="col-sm-1 control-label">State</label>
 		    <div class="col-sm-4">
 		     
 		     <% 

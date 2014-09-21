@@ -50,11 +50,9 @@
             <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <span class="caret"></span></a>
 	          <ul class="dropdown-menu" role="menu">
-	            <li><a href="/EnergyCert/admin/createco.jsp">Create Company Account</a></li>
-	            <li><a href="/EnergyCert/admin/viewco.jsp">View Companies</a></li>
+	            <li><a href="/EnergyCert/admin/viewco.jsp">Manage Company Accounts</a></li>
 	            <li><a href="/EnergyCert/admin/editformula.jsp">Edit Formula</a></li>
-	            <li><a href="/EnergyCert/admin/addweather.jsp">Add Weather</a></li>
-	            <li><a href="/EnergyCert/admin/editweather.jsp">Edit Weather</a></li>
+	            <li><a href="/EnergyCert/admin/editweather.jsp">Manage Weather</a></li>
 	          </ul>
 	        </li>  
 	        <% } else { %>
@@ -62,12 +60,8 @@
             <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <span class="caret"></span></a>
 	          <ul class="dropdown-menu" role="menu">
-	            <li><a href="/EnergyCert/client/createacct.jsp">Create Account</a></li>
-	            <li><a href="/EnergyCert/client/viewacct.jsp">View Accounts</a></li>
-	            <li><a href="/EnergyCert/client/importusers.jsp">Import Accounts</a></li>
-	            <li><a href="/EnergyCert/client/addwh.jsp">Add Site</a></li>
-	            <li><a href="/EnergyCert/client/viewwh.jsp">View Sites</a></li>
-	            <li><a href="/EnergyCert/client/importwh.jsp">Import Sites</a></li>
+	            <li><a href="/EnergyCert/client/viewacct.jsp">Manage Accounts</a></li>
+	            <li><a href="/EnergyCert/client/viewwh.jsp">Manage Sites</a></li>
 	            <li><a href="/EnergyCert/client/manageperiod.jsp">Manage Period</a></li>
 	          </ul>
 	        </li>  
@@ -77,8 +71,6 @@
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
 	          <ul class="dropdown-menu" role="menu">
 	            <li><a href="/EnergyCert/account/changepwd.jsp">Change Password</a></li>
-	            <li><a href="#">Another action</a></li>
-	            <li><a href="#">Something else here</a></li>
 	          </ul>
 	        </li>  
 	        <% } %>

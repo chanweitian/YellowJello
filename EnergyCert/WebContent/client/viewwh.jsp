@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>View Sites</title>
+    <title>Manage Sites</title>
 
     <!-- Bootstrap -->
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -43,6 +43,9 @@
 		  margin-bottom: 10px;
 		}
 		
+		.modal {
+		  margin-top: 50px;
+		}
 	</style>
 
   </head>
@@ -56,22 +59,40 @@
   	ResultSet rs = ro.getResultSet();
   	String deleteWhFlag = (String) session.getAttribute("deleteWhFlag");
     session.removeAttribute("deleteWhFlag");
+    String addWhMsg = (String) session.getAttribute("addWhMsg");
+    session.removeAttribute("addWhMsg");
+    String importWhMsg = (String) session.getAttribute("importWhMsg");
+    session.removeAttribute("importWhMsg");
   	%>
 
-	<div class="header">View sites</div>
+	<div class="header">Manage sites</div>
     <div class="container theme-showcase" role="main">
 
       <%-- <h2 class="heading">View warehouses</h2><p> --%>
 
-
-
-      <p>
       	<% if (deleteWhFlag!=null) { %>
       	<div class="alert alert-warning">
-        <strong>Site has been deleted successfully.</strong>
+        Site has been deleted successfully.
       	</div>
 		<% } %>
       	
+      	<% if (addWhMsg!=null) { %>
+      	<div class="alert alert-warning">
+        <%=addWhMsg %>
+      	</div>
+		<% } %>
+		
+		<% if (importWhMsg!=null) { %>
+      	<div class="alert alert-warning">
+        <%=importWhMsg %>
+      	</div>
+		<% } %>
+      	
+      	<p>
+			<a class="btn btn-primary" href="addwh.jsp" style="margin-left:12px">Add Site</a>
+			<a class="btn btn-primary" href="importwh.jsp" style="margin-left:915px">Import Sites</a>
+		</p>
+		
       	<table class="table table-hover">
 	        <thead>
 	          <tr>
@@ -80,13 +101,15 @@
 	            <th>Country</th>
 	            <th>Site</th>
 	            <th>Street</th>
-	            <th>City</th>
+	            <th>State</th>
 	            <th>Postal</th>
 	          </tr>
 	        </thead>
 	        <tbody>
-	        <%try {
-				while (rs.next()) { %>
+	        <% int count=0;
+	        try {
+				while (rs.next()) { 
+					count++;%>
 			          <tr>
 			            <td><%=rs.getString("Site_ID") %></td>
 			            <td><%=rs.getString("Region") %>
@@ -96,9 +119,33 @@
 			            <td><%=rs.getString("site_info_address_city") %></td>
 			            <td><%=rs.getString("site_info_address_postal") %>
 			            <td>
-			            	<a class="btn btn-default" href="managewh.jsp?siteid=<%=rs.getString("Site_ID") %>">Manage</a>
+			            	<a class="btn btn-default" href="managewh.jsp?siteid=<%=rs.getString("Site_ID") %>">Modify</a>
 			            </td>
+			            <td>
+			            	<button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<%=rs.getString("Site_ID")%>">Delete</button>
+      					</td>
 			          </tr>
+			          <div class="modal fade" id="deleteModal<%=rs.getString("Site_ID")%>" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog" style="left: 0px">
+							<div class="modal-content">
+								<div class="modal-header">
+						 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+									<h4 class="modal-title">Delete site</h4>
+								</div>
+				
+								<div class="modal-body">
+									<form action="processdeletewh" method="post">
+										<center>Are you sure you want to delete the site?<br /><br />
+							      		<input type="hidden" name="siteid" value="<%=rs.getString("Site_ID") %>">
+							      		<button class="btn" type="submit">Yes</button>
+							      		<button class="btn" data-dismiss="modal">No</button>
+							      		</center>
+							      </form>
+								</div>
+							</div>
+						</div>
+					</div> 
 				<% }
 	          } catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -107,8 +154,10 @@
 			ro.close();%>
 	        </tbody>
 	      </table>
-      </p>
-
+			<% if (count==0) { %>
+	          	<p><strong><font color="red">No site has been added. Click on Add Site to add one.</font></strong></p>
+	          <% }
+			  %>
     </div> <!-- /container -->
 
 

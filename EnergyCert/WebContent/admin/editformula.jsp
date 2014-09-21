@@ -50,6 +50,9 @@
 		.btn-primary {
 			margin-left: 1030px;
 		}
+		$('#accordion').on('show.bs.collapse', function () {
+		    if (active) $('#accordion .in').collapse('hide');
+		});
 	</style>
   </head>
   
@@ -102,9 +105,9 @@
      	 
       <div class="panel-group" id="accordion">
 		  <div class="panel panel-default">
-		    <div class="panel-heading">
+		    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 		      <h4 class="panel-title">
-		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+		        <a class="accordion-toggle">
 		          Ratios
 		        </a>
 		      </h4>
@@ -130,9 +133,9 @@
 		  </div>
 		  
 		  <div class="panel panel-default">
-		    <div class="panel-heading">
+		    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo">
 		      <h4 class="panel-title">
-		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+		        <a class="accordion-toggle">
 		          Type specific parameters
 		        </a>
 		      </h4>
@@ -181,9 +184,9 @@
 		  </div>
 		  
 		  <div class="panel panel-default">
-		    <div class="panel-heading">
+		    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree">
 		      <h4 class="panel-title">
-		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+		        <a class="accordion-toggle">
 		          Units and Efficiency
 		        </a>
 		      </h4>
@@ -245,9 +248,9 @@
 		  </div>
 		  
 		  <div class="panel panel-default">
-		    <div class="panel-heading">
+		    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour">
 		      <h4 class="panel-title">
-		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+		        <a class="accordion-toggle">
 		          Power Consumption
 		        </a>
 		      </h4>
@@ -321,9 +324,9 @@
 		  </div>
 		  
 		  <div class="panel panel-default">
-		    <div class="panel-heading">
+		    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive">
 		      <h4 class="panel-title">
-		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+		        <a class="accordion-toggle">
 		          External lighting
 		        </a>
 		      </h4>
@@ -343,9 +346,9 @@
 		  </div>
 		  
 		  <div class="panel panel-default">
-		    <div class="panel-heading">
+		    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseSix">
 		      <h4 class="panel-title">
-		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix">
+		        <a class="accordion-toggle">
 		          Water Req
 		        </a>
 		      </h4>
@@ -401,9 +404,9 @@
 		  </div>
 		  
 		  <div class="panel panel-default">
-		    <div class="panel-heading">
+		    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseSeven">
 		      <h4 class="panel-title">
-		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven">
+		        <a class="accordion-toggle">
 		          Conversion Factor
 		        </a>
 		      </h4>
@@ -423,9 +426,9 @@
 		  </div>
 		  
 		  <div class="panel panel-default">
-		    <div class="panel-heading">
+		    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseEight">
 		      <h4 class="panel-title">
-		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseEight">
+		        <a class="accordion-toggle">
 		          Energy Consumption
 		        </a>
 		      </h4>

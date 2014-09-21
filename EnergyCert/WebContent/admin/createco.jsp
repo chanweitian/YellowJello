@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Create Company Account</title>
+    <title>Add Company Account</title>
 
 	<!-- Bootstrap -->
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -51,11 +51,13 @@
 	String creationMsg = (String) session.getAttribute("creationMsg");
   	String creationCompany = (String) session.getAttribute("creationCompany");
   	String creationEmail = (String) session.getAttribute("creationEmail");
+  	String creationUserid = (String) session.getAttribute("creationUserid");
+  	session.removeAttribute("creationUserid");
   	session.removeAttribute("creationMsg");
   	session.removeAttribute("creationCompany");
   	session.removeAttribute("creationEmail");
     %>
-	<div class="header">Create company account</div>
+	<div class="header">Add company account</div>
     <div class="container theme-showcase" role="main">
 
       <%-- <h2 class="heading">Create company account</h2><p>--%>
@@ -64,7 +66,16 @@
     
 
       <form class="form-horizontal" role="form" method="post" action="processcreation">
-      
+      	<div class="form-group">
+		    <label for="inputUserid" class="col-sm-1 control-label">Userid</label>
+		    <div class="col-sm-4">
+	    	<% if (creationUserid!=null) { %>
+	    		<input type="text" class="form-control" id="inputUserid" name="inputUserid" value="<%=creationUserid %>" required>
+		      <% } else { %>
+		      <input type="text" class="form-control" id="inputUserid" name="inputUserid" required>
+		      <% } %>
+		    </div>
+		  </div>
 		  <div class="form-group">
 		    <label for="inputCompany" class="col-sm-1 control-label">Company</label>
 		    <div class="col-sm-4">

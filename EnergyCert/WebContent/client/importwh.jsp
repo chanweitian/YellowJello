@@ -56,6 +56,7 @@
 		
       <%--<h2 class="heading">Import users</h2><p>--%>
       
+      <p>Click on the link to download a sample of the format: <a href="sites.xlsx">Download here</a></p>
 
       <form class="form-horizontal" role="form" action="processimportwh" method="POST" enctype="multipart/form-data" >
 		  <div class="form-group">

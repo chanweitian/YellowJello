@@ -98,29 +98,35 @@ public class ProcessAddWeatherServlet extends HttpServlet {
 		    }
 		}
 	    
+		boolean success = false;
 	    if (addWeatherMsg==null) {
 	    	WeatherManager.addWeather(country,city,hm);
 	    	addWeatherMsg = "Weather added successfully";
+	    	success = true;
 	    }
 	    
 	    HttpSession session = request.getSession();
 	    session.setAttribute("addWeatherMsg", addWeatherMsg);
-		session.setAttribute("addWeatherCountry", country);
-		session.setAttribute("addWeatherCity", request.getParameter("city"));
-		session.setAttribute("otherCity", request.getParameter("otherCity"));
-		session.setAttribute("awJan", request.getParameter("Jan"));
-		session.setAttribute("awFeb", request.getParameter("Feb"));
-		session.setAttribute("awMar", request.getParameter("Mar"));
-		session.setAttribute("awApr", request.getParameter("Apr"));
-		session.setAttribute("awMay", request.getParameter("May"));
-		session.setAttribute("awJun", request.getParameter("Jun"));
-		session.setAttribute("awJul", request.getParameter("Jul"));
-		session.setAttribute("awAug", request.getParameter("Aug"));
-		session.setAttribute("awSep", request.getParameter("Sep"));
-		session.setAttribute("awOct", request.getParameter("Oct"));
-		session.setAttribute("awNov", request.getParameter("Nov"));
-		session.setAttribute("awDec", request.getParameter("Dec"));
-		response.sendRedirect("addweather.jsp");
+	    if (!success) {
+			session.setAttribute("addWeatherCountry", country);
+			session.setAttribute("addWeatherCity", request.getParameter("city"));
+			session.setAttribute("otherCity", request.getParameter("otherCity"));
+			session.setAttribute("awJan", request.getParameter("Jan"));
+			session.setAttribute("awFeb", request.getParameter("Feb"));
+			session.setAttribute("awMar", request.getParameter("Mar"));
+			session.setAttribute("awApr", request.getParameter("Apr"));
+			session.setAttribute("awMay", request.getParameter("May"));
+			session.setAttribute("awJun", request.getParameter("Jun"));
+			session.setAttribute("awJul", request.getParameter("Jul"));
+			session.setAttribute("awAug", request.getParameter("Aug"));
+			session.setAttribute("awSep", request.getParameter("Sep"));
+			session.setAttribute("awOct", request.getParameter("Oct"));
+			session.setAttribute("awNov", request.getParameter("Nov"));
+			session.setAttribute("awDec", request.getParameter("Dec"));
+			response.sendRedirect("addweather.jsp");
+	    } else {
+	    	response.sendRedirect("editweather.jsp");
+	    }
 	}
 
 }

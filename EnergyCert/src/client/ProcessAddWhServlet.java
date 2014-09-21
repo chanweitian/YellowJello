@@ -78,6 +78,7 @@ public class ProcessAddWhServlet extends HttpServlet {
 			tempCompany = tempCompany.substring(0,6);
 		}
 		
+		boolean success=false;
 		
 		if (site.trim().length()==0) {
 			addWhMsg = "Please input site";
@@ -124,17 +125,22 @@ public class ProcessAddWhServlet extends HttpServlet {
 					+ "\',\'" + street + "\',\'" + city + "\',\'" + postal + "\'";
 			SQLManager.insertRecord("site", values);
 			addWhMsg = "Site added. SiteID: " + warehouseID;
+			success = true;
 		}
 		
 		session.setAttribute("addWhMsg", addWhMsg);
-		session.setAttribute("addWhSite", site);
-		session.setAttribute("addWhCountry", country);
-		session.setAttribute("addWhRegion", region);
-		session.setAttribute("addWhStreet", street);
-		session.setAttribute("addWhCity", request.getParameter("city"));
-		session.setAttribute("otherCity", request.getParameter("otherCity"));
-		session.setAttribute("addWhPostal", postal);
-		response.sendRedirect("addwh.jsp");
+		if (!success) {
+			session.setAttribute("addWhSite", site);
+			session.setAttribute("addWhCountry", country);
+			session.setAttribute("addWhRegion", region);
+			session.setAttribute("addWhStreet", street);
+			session.setAttribute("addWhCity", request.getParameter("city"));
+			session.setAttribute("otherCity", request.getParameter("otherCity"));
+			session.setAttribute("addWhPostal", postal);
+			response.sendRedirect("addwh.jsp");
+		} else {
+			response.sendRedirect("viewwh.jsp");
+		}
 	}
 
 }

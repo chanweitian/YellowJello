@@ -74,6 +74,9 @@ public class ProcessImportWhServlet extends HttpServlet {
         List sheetData = new ArrayList();
 
         InputStream fis = null;
+        
+        boolean success = false;
+        
         try {
             //
             // Create a FileInputStream that will be use to read the excel file.
@@ -118,12 +121,17 @@ public class ProcessImportWhServlet extends HttpServlet {
 	        }
 	
 	        importWhMsg = showExelData(sheetData,request);
+	        success = true;
 	        
         } catch(InvalidOperationException ioe) {
         	importWhMsg = "Please input a valid file";
         }
         session.setAttribute("importWhMsg", importWhMsg);
-		response.sendRedirect("importwh.jsp");
+        if (!success) {
+        	response.sendRedirect("importwh.jsp");
+        } else {
+        	response.sendRedirect("viewwh.jsp");
+        }
     }
 
     private static String showExelData(List sheetData, HttpServletRequest request) {

@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Edit Weather</title>
+    <title>Manage Weather</title>
 	
 	<!-- Bootstrap -->
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -47,8 +47,12 @@
 		  margin-bottom: 10px;
 		}
 		
-		.btn-primary {
-			margin-left: 1030px;
+		$('#accordion').on('show.bs.collapse', function () {
+		    if (active) $('#accordion .in').collapse('hide');
+		});
+		
+		.modal {
+		  margin-top: 50px;
 		}
 	</style>
   </head>
@@ -58,6 +62,8 @@
   
   	<% String weatherFlag = (String) session.getAttribute("weatherFlag");
     session.removeAttribute("weatherFlag");
+    String addWeatherMsg = (String) session.getAttribute("addWeatherMsg");
+    session.removeAttribute("addWeatherMsg");
     Map<String,String[]> weatherHM = new HashMap<String,String[]>(); 
     ArrayList<String> weatherMsg = null;
     HashMap<String,ArrayList<String>> countryHM = WeatherManager.getCountryHM();
@@ -81,13 +87,21 @@
   	%>
 
   
-  <div class="header">Edit Weather</div>
+  <div class="header">Manage weather</div>
     <div class="container theme-showcase" role="main">
+    	
+    	<% if (addWeatherMsg!=null) { %>
+      	<div class="alert alert-warning">
+        <%=addWeatherMsg %>
+      	</div>
+		<% } %>
+    	
+    	<p>The following are the Average Monthly Temperature (°C) of the different States.</p>
       
       <form class="form-horizontal" role="form" method="post" action="processeditweather">
-      
       <div class="form-group">
-	  	<button type="submit" class="btn btn-primary">Save Changes</button>
+      	<a class="btn btn-primary" href="addweather.jsp" style="margin-left:12px">Add Weather</a>
+	  	<button type="submit" class="btn btn-primary" style="margin-left:900px">Save Changes</button>
 	  	<% if (weatherMsg!=null) { %>
 	  		<p>
 				<% for (String msg: weatherMsg) { %>
@@ -95,27 +109,24 @@
         		<% } %>
 				</p>
         	<% } %>
-	  </div>
-     	 
+     	 </div>
      <div class="panel-group" id="accordion">
       <% int count=0;
-      Iterator iter2 = countryHM.entrySet().iterator();
-	  	while (iter2.hasNext()) {
-	        Map.Entry<String,ArrayList<String>> pairs = (Map.Entry<String,ArrayList<String>>)iter2.next();
-	        String country = pairs.getKey();
-	        ArrayList<String> cities = pairs.getValue(); 
-	        %>
-	        
-			  <div class="panel panel-default">
-			    <div class="panel-heading">
-			      <h4 class="panel-title">
-			        <a data-toggle="collapse" data-parent="#accordion" href="<%="#collapse"+count %>">
-			          <%=country %>
-			        </a>
-			      </h4>
-			    </div>
-			    
-			    <% if (count==0) { %>
+      Set<String> countries = countryHM.keySet();
+      ArrayList<String> list = new ArrayList<String>();
+      list.addAll(countries);
+      Collections.sort(list);
+      for (String country: list) { %>
+    	  <div class="panel panel-default">
+		    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="<%="#collapse"+count %>">
+		      <h4 class="panel-title">
+		        <a class="accordion-toggle">
+		          <%=country %>
+		        </a>
+		      </h4>
+		    </div>
+		    
+		    <% if (count==0) { %>
 			    	<div id="<%="collapse"+count %>" class="panel-collapse collapse in">
 			    <% } else { %>
 			    	<div id="<%="collapse"+count %>" class="panel-collapse collapse">
@@ -126,7 +137,7 @@
 					  <table class="table table-hover">
 			        <thead>
 			          <tr>
-			            <th>City</th>
+			            <th>State</th>
 			            <th>Jan</th>
 			            <th>Feb</th>
 			            <th>Mar</th>
@@ -143,7 +154,9 @@
 			        </thead>
 			        <tbody>
 			        
-			          <% for (String city: cities) { %>
+			        <% ArrayList<String> cities = countryHM.get(country);
+			        Collections.sort(cities);
+			          for (String city: cities) { %>
 			          <tr>
 			            <td><%=city %></td>
 			            <td><input type="text" class="form-control" id="<%=city+";Jan" %>" name="<%=city+";Jan" %>" value="<%=weatherHM.get(city+";Jan")[0] %>" required></td>
@@ -167,11 +180,13 @@
 			    </div>
 			  </div>
 	  <% } %>
+      
+			    
 		  
 		</div>
 		
 		<div class="form-group">
-			<button type="submit" class="btn btn-primary">Save Changes</button>
+			<button type="submit" class="btn btn-primary" style="margin-left:1030px">Save Changes</button>
 	  	</div>
 	  	</form>
 

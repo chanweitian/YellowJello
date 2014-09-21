@@ -85,6 +85,8 @@ public class ProcessImportServlet extends HttpServlet {
         List sheetData = new ArrayList();
 
         InputStream fis = null;
+        boolean success = false;
+        
         try {
             //
             // Create a FileInputStream that will be use to read the excel file.
@@ -129,12 +131,17 @@ public class ProcessImportServlet extends HttpServlet {
 	        }
 	
 	        importMsg = showExelData(sheetData,request);
+	        success = true;
 	        
         } catch(InvalidOperationException ioe) {
         	importMsg = "Please input a valid file";
         }
         session.setAttribute("importMsg", importMsg);
-		response.sendRedirect("importusers.jsp");
+        if(!success) {
+        	response.sendRedirect("importusers.jsp");
+        } else {
+        	response.sendRedirect("viewacct.jsp");
+        }
     }
 
     private static String showExelData(List sheetData, HttpServletRequest request) {
@@ -156,40 +163,22 @@ public class ProcessImportServlet extends HttpServlet {
             	String type = null;
             	String description = null;
             	String email = null;
-            	
-            	boolean isUnique = false;
-    			String userid = null;
-    			while (!isUnique) {
-    				userid = tempCompany + Long.toHexString(Double.doubleToLongBits(Math.random()));
-    				userid = userid.substring(0, 13);
-    				RetrievedObject ro = SQLManager.retrieveRecords("account", "userid=\'"+userid+"\'");
-    				ResultSet rs = ro.getResultSet();
-    				boolean unique = true;
-    				try {
-    					while (rs.next()) {
-    						unique = false;
-    					}
-    					if (unique) {
-    						isUnique = true;
-    					}
-    				} catch (SQLException e) {
-    					// TODO Auto-generated catch block
-    					e.printStackTrace();
-    				}
-    				ro.close();
-    			}
+            	String userid = null;
             	
 	            for (int j = 0; j < list.size(); j++) {
 	                XSSFCell cell = (XSSFCell) list.get(j);
 	                System.out.print(cell.getRichStringCellValue().getString());
 	                switch (j) {
 	                case 0:
-	                	type = cell.getRichStringCellValue().getString();
+	                	userid = cell.getRichStringCellValue().getString();
 	                	break;
 	                case 1:
-	                	description = cell.getRichStringCellValue().getString();
+	                	type = cell.getRichStringCellValue().getString();
 	                	break;
 	                case 2:
+	                	description = cell.getRichStringCellValue().getString();
+	                	break;
+	                case 3:
 	                	email = cell.getRichStringCellValue().getString();
 	                	break;
 	                }
@@ -223,13 +212,17 @@ public class ProcessImportServlet extends HttpServlet {
     			try {
     	 
     				Message message = new MimeMessage(session);
-    				message.setFrom(new InternetAddress("karchiankoh@gmail.com"));
-    				message.setRecipients(Message.RecipientType.TO,
-    					InternetAddress.parse(email));
-    				message.setSubject("Your account has been created");
-    				message.setText("Dear User,"
-    					+ "\n\n Your userid is " + userid
-    					+ "\n Your password is " + password);
+    				message.setFrom(new InternetAddress("gtl.fypeia@gmail.com"));
+					message.setRecipients(Message.RecipientType.TO,
+						InternetAddress.parse(email));
+					message.setSubject("Login Credentials for EnergyCert");
+					message.setText("Dear User,"
+						+ "\n\n Your account has been created."
+						+ "\n \n The following are your login credentials:"
+						+ "\n Userid: " + userid
+						+ "\n Password: " + password
+						+ "\n \n This is the link for the application: "
+						+ "http://apps.greentransformationlab.com/EnergyCert/");
     	 
     				Transport.send(message);
     				System.out.println();
