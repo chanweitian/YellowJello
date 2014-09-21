@@ -45,6 +45,52 @@
     right: 25px;
 }
 </style>
+
+<script>
+	function showValues(str)
+	{
+	var xmlhttp;    
+	if (str=="")
+	  {
+	  document.getElementById("txtHint").innerHTML="";
+	  return;
+	  }
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	    {
+		  var res = xmlhttp.responseText;
+		  var values = res.split(";");
+		  var select = document.getElementById("zone_id"), option = null, next_desc = null;
+		  var len = select.options.length;
+		 
+		  for (var i = 0; i < len; i++)
+          {
+              select.remove(0);
+          }
+          
+		  for(x in values) {
+		        option = document.createElement("option");
+		        next_desc = values[x];
+		        option.value = next_desc;
+		        var temp = next_desc.split("//");
+		        option.innerHTML = temp[0];
+		        select.appendChild(option);
+		    }
+	    }
+	  }
+	xmlhttp.open("GET","getzones.jsp?questionnaire_id="+str,true);
+	xmlhttp.send();
+	}
+	</script>
 </head>
 <body>
 <%
@@ -98,11 +144,11 @@ if (today.before(cal)) {
 				<div class="row">
 					<div class="col-md-3 selectContainer" id="required">
 						<label class="control-label">Site ID</label> <select
-							class="form-control" name="site_id">
+							class="form-control" name="site_id" onchange="showValues(this.value)" >
 							<option value="">--Select one--</option>
 							<%
 							while (rs.next()) {
-								where = "site_id=\'" + rs.getString("site_id") + "\' and year=" + previousYear;
+								where = "site_id=\'" + rs.getString("site_id") + "\' and year=" + previousYear + " and emission_electrical_use <> 0";
 								RetrievedObject ro2 = SQLManager.retrieveRecords("questionnaire", where); 
 								ResultSet rs2 = ro2.getResultSet();
 								while (rs2.next()) {
@@ -117,12 +163,8 @@ if (today.before(cal)) {
 
 					<div class="col-md-3 selectContainer" id="required">
 						<label class="control-label">Zone ID</label> <select
-							class="form-control" name="zone_id">
+							class="form-control" id="zone_id" name="zone_id">
 							<option value="">--Select one--</option>
-							<option value="action">Action</option>
-							<option value="comedy">Comedy</option>
-							<option value="horror">Horror</option>
-							<option value="romance">Romance</option>
 						</select>
 					</div>
 				</div>
