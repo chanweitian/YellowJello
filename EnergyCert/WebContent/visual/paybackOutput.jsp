@@ -52,7 +52,19 @@
 	var xmlhttp;    
 	if (str=="")
 	  {
-	  document.getElementById("txtHint").innerHTML="";
+		var select = document.getElementById("zone_id"), option = null;
+		var len = select.options.length;
+		for (var i = 0; i < len; i++)
+        {
+            select.remove(0);
+        }
+		option = document.createElement("option");
+		option.value = ""
+		option.innerHTML = "--Select a Site ID first--";
+	    select.appendChild(option);
+	    setTimeout(function() {
+			$('#payback_form').bootstrapValidator('revalidateField', 'zone_id');
+		}, 300);
 	  return;
 	  }
 	if (window.XMLHttpRequest)
@@ -76,7 +88,7 @@
           {
               select.remove(0);
           }
-          
+	        
 		  for(x in values) {
 		        option = document.createElement("option");
 		        next_desc = values[x];
@@ -89,10 +101,24 @@
 	  }
 	xmlhttp.open("GET","getzones.jsp?questionnaire_id="+str,true);
 	xmlhttp.send();
+	setTimeout(function() {
+		$('#payback_form').bootstrapValidator('revalidateField', 'zone_id');
+	}, 300);
+	}
+	
+	function validateFields() {
+		$('#payback_form').bootstrapValidator('revalidateField', 'integer');
+		$('#payback_form').bootstrapValidator('revalidateField', 'number');
+		var len = document.getElementById("site_id").options.length;
+	
+		if (len == 1) {
+			$('#paybackModal').modal('show');
+		}
 	}
 	</script>
+
 </head>
-<body>
+<body onload="validateFields()">
 <%
 Map<String,String[]> formulaHM = new HashMap<String,String[]>();
 	HashMap<String,Integer> hm = PaybackFormulaManager.getFormulaHM();
@@ -144,7 +170,7 @@ if (today.before(cal)) {
 				<div class="row">
 					<div class="col-md-3 selectContainer" id="required">
 						<label class="control-label">Site ID</label> <select
-							class="form-control" name="site_id" onchange="showValues(this.value)" >
+							class="form-control" name="site_id" id="site_id" onchange="showValues(this.value)" >
 							<option value="">--Select one--</option>
 							<%
 							while (rs.next()) {
@@ -164,7 +190,7 @@ if (today.before(cal)) {
 					<div class="col-md-3 selectContainer" id="required">
 						<label class="control-label">Zone ID</label> <select
 							class="form-control" id="zone_id" name="zone_id">
-							<option value="">--Select one--</option>
+							<option value="">--Select a Site ID first--</option>
 						</select>
 					</div>
 				</div>
@@ -176,7 +202,7 @@ if (today.before(cal)) {
 				<div class="row">
 					<div class="col-md-3">
 		                <label class="control-label">Actual Consumption of Electricity (kWh)</label>
-		                <input type="text" class="form-control" name="actual_consumption_electricity" />
+		                <input type="text" class="form-control" id="actual_consumption_electricity" name="actual_consumption_electricity" />
 		            </div>
 
 					<div class="col-md-3">
@@ -770,5 +796,24 @@ if (today.before(cal)) {
 			<br><br>
 			</form>
 	</div>
+	
+	
+	<%-- Modal --%>
+	<div class="modal fade" id="paybackModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-dialog" style="left:0px">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+	                <h4 class="modal-title">Payback Analysis</h4>
+	            </div>
+	
+	            <div class="modal-body">
+	                <!-- The form is placed inside the body of modal -->
+					Please <b>complete Questionnaire and generate Energy Certificate</b> for <b>at least one Site</b> in order to proceed with Payback Analysis
+	            </div>
+	        </div>
+	    </div>
+	</div>	
+	
 </body>
 </html>

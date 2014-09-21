@@ -4,6 +4,12 @@ font-family: bebasneue;
 src: url(../fonts/bebas-neue-bold.otf);
 }
 
+@font-face
+{
+font-family: Rockwell;
+src: url(../fonts/Rockwell);
+}
+
 *{font-family:Rockwell;}
 
 .header{font-family:bebasneue;font-size:450%;text-align: center;padding: 25px;color:#b0232a;}

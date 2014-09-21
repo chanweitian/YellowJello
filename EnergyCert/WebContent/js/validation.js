@@ -1,61 +1,3 @@
-(function($) {
-    $.fn.bootstrapValidator.validators.valid = {
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            var re = new RegExp("^[^*\^\\,]*$");
-            if (value === '') {
-                return true;
-            }
-
-            // Check the text includes , * ^
-            if (!value.match(re)) {
-                return false;
-            }
-
-            return true;
-        }
-    };
-}(window.jQuery));
-
-(function($) {
-    $.fn.bootstrapValidator.validators.validName = {
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            var re = new RegExp("[a-zA-Z0-9]*");
-            if (value === '') {
-                return true;
-            }
-
-            // Check the text includes , * ^
-            if (!value.match(re)) {
-                return false;
-            }
-
-            return true;
-        }
-    };
-}(window.jQuery));
-
-(function($) {
-    $.fn.bootstrapValidator.validators.valid_spacing = {
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            var re = new RegExp("^[^*\^\s\\,]*$");
-            if (value === '') {
-                return true;
-            }
-
-            // Check the text includes , * ^ and spacing
-            if (!value.match(re)) {
-                return false;
-            }
-
-            return true;
-        }
-    };
-}(window.jQuery));
-
-
 $(document).ready(function() {
     $('#questionnaire').bootstrapValidator({
     	
@@ -71,8 +13,9 @@ $(document).ready(function() {
                     notEmpty: {
                         message: 'This field is required'
                     },
-                    valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9]+$/i,
+                        message: 'Alphabetical characters <br> & digits only'
                     }
                 }
             },
@@ -109,8 +52,9 @@ $(document).ready(function() {
                 	notEmpty: {
                         message: 'This field is required'
                     },
-                    valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9]+$/i,
+                        message: 'Alphabetical characters <br> & digits only'
                     }
                 }
             },
@@ -188,8 +132,9 @@ $(document).ready(function() {
                         inclusive: true,
                         message: 'Enter a positive number'
                     },
-                    valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
+                    regexp: {
+                        regexp: /^[0-9\.]+$/i,
+                        message: 'Digits only'
                     },
                     notEmpty: {
                         message: 'This field is required'
@@ -204,8 +149,9 @@ $(document).ready(function() {
                         inclusive: true,
                         message: 'Enter a positive number'
                     },
-                    valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
+                    regexp: {
+                        regexp: /^[0-9\.]+$/i,
+                        message: 'Digits only'
                     },
                     notEmpty: {
                         message: 'This field is required'
@@ -220,8 +166,9 @@ $(document).ready(function() {
                         inclusive: true,
                         message: 'Enter a positive number'
                     },
-                    valid: {
-                        message: 'Omit * ^ ,'
+                    regexp: {
+                        regexp: /^[0-9\.]+$/i,
+                        message: 'Digits only'
                     },
                     notEmpty: {
                         message: 'This field is required'
@@ -283,8 +230,9 @@ $(document).ready(function() {
                     notEmpty: {
                         message: 'This field is required'
                     },
-                    valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
+                    regexp: {
+                        regexp: /^[0-9\.]+$/i,
+                        message: 'Digits only'
                     },
                     greaterThan: {
                         value: 0,
@@ -328,8 +276,9 @@ $(document).ready(function() {
                         inclusive: false,
                         message: 'Please enter a digit greater than 0'
                     },
-                    valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
+                    regexp: {
+                        regexp: /^[0-9\.]+$/i,
+                        message: 'Digits only'
                     }
                 }
             },
@@ -430,8 +379,8 @@ $(document).ready(function() {
                         max: 100,
                         message: 'Please enter a number between 0 and 100'
                     },
-                    valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
+                    integer: {
+                        message: 'Enter an integer'
                     },
 		            notEmpty: {
                         message: 'This field is required'
@@ -484,9 +433,6 @@ $(document).ready(function() {
                     emailAddress: {
                         message: 'The value is not a valid email address'
                     },
-                    valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
-                    },
                     notEmpty: {
                         message: 'This field is required'
                     }
@@ -495,9 +441,6 @@ $(document).ready(function() {
             email_optional: {
             	selector: '[id="email_optional"]',
                 validators: {
-                	valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
-                    },
                     emailAddress: {
                         message: 'The value is not a valid email address'
                     }
@@ -524,8 +467,8 @@ $(document).ready(function() {
                         max: 100,
                         message: 'Please enter a number between 0 and 100'
                     },
-                    valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
+                    integer: {
+                        message: 'Enter an integer'
                     },
 		            notEmpty: {
                         message: 'This field is required'
