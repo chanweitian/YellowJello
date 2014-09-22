@@ -46,6 +46,7 @@ public class ProcessMasterServlet extends HttpServlet {
 
 	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("master: " + request.getParameter("zone_details"));
 		String[] zone_array = request.getParameter("zone_details").split("//");
 		
 		HttpSession session = request.getSession();
@@ -86,10 +87,12 @@ public class ProcessMasterServlet extends HttpServlet {
 		String redirectURL = "";
 		if (action!=null) {
 		    redirectURL = "/EnergyCert/visual/calculate";
+		    //response.sendRedirect(redirectURL);
 		} else {
 		    redirectURL = "SavedQuestionnaire.jsp";
+			//System.out.println("Processmaster - saved!");
 		}
-	    response.sendRedirect(redirectURL);
+		response.sendRedirect(redirectURL);
 	}
 	
 	private void processMez(HttpServletRequest request) {

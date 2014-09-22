@@ -89,6 +89,12 @@ if (link != null) { %>
 		<div class="header">
             GTL Energy Certificate Questionnaire
         </div>
+        
+        <div id="success-save-alert" style="width:35%;padding-left:2em;display:none;">  
+	        <div class="alert alert-success">
+	        	<strong>Success!</strong> Your Questionnaire has been saved successfully.
+	    	</div>
+	    </div>
                 
 		<form id="master_form" action="processmaster" class="form-horizontal" method="post">
 		
@@ -284,6 +290,7 @@ if (link != null) { %>
 		
 		//set zone_details as a hidden field to pass to process_master.jsp 
 		zone_details = zone_details.substring(0,zone_details.length()-2);
+		System.out.println("zone_details: " + zone_details);
 		%>
 		<input type="hidden" name="zone_details" value="<%=zone_details%>" />
 		<%-- Thread.sleep(10000); //QN: What is this thread sleep for?--%>

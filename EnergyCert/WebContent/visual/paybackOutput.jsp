@@ -274,18 +274,8 @@ if (today.before(cal)) {
 							</div>
 						</div>
 						<div class="table_row">
-							<div class="form-group">
-								<div class="col-lg-12">
-									<input name="current_cost_lamp" type="text" id="number" value="<%=formulaHM.get("current_cost_lamp")[0] %>" class="form-control"/>
-								</div>	
-							</div>
 						</div>
 						<div class="table_row">
-							<div class="form-group">
-								<div class="col-lg-12">
-									<input name="current_installation_cost" type="text" id="number" value="<%=formulaHM.get("current_installation_cost")[0] %>" class="form-control"/>
-								</div>	
-							</div>
 						</div>	
 			            
 			    	</div>

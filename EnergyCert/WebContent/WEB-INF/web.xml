@@ -228,4 +228,12 @@
     <servlet-name>GenerateChart</servlet-name>
     <url-pattern>/visual/generate</url-pattern>
   </servlet-mapping>
+    <servlet>
+    <servlet-name>ProcessAddZoneServlet</servlet-name>
+    <servlet-class>form.ProcessAddZoneServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessAddZoneServlet</servlet-name>
+    <url-pattern>/form/processaddzone</url-pattern>
+  </servlet-mapping>
 </web-app>
