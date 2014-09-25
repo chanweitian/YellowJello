@@ -236,4 +236,12 @@
     <servlet-name>ProcessAddZoneServlet</servlet-name>
     <url-pattern>/form/processaddzone</url-pattern>
   </servlet-mapping>
+    <servlet>
+    <servlet-name>ProcessDeleteZoneServlet</servlet-name>
+    <servlet-class>form.ProcessDeleteZoneServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessDeleteZoneServlet</servlet-name>
+    <url-pattern>/form/processdeletezone</url-pattern>
+  </servlet-mapping>
 </web-app>

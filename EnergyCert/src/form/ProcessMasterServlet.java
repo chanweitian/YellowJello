@@ -1,6 +1,7 @@
 package form;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -33,6 +34,7 @@ public class ProcessMasterServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("doGet");
 		processView(request,response);
 	}
 
@@ -41,15 +43,23 @@ public class ProcessMasterServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("doPost");
 		processView(request,response);
 	}
 
 	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println("master: " + request.getParameter("zone_details"));
-		String[] zone_array = request.getParameter("zone_details").split("//");
+		System.out.println("master");
+		
 		
 		HttpSession session = request.getSession();
+		//PrintWriter out = response.getWriter();
+		
+		String[] zone_array = request.getParameter("zone_details").split("//");
+		
+		//session.setAttribute("zone_details",request.getParameter("zone_details"));
+		//String quest_id = (String) session.getAttribute("quest_id");
+		
 		
 		for(int i = 0; i < zone_array.length; i++) {
 			
@@ -87,12 +97,14 @@ public class ProcessMasterServlet extends HttpServlet {
 		String redirectURL = "";
 		if (action!=null) {
 		    redirectURL = "/EnergyCert/visual/calculate";
-		    //response.sendRedirect(redirectURL);
+		    response.sendRedirect(redirectURL);
 		} else {
 		    redirectURL = "SavedQuestionnaire.jsp";
-			//System.out.println("Processmaster - saved!");
+			//out.println("ok");
+			//session.setAttribute("quest_id",quest_id);
+			System.out.println("Processmaster - saved!");
+			response.sendRedirect(redirectURL);
 		}
-		response.sendRedirect(redirectURL);
 	}
 	
 	private void processMez(HttpServletRequest request) {

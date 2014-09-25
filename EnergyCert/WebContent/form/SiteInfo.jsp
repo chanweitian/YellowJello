@@ -453,9 +453,9 @@ ro.close();
 										</div>
 										<div class="radio">
 											<% if (site_info_access_to_energy_data.equals("Detailed energy data (from automatic meters allowing daily profile curves)")) { %>
-												<label><input type="radio" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Detailed energy data (from automatic meters allowing daily profile curves)" checked />Detailed energy data (from automatic meters allowing daily profile curves)</label>
+												<label><input type="radio" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Detailed energy data (from automatic meters allowing daily profile curves)" checked />Detailed energy data (from automatic meters <br> allowing daily profile curves)</label>
 											<% } else { %>
-												<label><input type="radio" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Detailed energy data (from automatic meters allowing daily profile curves)" />Detailed energy data (from automatic meters allowing daily profile curves)</label>
+												<label><input type="radio" id="access_to_energy_data" name="site_info_access_to_energy_data" value="Detailed energy data (from automatic meters allowing daily profile curves)" />Detailed energy data (from automatic meters <br> allowing daily profile curves)</label>
 											<% } %>
 										</div>															
 									</div>
@@ -470,14 +470,14 @@ ro.close();
 						        	<div class="form-group">
 									<label class="col-lg-5 control-label" for="site_info_truck_loading_bays">How many truck loading bays does your site have in total? <font color="red">*</font></label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" id="numbers" name="site_info_truck_loading_bays" style="width: 420px;" value="<%=site_info_truck_loading_bays%>" ></input>
+										<input type="text" class="form-control" name="site_info_truck_loading_bays" style="width: 420px;" value="<%=site_info_truck_loading_bays%>" ></input>
 									</div>
 									</div>
 						
 									<div class="form-group">
 									<label class="col-lg-5 control-label" for="site_info_bays_dock_seals">How many of your bays have dock seals? <font color="red">*</font></label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" id="numbers" name="site_info_bays_dock_seals" style="width: 420px;" value="<%=site_info_bays_dock_seals%>" ></input>
+										<input type="text" class="form-control" name="site_info_bays_dock_seals" style="width: 420px;" value="<%=site_info_bays_dock_seals%>" ></input>
 									</div>
 									</div>
 									
@@ -505,7 +505,7 @@ ro.close();
 										</div>
 										<div class="form-group" style="width:25%;">
 												<div class="col-lg-12">
-													<label>Typical charge duration (hours) <font color="red">*</font></label>
+													<label>Typical charge duration <br>for single charge (hours) <font color="red">*</font></label>
 												</div>
 											</div>
 										</div>
@@ -664,9 +664,9 @@ ro.close();
 										</div>
 										<div class="checkbox">
 											<% if (site_info_ext_area_controlled.equals("Timers that do not adjust for different daylight hours throughout the year")) { %>
-												<label><input type="checkbox" id="site_info_ext_area_controlled" name="site_info_ext_area_controlled" value="Timers that do not adjust for different daylight hours throughout the year" checked />Timers that do not adjust for different daylight hours throughout the year</label>
+												<label><input type="checkbox" id="site_info_ext_area_controlled" name="site_info_ext_area_controlled" value="Timers that do not adjust for different daylight hours throughout the year" checked />Timers that <u>do not</u> adjust for different daylight hours throughout the year</label>
 											<% } else { %>
-												<label><input type="checkbox" id="site_info_ext_area_controlled" name="site_info_ext_area_controlled" value="Timers that do not adjust for different daylight hours throughout the year" />Timers that do not adjust for different daylight hours throughout the year</label>
+												<label><input type="checkbox" id="site_info_ext_area_controlled" name="site_info_ext_area_controlled" value="Timers that do not adjust for different daylight hours throughout the year" />Timers that <u>do not</u> adjust for different daylight hours throughout the year</label>
 											<% } %>
 										</div>
 										<div class="checkbox">

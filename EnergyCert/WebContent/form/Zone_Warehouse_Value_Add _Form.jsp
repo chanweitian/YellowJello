@@ -143,7 +143,7 @@
 								<div class="form-group">
 									<label class="col-lg-5 control-label">How many floors does this zone occupy? <font color="red">* </font></label><br>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" id="numbers"
+										<input type="text" class="form-control" id="integer_positive_required"
 											name="zone_numoffloors<%=identifier%>" value="<%=zone_numoffloors%>" />
 									</div>
 								</div>

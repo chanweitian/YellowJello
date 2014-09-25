@@ -96,8 +96,7 @@ if (link != null) { %>
 	    	</div>
 	    </div>
                 
-		<form id="master_form" action="processmaster" class="form-horizontal" method="post">
-		
+		<form id="master_form" method="post" class="form-horizontal">
 		<%-- Get previous year --%>
 		<%String company = (String) session.getAttribute("company");
 		int month = PeriodManager.getMonthInt(company);
@@ -134,8 +133,13 @@ if (link != null) { %>
 		String zone_details = "";
 		
 		String fromEdit = request.getParameter("fromEdit");
+		
+		String fromAddZone = (String) session.getAttribute("fromAddZone");
+		if (fromAddZone != null) {
+			session.removeAttribute("fromAddZone");
+		}
 		//if fromEdit is null AND fromLink is false means it's a new questionnaire		
-		if (fromEdit == null && fromLink == false) {
+		if (fromEdit == null && fromLink == false && fromAddZone == null) {
 			quest_id = (SQLManager.getRowCount("questionnaire") + 1) + "";
 			
 			//store in QUESTIONNAIRE table
@@ -232,7 +236,7 @@ if (link != null) { %>
 		
 		//if fromEdit is not null OR fromLink is not null means need to put values from db for the saved questionnaire
 		} else {
-			if (!fromLink) {
+			if (!fromLink && fromAddZone == null) {
 				quest_id = request.getParameter("quest_id");
 				session.setAttribute("quest_id",quest_id);	
 			} else {
@@ -290,7 +294,8 @@ if (link != null) { %>
 		
 		//set zone_details as a hidden field to pass to process_master.jsp 
 		zone_details = zone_details.substring(0,zone_details.length()-2);
-		System.out.println("zone_details: " + zone_details);
+		
+		
 		%>
 		<input type="hidden" name="zone_details" value="<%=zone_details%>" />
 		<%-- Thread.sleep(10000); //QN: What is this thread sleep for?--%>
@@ -365,7 +370,7 @@ if (link != null) { %>
 			}
 			  %>
 			</ul>
-			
+
 			<%-- Include SiteDef (fields disabled), SiteInfo and Usage parts in Questionnaire.jsp --%>
 			
 			<div class="tab-content">
@@ -485,7 +490,6 @@ if (link != null) { %>
 			%>
   
 			</div>
-			
 			<script>
 			  $(function () {
 			    $('#myTab a:first').tab('show')
@@ -514,7 +518,7 @@ if (link != null) { %>
 			<div>
 		        <div class="col-md-offset-9">
 		            <% if (!fromLink) {%>
-		            <button type="submit" class="btn btn-primary" name="action" value="submit">Submit Questionnaire</button>
+		            <button type="submit" class="btn btn-primary" name="action" value="submit" onclick="submitFunction()">Submit Questionnaire</button>
 					<% } %>
 				</div>
 				<br><br>
@@ -531,74 +535,9 @@ if (link != null) { %>
 		    <%-- <a data-toggle="modal" data-target="#assignModal">Assign Questions</a> --%>
 		</div>
 	<% } %>
-	<%-- Modal for Assign Questions --%>
-	<div class="modal fade" id="assignModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	    <div class="modal-dialog" style="left:0px">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-	                <h4 class="modal-title">Assign Questions</h4>
-	            </div>
 	
-	            <div class="modal-body">
-	                <!-- The form is placed inside the body of modal -->
-	                <form name="assign-form" method="GET" action="processsendemail" class="form-horizontal" id="assign-form">
-					    <div class="form-group">
-					        <label class="col-md-5 control-label">Receiver's Name</label>
-					        <div class="col-md-5">
-					            <input type="text" class="form-control" name="receiver_name" />
-					        </div>
-					    </div>
-					    <div class="form-group">
-					        <label class="col-md-5 control-label">Receiver's Email</label>
-					        <div class="col-md-5">
-					            <input type="text" class="form-control" name="receiver_email" />
-					        </div>
-					    </div>
-					    <div class="form-group">
-					        <label class="col-md-5 control-label">Message to Receiver</label>
-					        <div class="col-md-5">
-					            <textarea class="form-control" name="message"></textarea>
-					        </div>
-					    </div>    
-					    <div class="form-group">
-							<label class="col-lg-5 control-label" for="sections_assigned">Sections Assigned</label>
-							<div class="col-lg-6">
-								<div class="checkbox">
-									<label><input type="checkbox" name="sections_assigned" value="a" />Site Information</label><br>
-									<label><input type="checkbox" name="sections_assigned" value="b" />Usage</label><br>
-									<% 
-									for (int i = 0; i < zone_list.size(); i++) {
-										String[] this_zone = zone_list.get(i).split(",");
-										
-										String building_name = this_zone[0];
-										String zone_name = this_zone[1];
-										
-										String tab_title = building_name + "_" + zone_name;
-										
-									%>
-										<label><input type="checkbox" name="sections_assigned" value="<%=i%>" /><%=tab_title%></label><br>
-									<%
-									}
-									%>
-								</div>
-							</div>
-						</div>               
-					    <div class="form-group">
-					        <div class="col-md-5 col-md-offset-5">
-					            <button type="submit" class="btn btn-primary">Send Email</button>
-					        </div>
-					    </div>
-					    <div class="form-group">
-					        <div class="col-md-5 col-md-offset-5">
-					        	<font color="maroon"><div id="result"></div></font>
-					        </div>
-					    </div>
-					</form>
-	            </div>
-	        </div>
-	    </div>
-	</div>	
+	<%@include file="modals.jsp" %>
+		
 </body>
 
 	<script type="text/javascript">

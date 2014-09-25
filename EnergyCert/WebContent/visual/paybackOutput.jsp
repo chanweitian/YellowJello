@@ -149,6 +149,7 @@ if (today.before(cal)) {
 		<div class="header">
 		    Payback Analysis
 		</div>
+		
          <form id="payback_form" action="">
 		
 			<%

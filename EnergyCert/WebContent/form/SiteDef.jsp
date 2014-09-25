@@ -26,7 +26,21 @@ String[] building_name_array = bName.split("\\*");
                 <div class="page-header" style="padding-left:0em;">
                     <img src="../icons/icon_definition.png" height="5%" width="5%">&nbsp;&nbsp;Site Definition
                 </div>
-                    
+                <% if (!fromLink) {%>
+                <div id="buildingButtons" style="display:inline-flex;">
+                    <div class="form-group" style="padding-right:2em;">
+                    	<div class="col-lg-4">
+                            <button type="button" data-toggle="modal" data-target="#addZoneModal" class="btn btn-default" style="width:100px;">Add Zone</button>
+                        </div>
+					</div>
+				
+					<div class="form-group" style="padding-right:2em;">
+                    	<div class="col-lg-4">
+                            <button type="button" data-toggle="modal" data-target="#deleteZoneModal" class="btn btn-default" style="width:100px;">Delete Zone</button>
+                        </div>
+					</div>
+				</div>  
+				<% } %>  
                     <% 
                     for (int i = 0; i < details_array.length; i++) { 
                     	String det = details_array[i];
@@ -93,6 +107,7 @@ String[] building_name_array = bName.split("\\*");
 								tableNameZone = "warehouse_value_add_form";
 							}
 							where_zone = "zone_id = \'" + zone + "\'";
+							
 							RetrievedObject ro_zone = SQLManager.retrieveRecords(tableNameZone, where_zone);
 							ResultSet rs_zone = ro_zone.getResultSet();
 							//String building_name = "";

@@ -132,14 +132,14 @@
 							<div class="form-group">
 							<label class="col-lg-5 control-label">How many floors does this zone occupy? <font color="red">* </font></label>
 							<div class="col-lg-6">
-								<input type="text" class="form-control" id="numbers" name="zone_numoffloors<%=identifier%>" value="<%=zone_numoffloors%>" />
+								<input type="text" class="form-control" id="integer_positive_required" name="zone_numoffloors<%=identifier%>" value="<%=zone_numoffloors%>" />
 							</div>
 							</div>
 
 							<div class="form-group">
 							<label class="col-lg-5 control-label">What is the average number of office employees during the typical working hours? <font color="red">* </font></label>
 							<div class="col-lg-6">
-								<input type="text" class="form-control" id="numbers" name="zone_aveemployees<%=identifier%>" value="<%=zone_aveemployees%>" />
+								<input type="text" class="form-control" id="integer_positive_required" name="zone_aveemployees<%=identifier%>" value="<%=zone_aveemployees%>" />
 							</div>
 							</div>
 							<hr>
@@ -149,21 +149,21 @@
 							<div class="form-group">
 							<label class="col-lg-5 control-label">Laptop <font color="red">*</font></label>
 							<div class="col-lg-6">
-								<input type="text" class="form-control" id="numbers" name="zone_numoflaptops<%=identifier%>" value="<%=zone_numoflaptops%>" />
+								<input type="text" class="form-control" id="integer_positive_required" name="zone_numoflaptops<%=identifier%>" value="<%=zone_numoflaptops%>" />
 							</div>
 							</div>
 
 							<div class="form-group">
 							<label class="col-lg-5 control-label">Desktop with flat screen monitor <font color="red">*</font></label>
 							<div class="col-lg-6">
-								<input type="text" class="form-control" id="numbers" name="zone_numofflatscreen<%=identifier%>" value="<%=zone_numofflatscreen%>" />
+								<input type="text" class="form-control" id="integer_positive_required" name="zone_numofflatscreen<%=identifier%>" value="<%=zone_numofflatscreen%>" />
 							</div>
 							</div>
 
 							<div class="form-group">
 							<label class="col-lg-5 control-label">Desktop with CRT monitor <font color="red">*</font></label>
 							<div class="col-lg-6">
-								<input type="text" class="form-control" id="numbers" name="zone_numofCRTmonitor<%=identifier%>" value="<%=zone_numofCRTmonitor%>" />
+								<input type="text" class="form-control" id="integer_positive_required" name="zone_numofCRTmonitor<%=identifier%>" value="<%=zone_numofCRTmonitor%>" />
 							</div>
 							</div>
 							
