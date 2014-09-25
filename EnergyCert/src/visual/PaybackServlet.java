@@ -86,6 +86,8 @@ public class PaybackServlet extends HttpServlet {
 			fetchZoneData(zoneT, zone_id);
 			calculateLightingAssessmentData(request);
 		
+			request.setAttribute("paybackMap",paybackMap);
+			
 		} catch (Exception e){
 			e.printStackTrace();
 		}
