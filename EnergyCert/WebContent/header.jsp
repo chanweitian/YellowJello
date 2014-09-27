@@ -53,6 +53,7 @@
 	            <li><a href="/EnergyCert/admin/viewco.jsp">Manage Company Accounts</a></li>
 	            <li><a href="/EnergyCert/admin/editformula.jsp">Edit Formula</a></li>
 	            <li><a href="/EnergyCert/admin/editweather.jsp">Manage Weather</a></li>
+	            <li><a href="/EnergyCert/admin/editpayback.jsp">Edit Payback Formula</a></li>
 	          </ul>
 	        </li>  
 	        <% } else { %>
@@ -63,6 +64,7 @@
 	            <li><a href="/EnergyCert/client/viewacct.jsp">Manage Accounts</a></li>
 	            <li><a href="/EnergyCert/client/viewwh.jsp">Manage Sites</a></li>
 	            <li><a href="/EnergyCert/client/manageperiod.jsp">Manage Period</a></li>
+	            <li><a href="/EnergyCert/client/uploadlogo.jsp">Upload Company Logo</a></li>
 	          </ul>
 	        </li>  
 	        <% }%>

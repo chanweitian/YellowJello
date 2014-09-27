@@ -6,7 +6,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
+
+import java.sql.PreparedStatement;
 
 public class SQLManager {
 		
@@ -423,6 +428,33 @@ public class SQLManager {
             ConnectionManager.close(conn, stmt, rs);
         }
 		    
+	}
+	
+	public static void insertImage(File imgfile, InputStream fin){
+		
+		Connection conn = null;
+		Statement stmt = null;
+		
+		try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.createStatement();
+		
+			PreparedStatement pre =
+			   conn.prepareStatement("insert into pic values(?,?,?)");
+			
+			   pre.setInt(1,3);
+			   pre.setString(2,"test");
+			   pre.setBinaryStream(3,fin,(int)imgfile.length());
+			   pre.executeUpdate();
+			   System.out.println("Successfully inserted the file into the database!");
+	
+			   pre.close();
+			   stmt.close();
+			   conn.close();
+		} catch (SQLException e) {
+            e.printStackTrace();
+        }
+		   
 	}
 	
 	/*

@@ -1,3 +1,4 @@
+<%@page import="java.io.*" %>
 <%@include file="../protectclientad.jsp" %>
 
 <!DOCTYPE html>
@@ -9,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Import Accounts</title>
+    <title>Upload Company Logo</title>
 
 	<!-- Bootstrap -->
 	<link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -47,34 +48,38 @@
   <body role="document">
   <%@include file="../header.jsp" %>
   
-  <% String importMsg = (String) session.getAttribute("importMsg");
-	session.removeAttribute("importMsg");
+  <% String uploadMsg = (String) session.getAttribute("uploadMsg");
+	session.removeAttribute("uploadMsg");
   %>
 
-	<div class="header">Import accounts</div>
+	<div class="header">Upload company logo</div>
     <div class="container theme-showcase" role="main">
-		
-      <%--<h2 class="heading">Import users</h2><p>--%>
-      
-    	<p>Click on the link to download a sample of the format: <a href="accounts.xlsx">Download here</a></p>
-    	
-      <form class="form-horizontal" role="form" action="processimport" method="POST" enctype="multipart/form-data" >
+		      
+      <p>Please upload a jpg image with a width of 105px and a height of 23px.<br /></p>
+
+      <form class="form-horizontal" role="form" action="processuploadlogo" method="POST" enctype="multipart/form-data" >
 		  <div class="form-group">
-		    <label for="inputFile" class="col-sm-1 control-label">Input file</label>
+		    <label for="inputFile" class="col-sm-1 control-label">Image</label>
 		    <div class="col-sm-4">
-		      <input type="file" id="inputFile" name="inputFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required>
-		    </div>
+		      <input type="file" id="inputFile" name="inputFile" accept="image/jpg" required>
+		    </div>	
 		  </div>
 		  <div class="form-group">
 		    <div class="col-sm-offset-1 col-sm-4">
 		      <button type="submit" class="btn btn-default">Upload</button></p>
-		      <% if (importMsg!=null) { %>
-	        	<font color="maroon"><label><%=importMsg %></font></label>
+		      <% if (uploadMsg!=null) { %>
+	        	<font color="maroon"><label><%=uploadMsg %></font></label>
 	        <% } %>
 		    </div>
 		  </div>
 		</form>
 
+	<%
+	String co = (String) session.getAttribute("company");
+	co = co.replaceAll(" ","");
+	%>
+	<p><strong>Current logo:</strong><img src="../img/<%=co %>.jpg" height="23" width="105" /></p>
+	
     </div> <!-- /container -->
 
 

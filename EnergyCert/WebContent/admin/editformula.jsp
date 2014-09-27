@@ -63,6 +63,7 @@
     session.removeAttribute("editFlag");
     Map<String,String[]> formulaHM = new HashMap<String,String[]>(); 
     ArrayList<String> editMsg = null;
+    String editSuccess = null;
     if (editFlag==null) {
   		HashMap<String,Double> hm = FormulaManager.getFormulaHM();
   		Iterator iter = hm.entrySet().iterator();
@@ -77,6 +78,8 @@
     	//insert code for retrieving values from processediting
     	formulaHM = (Map<String,String[]>) session.getAttribute("editHM");
     	editMsg = (ArrayList<String>) session.getAttribute("editMsg");
+    	editSuccess = (String) session.getAttribute("editSuccess");
+        session.removeAttribute("editSuccess");
         session.removeAttribute("editHM");
         session.removeAttribute("editMsg");
     }
@@ -86,8 +89,12 @@
     <div class="container theme-showcase" role="main">
 
       <%--<h2 class="heading">Edit Formula</h2><p>--%>
-
-  
+      
+      <% if (editSuccess!=null) { %>
+      	<div class="alert alert-warning">
+        <%=editSuccess %>
+      	</div>
+		<% } %>
 
       
       <form class="form-horizontal" role="form" method="post" action="processedit">
