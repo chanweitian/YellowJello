@@ -100,9 +100,12 @@ String site_id = request.getParameter("site_id");
 	            GTL Energy Certificate Questionnaire
 	        </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 	    
 	        <form id="questionnaire" method="post" class="form-horizontal" action="processsitedef">
 =======
+=======
+>>>>>>> FETCH_HEAD
 
 		<div id="site-def-alert" style="width: 35%; padding-left: 2em; display: none;">
 			<div id="site-def-alert-text" class="alert alert-danger">
@@ -111,6 +114,9 @@ String site_id = request.getParameter("site_id");
 
 
 		<form id="questionnaire" method="post" class="form-horizontal" action="processsitedef">
+<<<<<<< HEAD
+>>>>>>> FETCH_HEAD
+=======
 >>>>>>> FETCH_HEAD
 	        	<input type="hidden" name="site_id" value="<%=site_id %>" />
 	        	
@@ -532,8 +538,13 @@ String site_id = request.getParameter("site_id");
 	    </div>
 	</body>
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
 </html>
+=======
+</html>
+
+>>>>>>> FETCH_HEAD
 =======
 </html>
 
@@ -572,7 +583,11 @@ function submitSiteDefFunction() {
 	});
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> FETCH_HEAD
 =======
 </script>
 >>>>>>> FETCH_HEAD

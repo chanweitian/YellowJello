@@ -245,7 +245,10 @@ function updateMinMaxTemp(selectedVal) {
 		html_max_temp.value = "";		
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
+=======
+>>>>>>> FETCH_HEAD
 =======
 >>>>>>> FETCH_HEAD
 	$('#questionnaire').bootstrapValidator('revalidateField', 'integer');
