@@ -58,12 +58,54 @@ String site_id = request.getParameter("site_id");
   
 	<body>
   		<%@include file="../header.jsp" %>
-	  
+	  	<script type='text/javascript'>
+	  		function removeZone(thisZone){
+	  			var rowzone, buildingID;
+	  			
+	  			if (thisZone.id == 'remove1') {
+	  	    		rowzone = "rowzone1";
+	  	    		buildingID = 'building1';
+	  	    	} else if (thisZone.id == 'remove2') {
+	  	    		rowzone = "rowzone2";
+	  	    		buildingID = 'building2';
+	  	    	} else if (thisZone.id == 'remove3') {
+	  	    		rowzone = "rowzone3";
+	  	    		buildingID = 'building3';
+	  	    	} else if (thisZone.id == 'remove4') {
+	  	    		rowzone = "rowzone4";
+	  	    		buildingID = 'building4';
+	  	    	} else if (thisZone.id == 'remove5') {
+	  	    		rowzone = "rowzone5";
+	  	    		buildingID = 'building5';
+	  	    	} else if (thisZone.id == 'remove6') {
+	  	    		rowzone = "rowzone6";
+	  	    		buildingID = 'building6';
+	  	    	}
+	  			//remove the whole div of this row
+	  			var elem = document.getElementById(rowzone);
+	  			elem.parentNode.removeChild(elem);
+	  			
+	  			//checks how many remove buttons there are, if is last one, disable
+                var $zoneclassEle = $('#' + buildingID).find('.zone');
+	  			//alert($zoneclassEle);
+         		if ($zoneclassEle.size()<=2){
+	           		alert($zoneclassEle.eq(0).attr('class') + " " + $zoneclassEle.eq(0).find('button').attr('style'));
+	            	$zoneclassEle.eq(0).find('button').attr('style','width:70px;visibility:hidden;')
+	        	} 
+	  		}
+		</script>
 	  	<br><br>
 	  	<div class="main">
 			<div class="header">
 	            GTL Energy Certificate Questionnaire
 	        </div>
+<<<<<<< HEAD
+<<<<<<< HEAD
+	    
+	        <form id="questionnaire" method="post" class="form-horizontal" action="processsitedef">
+=======
+=======
+>>>>>>> FETCH_HEAD
 
 		<div id="site-def-alert" style="width: 35%; padding-left: 2em; display: none;">
 			<div id="site-def-alert-text" class="alert alert-danger">
@@ -72,6 +114,10 @@ String site_id = request.getParameter("site_id");
 
 
 		<form id="questionnaire" method="post" class="form-horizontal" action="processsitedef">
+<<<<<<< HEAD
+>>>>>>> FETCH_HEAD
+=======
+>>>>>>> FETCH_HEAD
 	        	<input type="hidden" name="site_id" value="<%=site_id %>" />
 	        	
 	        	<div class="container">
@@ -145,7 +191,7 @@ String site_id = request.getParameter("site_id");
 									</div>
 									
 				                    <%-- 1st row of zone in table --%>
-				                    <div class="zone" style="display:inline-flex;width:100%;">
+				                    <div class="zone" id="rowzone0" style="display:inline-flex;width:100%;">
 					                    <div class="form-group" style="padding-right:2em;">
 											<div class="col-lg-12">
 												<input name="test_name" type="text" class="form-control" id="zone_name" style="width: 160px;"/>
@@ -205,10 +251,10 @@ String site_id = request.getParameter("site_id");
 											</div>
 										</div>
 				                    	<div class="form-group" style="padding-right:2em;">
-						                  	<div class="col-lg-4">
-					                            <button type="button" class="btn btn-default btn-sm addButton" id="button0" style="width:70px;" data-template="textbox">Add</button>
+					                    	<div class="col-lg-4">
+					                            <button type="button" class="btn btn-default btn-sm removeButton" id="remove0" onclick="removeZone(this)" style="width:70px;visibility:hidden;">Remove</button>
 					                        </div>
-										</div>
+										</div>    
 				                    
 				                    </div>
 				                   
@@ -280,6 +326,12 @@ String site_id = request.getParameter("site_id");
 										</div>    
 				                    </div>
 				                    
+				                    <div class="form-group" style="padding-right:2em;">
+						               	<div class="col-lg-4">
+					                      	<button type="button" class="btn btn-default btn-sm addButton" id="button0" style="width:70px;" data-template="textbox">Add</button>
+					                  	</div>
+									</div>
+									
 				                    <br><br><br>
 				            	</div>
 			                    
@@ -321,13 +373,13 @@ String site_id = request.getParameter("site_id");
 										</div>
 										<div class="form-group" style="width:16%;">
 											<div class="col-lg-12">
-												<label id="label_building_name">Months of Zone Operation in 2013 <font color="red">*</font></label>
+												<label id="label_building_name">Months of Zone Operation in <%=previousYear %> <font color="red">*</font></label>
 											</div>
 										</div>
 									</div>
 									
 				                    <%-- 1st row of zone in table --%>
-				                    <div class="zone" style="display:inline-flex;width:100%;">
+				                    <div class="zone" id="rowzone1" style="display:inline-flex;width:100%;">
 					                    <div class="form-group" style="padding-right:2em;">
 											<div class="col-lg-12">
 												<input name="b1_zone_name[]" type="text" class="form-control" id="zone_name" style="width: 160px;"/>
@@ -386,11 +438,12 @@ String site_id = request.getParameter("site_id");
 												</select>
 											</div>
 										</div>
-				                    	<div class="form-group" style="padding-right:2em;">
-						                  	<div class="col-lg-4">
-					                            <button type="button" class="btn btn-default btn-sm addButton" id="button1" style="width:70px;" data-template="textbox">Add</button>
+										
+										<div class="form-group" style="padding-right:2em;">
+					                    	<div class="col-lg-4">
+					                            <button type="button" class="btn btn-default btn-sm removeButton" id="remove1" onclick="removeZone(this)" style="width:70px;visibility:hidden;">Remove</button>
 					                        </div>
-										</div>
+										</div>   
 				                    
 				                    </div>
 				                   
@@ -462,30 +515,40 @@ String site_id = request.getParameter("site_id");
 										</div>    
 				                    </div>
 				                    
-				                    <br><br><br>
+				                    <div class="form-group" style="padding-right:2em;">
+						            	<div class="col-lg-4">
+					                    	<button type="button" class="btn btn-default btn-sm addButton" id="button1" style="width:70px;" data-template="textbox">Add</button>
+					                	</div>
+									</div>
+				                    
+				                    <br>
 				            	</div>
-				            	
-				            	
-			            
 			            </div>
 					</section>
 				</div>
-			</div>
-       
-
-	       
-	        <br><br>
+			</div> 
+	        <br>
 	        <div>
 		        <div class="col-md-offset-9">
 		            <button type="submit" id="generatequest" onclick="submitSiteDefFunction()" class="btn btn-primary">Generate Questionnaire</button>
 		        </div>
 		    </div>
-	       
+	       <br><br>
 	        </form>
 	    </div>
 	</body>
+<<<<<<< HEAD
+<<<<<<< HEAD
+	
+</html>
+=======
 </html>
 
+>>>>>>> FETCH_HEAD
+=======
+</html>
+
+>>>>>>> FETCH_HEAD
 <script>
 function submitSiteDefFunction() {
 	var form = $('#questionnaire');
@@ -519,4 +582,12 @@ function submitSiteDefFunction() {
 		return false;
 	});
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> FETCH_HEAD
+=======
+</script>
+>>>>>>> FETCH_HEAD

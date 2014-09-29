@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	
     $('.addButton').on('click', function() {
-    	
+    	var buildingID;
     	var $templateName, $name1, $name2, $name3, $name4, $name5, $name6;
     	
     	if (this.id == 'button1') {
@@ -12,6 +12,7 @@ $(document).ready(function() {
     		$name4 = 'b1_zone_max_temp[]';
     		$name5 = 'b1_zone_activity[]';
     		$name6 = 'b1_zone_operation[]';
+    		buildingID = 'building1';	
     	} else if (this.id == 'button2') {
     		$templateName = '#zone-container-2';
     		$name1 = 'b2_zone_name[]';
@@ -20,6 +21,7 @@ $(document).ready(function() {
     		$name4 = 'b2_zone_max_temp[]';
     		$name5 = 'b2_zone_activity[]';
     		$name6 = 'b2_zone_operation[]';
+    		buildingID = 'building2';
     	} else if (this.id == 'button3') {
     		$templateName = '#zone-container-3';
     		$name1 = 'b3_zone_name[]';
@@ -28,6 +30,7 @@ $(document).ready(function() {
     		$name4 = 'b3_zone_max_temp[]';
     		$name5 = 'b3_zone_activity[]';
     		$name6 = 'b3_zone_operation[]';
+    		buildingID = 'building3';
     	} else if (this.id == 'button4') {
     		$templateName = '#zone-container-4';
     		$name1 = 'b4_zone_name[]';
@@ -36,6 +39,7 @@ $(document).ready(function() {
     		$name4 = 'b4_zone_max_temp[]';
     		$name5 = 'b4_zone_activity[]';
     		$name6 = 'b4_zone_operation[]';
+    		buildingID = 'building4';
     	} else if (this.id == 'button5') {
     		$templateName = '#zone-container-5';
     		$name1 = 'b5_zone_name[]';
@@ -44,6 +48,7 @@ $(document).ready(function() {
     		$name4 = 'b5_zone_max_temp[]';
     		$name5 = 'b5_zone_activity[]';
     		$name6 = 'b5_zone_operation[]';
+    		buildingID = 'building5';
     	} else if (this.id == 'button6') {
     		$templateName = '#zone-container-6';
     		$name1 = 'b6_zone_name[]';
@@ -52,6 +57,7 @@ $(document).ready(function() {
     		$name4 = 'b6_zone_max_temp[]';
     		$name5 = 'b6_zone_activity[]';
     		$name6 = 'b6_zone_operation[]';
+    		buildingID = 'building6';
     	}
     	
         var $templateEle = $($templateName),
@@ -62,22 +68,39 @@ $(document).ready(function() {
         	$el4         = $row.find('input').eq(2).attr('name', $name4);
         	$el5         = $row.find('select').eq(0).attr('name', $name5);
         	$el6         = $row.find('select').eq(2).attr('name', $name6);
-        
+        	
+        	//checks if there are more than 1 rows, if yes make visible
+        	var $zoneclassEle = $('#' + buildingID).find('.zone');
+     		if ($zoneclassEle.size()>2){
+     			$zoneclassEle.eq(0).find('button').attr('style','width:70px;visibility:visible;');
+     		}
+        	
+        	
         $('#questionnaire').bootstrapValidator('addField', $el1);
         $('#questionnaire').bootstrapValidator('addField', $el2);
         $('#questionnaire').bootstrapValidator('addField', $el3);
         $('#questionnaire').bootstrapValidator('addField', $el4);
         $('#questionnaire').bootstrapValidator('addField', $el5);
         $('#questionnaire').bootstrapValidator('addField', $el6);
-
+        
         $row.on('click', '.removeButton', function(e) {
+        	
             $('#questionnaire').bootstrapValidator('removeField', $el1);
             $('#questionnaire').bootstrapValidator('removeField', $el2);
             $('#questionnaire').bootstrapValidator('removeField', $el3);
             $('#questionnaire').bootstrapValidator('removeField', $el4);
             $('#questionnaire').bootstrapValidator('removeField', $el5);
             $('#questionnaire').bootstrapValidator('removeField', $el6);
+            
                 $row.remove();
+                
+                //checks how many remove buttons there are, if is last one, disable
+                var $zoneclassEle = $('#' + buildingID).find('.zone');
+         		if ($zoneclassEle.size()<=2){
+	           		//alert($zoneclassEle.eq(0).attr('class') + " " + $zoneclassEle.eq(0).find('button').attr('style'));
+	            	$zoneclassEle.eq(0).find('button').attr('style','width:70px;visibility:hidden;')
+	        	} 
+         		
             });
         });
     });
@@ -91,7 +114,11 @@ $(document).ready(function() {
    	$('#add_building').click(function(){
    		cloned = $( '#building'+ bNum );
         newBuilding = $("#building0").clone(true,true).removeClass('hide').attr('id', 'building'+(++bNum) ).insertAfter( cloned );
-        newBuilding.find('button').eq(0).attr('id', 'button' + bNum);
+        newBuilding.find('button').eq(0).attr('id','remove' + bNum);
+        newBuilding.find('#rowzone0').attr('id', 'rowzone' + bNum);
+        //alert(newBuilding.find('button').eq(0).attr('id'));
+        //alert(newBuilding.find('button').eq(2).attr('class'));
+        newBuilding.find('button').eq(2).attr('id', 'button' + bNum);
         newBuilding.find('#zone-container-0').attr('id', 'zone-container-' + bNum);
             var $el1         = newBuilding.find('input').eq(1).attr('name', 'b' + bNum + '_zone_name[]');
 	        	$el2         = newBuilding.find('select').eq(1).attr('name', 'b' + bNum + '_zone_heating_cooling[]');
@@ -100,6 +127,8 @@ $(document).ready(function() {
 	        	$el5         = newBuilding.find('select').eq(0).attr('name', 'b' + bNum + '_zone_activity[]');
 	        	$el6         = newBuilding.find('select').eq(2).attr('name', 'b' + bNum + '_zone_operation[]');
 	        	$elName      = newBuilding.find('input').eq(0).attr('name', 'building_name[]');
+	        	
+	        	
 	        	
         	 $('#questionnaire').bootstrapValidator('addField', $el1);
              $('#questionnaire').bootstrapValidator('addField', $el2);
@@ -215,6 +244,13 @@ function updateMinMaxTemp(selectedVal) {
 		html_min_temp.value = "";
 		html_max_temp.value = "";		
 	}
+<<<<<<< HEAD
+<<<<<<< HEAD
+	
+=======
+>>>>>>> FETCH_HEAD
+=======
+>>>>>>> FETCH_HEAD
 	$('#questionnaire').bootstrapValidator('revalidateField', 'integer');
 	
 }
