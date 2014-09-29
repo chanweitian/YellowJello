@@ -62,7 +62,7 @@
 		  <div class="form-group">
 		    <label for="inputFile" class="col-sm-1 control-label">Input file</label>
 		    <div class="col-sm-4">
-		      <input type="file" id="inputFile" name="inputFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+		      <input type="file" id="inputFile" name="inputFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required>
 		    </div>	
 		  </div>
 		  <div class="form-group">

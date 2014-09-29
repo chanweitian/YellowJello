@@ -13,21 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import utility.FormulaManager;
-
-import db.SQLManager;
+import utility.PaybackFormulaManager;
 
 /**
- * Servlet implementation class ProcessEditServlet
+ * Servlet implementation class ProcessEditFormulaServlet
  */
-@WebServlet("/ProcessEditServlet")
-public class ProcessEditServlet extends HttpServlet {
+@WebServlet("/ProcessEditFormulaServlet")
+public class ProcessEditPaybackServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ProcessEditServlet() {
+    public ProcessEditPaybackServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,7 +33,7 @@ public class ProcessEditServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		processView(request,response);
 	}
@@ -50,40 +48,41 @@ public class ProcessEditServlet extends HttpServlet {
 	
 	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		ArrayList<String> editMsg = new ArrayList<String>();
-		Map<String,String[]> editMap = request.getParameterMap();
-		Map<String,String[]> editHM = new HashMap<String,String[]>();
-		Iterator iter = editMap.entrySet().iterator();
-		HashMap<String,Double> hm = new HashMap<String,Double>();
-		String editSuccess = null;
+		ArrayList<String> paybackMsg = new ArrayList<String>();
+		Map<String,String[]> paybackMap = request.getParameterMap();
+		Map<String,String[]> paybackHM = new HashMap<String,String[]>();
+		Iterator iter = paybackMap.entrySet().iterator();
+		HashMap<String,Integer> hm = new HashMap<String,Integer>();
+		String paybackSuccess = null;
 	    while (iter.hasNext()) {
 	        Map.Entry<String,String[]> pairs = (Map.Entry<String,String[]>)iter.next();
 	        String field = pairs.getKey();
 	        String input = pairs.getValue()[0];
-	        editHM.put(field, pairs.getValue());
+	        paybackHM.put(field, pairs.getValue());
 	        try {
-	        	Double inputDouble = Double.parseDouble(input);
-	        	if (inputDouble<0) {
-	        		editMsg.add(field + " has to be positive");
+	        	Integer inputInt = Integer.parseInt(input);
+	        	if (inputInt<0) {
+	        		paybackMsg.add(field + " has to be positive");
 	        	} else {
-	        		hm.put(field, inputDouble);
+	        		hm.put(field, inputInt);
 	        	}
 	        } catch (NumberFormatException e) {
-	        	editMsg.add(field + " has to be a number");
+	        	paybackMsg.add(field + " has to be a number");
 	        }
 	    }
 
-	    if (editMsg.size()==0){
-	    	FormulaManager.setFormulaHM(hm);
-	    	editSuccess = "Changes saved successfully!";
+	    if (paybackMsg.size()==0){
+	    	PaybackFormulaManager.setFormulaHM(hm);
+	    	paybackSuccess = "Changes saved successfully!";
 	    	
 	    } 
+	    
 	    HttpSession session = request.getSession();
-	    session.setAttribute("editMsg", editMsg);
-    	session.setAttribute("editFlag", "true");
-    	session.setAttribute("editHM", editHM);
-    	session.setAttribute("editSuccess", editSuccess);
-    	response.sendRedirect("editformula.jsp");
+	    session.setAttribute("paybackMsg", paybackMsg);
+    	session.setAttribute("paybackFlag", "true");
+    	session.setAttribute("paybackHM", paybackHM);
+    	session.setAttribute("paybackSuccess", paybackSuccess);
+    	response.sendRedirect("editpayback.jsp");
 	}
 
 }
