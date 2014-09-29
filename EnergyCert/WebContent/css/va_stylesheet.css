@@ -139,6 +139,10 @@ th {
 
 @media print{
 
+.navigation{
+	display: none;
+} 
+	
 #main{
 	margin-top: -60pt;
 }	
@@ -171,10 +175,12 @@ th {
 }
 
 h2 {
-	font-size: 20pt;
+	font-size: 18pt;
 }
 
-
+.field_name {
+	min-width:100px;
+}
 
 #google_charts{
 	width: 40%;

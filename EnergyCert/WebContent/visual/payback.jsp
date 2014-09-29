@@ -58,8 +58,6 @@
 	
 	*/
 	
-	
-	
 	Set<String> keySet = paybackMap.keySet();
 	
 	String[] arr = {"192,262,63","82,225,203","255,26,0","110,16,232","2,213,255"};

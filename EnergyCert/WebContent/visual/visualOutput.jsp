@@ -508,17 +508,14 @@ function getLightingMultiplier(){
 		</div>
 	</div> 
 
-<%
-String co = (String) session.getAttribute("company");
-co = co.replaceAll(" ","");
-%>
+
 
 <br/>
 <div id="main">
 <div id="General_Info">
 <div id="logo_container">
-<div id="company_logo" style="float: left"><img src="../img/<%=co %>.jpg" height="23" width="105" /></div>
-<div id="dhl_logo" ><img src="../img/DHL_Logo.png" height="23" width="105" /></div>
+<!--  <div id="company_logo" style="float: left"><img src="../img/DHL_Logo.png" height="23"/></div> --> 
+<div id="dhl_logo" ><img src="../img/DHL_Logo.png" height="23" /></div>
 </div>
 
   
@@ -530,11 +527,11 @@ co = co.replaceAll(" ","");
 <table id="general_info_table">
 <tr><th colspan = "6">Energy Certificate</th></tr>
 <tr>
-<td class="field_name"> Facility Name:</td>
-<td class="field_info"><%= site_info_name %></td>
+<td class="field_name" > Facility Name:</td>
+<td class="field_info" ><%= site_info_name %></td>
 <td></td>
-<td></td>
-<td class="field_name"> Certification Year:</td>
+
+<td class="field_name" colspan="2"> Certification Year:</td>
 <td class="field_info"> <%= year1 %></td>
 </tr>
 <tr><th colspan = "6">Building and Facility Information</th></tr>
@@ -583,15 +580,15 @@ site_info_address_city = p.getProperty("key"); %>
 
 <tr>
 <td class="field_name"> Business Unit:</td>
-<td class="field_info">  <%= business_unit %></td>
-<td> </td>
+<td class="field_info" colspan='2'>  <%= business_unit %></td>
+
 <td> </td>
 <td class="field_name"> Date Issued: </td>
 <td class="field_info">  <%= new java.text.SimpleDateFormat("MMM-yy").format(new java.util.Date()) %> </td>
 </tr>
 
 <tr>
-<td class="field_name"> Facility Contact:</td>
+<td class="field_name"> Contact:</td>
 <td class="field_info">  <%= facility_contact %></td>
 <td> </td>
 <td> </td>
@@ -608,8 +605,8 @@ site_info_address_city = p.getProperty("key"); %>
 	<div id="Eff_Rating">
 		<h2>Energy Efficiency Rating (<%= year1 %>)</h2>
 		More energy efficient
-		ActualConsumption: <%=actualConsumption %>
-		 Benchmark: <%=benchmark %><br/>
+		 <!--ActualConsumption: <%=actualConsumption %>-->
+		  <!--Benchmark: <%=benchmark %><br/>-->
 		 <!-- Heat: <%=heatConsumption %><br/> -->
 		 <!-- Cool: <%=coolConsumption %><br/> --> 
 		 <!-- Lighting: <%=lightingConsumption %><br/> --> 
