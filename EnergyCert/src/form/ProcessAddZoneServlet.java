@@ -228,16 +228,16 @@ public class ProcessAddZoneServlet extends HttpServlet {
 			String tableName = "";
 			if (zoneActivity.equals("wh_mezzanine")) {
 				tableName = "mezzanine_form";
-				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
 			} else if (zoneActivity.equals("wh_ground_to_roof")) {
 				tableName = "ground_to_roof_form";
-				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
 			} else if (zoneActivity.equals("wh_value_add")) {
 				tableName = "warehouse_value_add_form";
-				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
 			} else if (zoneActivity.equals("offices")) {
 				tableName = "office_form";
-				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
 			}
 			SQLManager.insertRecord(tableName,values_zone);
 			

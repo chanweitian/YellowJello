@@ -46,7 +46,6 @@ public class ProcessSiteDefServlet extends HttpServlet {
 	}
 	
     public static boolean checkDuplicate(String[] input) {
-        ArrayList<String> returnList = new ArrayList<String>();
     	for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < input.length; j++) {
                 if (input[i].equals(input[j]) && i != j) {
@@ -180,9 +179,7 @@ public class ProcessSiteDefServlet extends HttpServlet {
 					
 					//add to site_info_details string to store in SITE_DEFINITION DB
 					site_def_details = site_def_details + quest_id + "-" + building_array[i] + "_" + zone_name_array[j] + "*";
-					site_def_activity = site_def_activity + zone_type + "*";
-				
-<<<<<<< HEAD
+					site_def_activity = site_def_activity + zone_type + "*"; 
 					
 					//add to DB
 					values = "";
@@ -216,21 +213,6 @@ public class ProcessSiteDefServlet extends HttpServlet {
 					}
 					
 					SQLManager.insertRecord(tableName, values);
-					
-=======
-				if (zone_type.equals("wh_mezzanine")) {
-					tableName = "mezzanine_form";
-					values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-				} else if (zone_type.equals("wh_ground_to_roof")) {
-					tableName = "ground_to_roof_form";
-					values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-				} else if (zone_type.equals("wh_value_add")) {
-					tableName = "warehouse_value_add_form";
-					values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-				} else if (zone_type.equals("offices")) {
-					tableName = "office_form";
-					values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
->>>>>>> FETCH_HEAD
 				}
 				//delimit site_def_details and site_def_activity by ^ (to separate by buildings)
 				site_def_details = site_def_details.substring(0,site_def_details.length()-1) + "^";

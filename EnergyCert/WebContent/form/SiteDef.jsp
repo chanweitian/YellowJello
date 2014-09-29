@@ -11,6 +11,7 @@ while (site_def_rs.next()) {
 	activity = site_def_rs.getString("site_def_activity");
 	bName = site_def_rs.getString("site_def_building_name");
 }
+
 site_def_ro.close();
 String[] details_array = details.split("\\^");
 String[] activity_array = activity.split("\\^");
