@@ -228,7 +228,7 @@
     <servlet-name>GenerateChart</servlet-name>
     <url-pattern>/visual/generate</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>ProcessAddZoneServlet</servlet-name>
     <servlet-class>form.ProcessAddZoneServlet</servlet-class>
   </servlet>
@@ -236,12 +236,20 @@
     <servlet-name>ProcessAddZoneServlet</servlet-name>
     <url-pattern>/form/processaddzone</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>ProcessDeleteZoneServlet</servlet-name>
     <servlet-class>form.ProcessDeleteZoneServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ProcessDeleteZoneServlet</servlet-name>
     <url-pattern>/form/processdeletezone</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ProcessSiteDefServlet</servlet-name>
+    <servlet-class>form.ProcessSiteDefServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessSiteDefServlet</servlet-name>
+    <url-pattern>/form/processsitedef</url-pattern>
   </servlet-mapping>
 </web-app>

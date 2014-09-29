@@ -115,6 +115,23 @@
 			$('#paybackModal').modal('show');
 		}
 	}
+	
+	function updateTable() {
+		var checkboxes = document.getElementsByName('types[]');
+		var checkboxesChecked = [];
+		 // loop over them all
+		for (var i=0; i<checkboxes.length; i++) {
+		    // And stick the checked ones onto an array...
+		    var temp = checkboxes[i].value + '_row';
+			if (checkboxes[i].checked) {
+		    	document.getElementById(temp).style.display = "block";
+		    	document.getElementById(temp).style.display = "inline-flex";
+		    } else {
+		    	document.getElementById(temp).style.display = "none";
+		    }
+		 }
+		validateFields();
+	}
 	</script>
 
 </head>
@@ -150,7 +167,7 @@ if (today.before(cal)) {
 		    Payback Analysis
 		</div>
 		
-         <form id="payback_form" action="">
+         <form id="payback_form" method="post" action="">
 		
 			<%
 			String desc = (String) session.getAttribute("userdesc");
@@ -202,7 +219,7 @@ if (today.before(cal)) {
 			<div class="form-group" style="width:90%;padding-left:1em;">
 				<div class="row">
 					<div class="col-md-3">
-		                <label class="control-label">Actual Consumption of Electricity (kWh)</label>
+		                <label class="control-label">Consumption of Electricity (kWh)</label>
 		                <input type="text" class="form-control" id="actual_consumption_electricity" name="actual_consumption_electricity" />
 		            </div>
 
@@ -213,6 +230,42 @@ if (today.before(cal)) {
 		            
 				</div>
 			</div>
+			
+			<hr>
+			
+			<div class="form-group" style="width:90%;padding-left:1em;">
+				<div class="row">
+					<div class="col-md-12">
+			        <label class="control-label">Select Types of Lighting for Analysis</label><br>
+			            <div class="btn-group" data-toggle="buttons">
+			                <label class="btn btn-default" style="width:120px;">
+			                    <input type="checkbox" name="types[]" value="t5" onchange="updateTable()" />T5
+			                </label>
+			                <label class="btn btn-default" style="width:120px;">
+			                    <input type="checkbox" name="types[]" value="t5_sensors" onchange="updateTable()" />T5 with sensors
+			                </label>
+			                <label class="btn btn-default" style="width:120px;">
+			                    <input type="checkbox" name="types[]" value="t8" onchange="updateTable()" />T8
+			                </label>
+			                <label class="btn btn-default" style="width:120px;">
+			                    <input type="checkbox" name="types[]" value="t8_sensors" onchange="updateTable()" />T8 with sensors
+			                </label>
+			                <label class="btn btn-default" style="width:120px;">
+			                    <input type="checkbox" name="types[]" value="LED" onchange="updateTable()">LED
+			                </label>
+			                <label class="btn btn-default" style="width:120px;">
+			                    <input type="checkbox" name="types[]" value="induction" onchange="updateTable()">Induction
+			                </label>
+			                <label class="btn btn-default" style="width:120px;">
+			                    <input type="checkbox" name="types[]" value="metal_halide" onchange="updateTable()">Metal Halide
+			                </label>
+			                <label class="btn btn-default" style="width:120px;">
+			                    <input type="checkbox" name="types[]" value="CFL" onchange="updateTable()">CFL
+			                </label>
+			            </div>
+			        </div>
+			     </div>
+		    </div>
 													
 				<div>
 					<%-- Header --%>
@@ -282,7 +335,7 @@ if (today.before(cal)) {
 			    	</div>
 			    	
 			    	<%-- 2nd Row: T5 --%>
-			    	<div class ="table_inline_flex">
+			    	<div class ="table_inline_flex" id="t5_row" style="display: none;">
 			            <div class="table_row_bold">T5</div>
 			            <div class="table_row">
 			            	<div class="form-group">
@@ -345,7 +398,7 @@ if (today.before(cal)) {
 			    	</div>
 			    	
 			    	<%-- 3rd Row: T5 with sensors --%>
-			    	<div class ="table_inline_flex">
+			    	<div class ="table_inline_flex" id="t5_sensors_row" style="display: none;">
 			            <div class="table_row_bold">T5 with sensors</div>
 			            <div class="table_row">
 			            	<div class="form-group">
@@ -407,7 +460,7 @@ if (today.before(cal)) {
 			    	</div>
 			    	
 			    	<%-- 4th Row: T8 --%>
-			    	<div class ="table_inline_flex">
+			    	<div class ="table_inline_flex" id="t8_row" style="display: none;">
 			            <div class="table_row_bold">T8</div>
 			            <div class="table_row">
 			            	<div class="form-group">
@@ -469,7 +522,7 @@ if (today.before(cal)) {
 			    	</div>
 			    	
 			    	<%-- 5th Row: T8 with sensors --%>
-			    	<div class ="table_inline_flex">
+			    	<div class ="table_inline_flex" id="t8_sensors_row" style="display: none;">
 			            <div class="table_row_bold">T8 with sensors</div>
 			            <div class="table_row">
 			            	<div class="form-group">
@@ -531,7 +584,7 @@ if (today.before(cal)) {
 			    	</div>
 			    	
 			    	<%-- 6th Row: LED --%>
-			    	<div class ="table_inline_flex">
+			    	<div class ="table_inline_flex" id="LED_row" style="display: none;">
 			            <div class="table_row_bold">LED</div>
 			            <div class="table_row">
 			            	<div class="form-group">
@@ -593,7 +646,7 @@ if (today.before(cal)) {
 			    	</div>
 			    	
 			    	<%-- 7th Row: Induction --%>
-			    	<div class ="table_inline_flex">
+			    	<div class ="table_inline_flex" id="induction_row" style="display: none;">
 			            <div class="table_row_bold">Induction</div>
 			            <div class="table_row">
 			            	<div class="form-group">
@@ -655,19 +708,19 @@ if (today.before(cal)) {
 			    	</div>
 			    	
 			    	<%-- 8th Row: Metal Halide --%>
-			    	<div class ="table_inline_flex">
+			    	<div class ="table_inline_flex" id="metal_halide_row" style="display: none;">
 			            <div class="table_row_bold">Metal Halide</div>
 			            <div class="table_row">
 			            	<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("induction_cost_lamp")[0] %>" class="form-control"/>
+									<input name="metal_halide_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("metal_halide_num_fixtures")[0] %>" class="form-control"/>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("induction_cost_lamp")[0] %>" class="form-control"/>
+									<input name="metal_halide_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("metal_halide_lamp_fixture")[0] %>" class="form-control"/>
 								</div>	
 							</div>
 						</div>
@@ -675,7 +728,7 @@ if (today.before(cal)) {
 						
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_power_rating" type="text" id="number" value="<%=formulaHM.get("induction_cost_lamp")[0] %>" class="form-control"/>
+									<input name="metal_halide_power_rating" type="text" id="number" value="<%=formulaHM.get("metal_halide_power_rating")[0] %>" class="form-control"/>
 								</div>	
 							</div>
 						</div>
@@ -717,7 +770,7 @@ if (today.before(cal)) {
 			    	</div>
 			    	
 			    	<%-- 9th Row: CFL --%>
-			    	<div class ="table_inline_flex">
+			    	<div class ="table_inline_flex" id="CFL_row" style="display: none;">
 			            <div class="table_row_bold">CFL</div>
 			            <div class="table_row">
 			            	<div class="form-group">

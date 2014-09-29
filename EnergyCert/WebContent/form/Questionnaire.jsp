@@ -89,12 +89,6 @@ if (link != null) { %>
 		<div class="header">
             GTL Energy Certificate Questionnaire
         </div>
-        
-        <div id="success-save-alert" style="width:35%;padding-left:2em;display:none;">  
-	        <div class="alert alert-success">
-	        	<strong>Success!</strong> Your Questionnaire has been saved successfully.
-	    	</div>
-	    </div>
                 
 		<form id="master_form" method="post" class="form-horizontal">
 		<%-- Get previous year --%>
@@ -110,25 +104,13 @@ if (link != null) { %>
 		}%>
 		
 		<%
-		//initialise array to get values from SiteDef form
-		String[] building_array = request.getParameterValues("building_name[]");
-		String[] zone_name_array;
-		String[] zone_type_array;
-		String[] zone_heating_cooling_array;
-		String[] zone_min_temp_array;
-		String[] zone_max_temp_array;
-		String[] zone_operation_array;
 		
 		ArrayList<String> zone_list = new ArrayList<String>();
 		ArrayList<String> identifiers_list = new ArrayList<String>();
 		
 		
 		int year = Calendar.getInstance().get(Calendar.YEAR); 
-		
-		//DB details
-		String tableName = ""; 
-		String values = "";
-		
+	
 		//zone details to pass to process_master.jsp
 		String zone_details = "";
 		
@@ -140,106 +122,24 @@ if (link != null) { %>
 		}
 		//if fromEdit is null AND fromLink is false means it's a new questionnaire		
 		if (fromEdit == null && fromLink == false && fromAddZone == null) {
-			quest_id = (SQLManager.getRowCount("questionnaire") + 1) + "";
+		
+			zone_details = (String) session.getAttribute("zone_details");
+			session.removeAttribute("zone_details");
 			
-			//store in QUESTIONNAIRE table
-			String values_quest = "";
-			values_quest = values_quest + "\'" + quest_id  + "\',";
-			values_quest = values_quest + "\'" + request.getParameter("site_id")  + "\',";
-			values_quest = values_quest + "\'" + previousYear  + "\',";
-			for (int i = 0; i < 76; i++) {
-				values_quest = values_quest + "\'\',";
+			String zone_string = (String) session.getAttribute("zone_string");
+			String[] zone_string_array = zone_string.split("//");
+			for (String z : zone_string_array) {
+				zone_list.add(z);
 			}
-			values_quest = values_quest + "0";
-			values_quest = values_quest + ",\'\',\'\'";
-			SQLManager.insertRecord("questionnaire",values_quest);
-			
-			if (session.getAttribute("fromLink") == null) {
-				session.setAttribute("quest_id",quest_id);
-			}
-			
-			//site_def_details and site_def_activity to store in SITE_DEFINITION table
-			String site_def_details = "";
-			String site_def_activity = "";
-			String site_def_building_name = "";
-	
-			for (int i = 0; i < building_array.length; i++) {
-				int num = i+1;
-				zone_type_array = request.getParameterValues("b" + num + "_zone_activity[]");
-				zone_name_array = request.getParameterValues("b" + num + "_zone_name[]");
-				zone_heating_cooling_array = request.getParameterValues("b" + num + "_zone_heating_cooling[]");	
-				zone_min_temp_array = request.getParameterValues("b" + num + "_zone_min_temp[]");
-				zone_max_temp_array = request.getParameterValues("b" + num + "_zone_max_temp[]");
-				zone_operation_array = request.getParameterValues("b" + num + "_zone_operation[]");
-				
-				site_def_building_name = site_def_building_name + building_array[i] + "*";
-				
-				for (int j = 0; j < zone_type_array.length; j++) {
-					String zone_type = zone_type_array[j];
-					//add to zone_list
-					String zone_element = building_array[i] + "," + zone_name_array[j] + "," + zone_type_array[j];
-					zone_list.add(zone_element);
-					
-					//add to zone_details string
-					zone_details = zone_details + zone_element + "//";
-					
-					//add to site_info_details string to store in SITE_DEFINITION DB
-					site_def_details = site_def_details + quest_id + "-" + building_array[i] + "_" + zone_name_array[j] + "*";
-					site_def_activity = site_def_activity + zone_type + "*";
-				
-					
-					//add to DB
-					values = "";
-					values = values + "\'" + quest_id  + "\',";
-					values = values + "\'" + quest_id + "-" + building_array[i] + "_" + zone_name_array[j]  + "\',";
-					
-					values = values + "\'" + (i+1)  + "\',";
-					values = values + "\'" + (j+1)  + "\',";
-					
-					values = values + "\'" + building_array[i]  + "\',";
-					values = values + "\'" + zone_name_array[j]  + "\',";
-					values = values + "\'" + zone_type_array[j]  + "\',";
-					values = values + "\'" + zone_heating_cooling_array[j]  + "\',";
-					values = values + "\'" + zone_min_temp_array[j]  + "\',";
-					values = values + "\'" + zone_max_temp_array[j]  + "\',";
-					values = values + "\'" + zone_operation_array[j]  + "\'";
-					
-					
-					if (zone_type.equals("wh_mezzanine")) {
-						tableName = "mezzanine_form";
-						values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					} else if (zone_type.equals("wh_ground_to_roof")) {
-						tableName = "ground_to_roof_form";
-						values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					} else if (zone_type.equals("wh_value_add")) {
-						tableName = "warehouse_value_add_form";
-						values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					} else if (zone_type.equals("offices")) {
-						tableName = "office_form";
-						values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					}
-					
-					SQLManager.insertRecord(tableName, values);
-					
-				}
-				//delimit site_def_details and site_def_activity by ^ (to separate by buildings)
-				site_def_details = site_def_details.substring(0,site_def_details.length()-1) + "^";
-				site_def_activity = site_def_activity.substring(0,site_def_activity.length()-1) + "^";
-			} 
-			
-			//store site_def_details and site_def_activity in SITE_DEFINITION table
-			site_def_details = site_def_details.substring(0,site_def_details.length()-1);
-			site_def_activity = site_def_activity.substring(0,site_def_activity.length()-1);
-			site_def_building_name = site_def_building_name.substring(0,site_def_building_name.length()-1);
-			String site_def_values = "\'" + quest_id + "\',\'" + site_def_details + "\',\'" + site_def_activity + "\',\'" + site_def_building_name + "\'";
-			SQLManager.insertRecord("site_definition",site_def_values);
 		
 		//if fromEdit is not null OR fromLink is not null means need to put values from db for the saved questionnaire
 		} else {
 			if (!fromLink && fromAddZone == null) {
+				System.out.println("here");
 				quest_id = request.getParameter("quest_id");
 				session.setAttribute("quest_id",quest_id);	
 			} else {
+				System.out.println("here2");
 				quest_id = (String) session.getAttribute("quest_id");
 			}
 			
@@ -297,6 +197,7 @@ if (link != null) { %>
 		
 		
 		%>
+		
 		<input type="hidden" name="zone_details" value="<%=zone_details%>" />
 		<%-- Thread.sleep(10000); //QN: What is this thread sleep for?--%>
 			<ul class="nav nav-tabs" role="tablist" id="myTab">

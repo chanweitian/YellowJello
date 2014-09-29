@@ -66,7 +66,7 @@ String site_id = request.getParameter("site_id");
 	        </div>
 	    
 	        
-	        <form id="questionnaire" method="post" class="form-horizontal" action="Questionnaire.jsp">
+	        <form id="questionnaire" method="post" class="form-horizontal" action="processsitedef">
 	        	<input type="hidden" name="site_id" value="<%=site_id %>" />
 	        	
 	        	<div class="container">
