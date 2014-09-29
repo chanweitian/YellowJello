@@ -77,8 +77,8 @@
 		  for(x in values) {
 		        option = document.createElement("option");
 		        next_desc = values[x];
-		        option.value = next_desc;
-		        option.innerHTML = next_desc;
+		        option.value = next_desc.trim();
+		        option.innerHTML = next_desc.trim();
 		        select.appendChild(option);
 		    }
 		  option = document.createElement("option");
@@ -93,7 +93,7 @@
 	</script>
 	
 	<script>
-	function Changed(str)
+	function cityChanged(str)
 	{	
 	var otherCity = document.getElementById("otherCity");
 	if (str=="Others")

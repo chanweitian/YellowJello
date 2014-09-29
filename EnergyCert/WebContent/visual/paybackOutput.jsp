@@ -92,9 +92,9 @@
 		  for(x in values) {
 		        option = document.createElement("option");
 		        next_desc = values[x];
-		        option.value = next_desc;
+		        option.value = next_desc.trim();
 		        var temp = next_desc.split("//");
-		        option.innerHTML = temp[0];
+		        option.innerHTML = temp[0].trim();
 		        select.appendChild(option);
 		    }
 	    }
