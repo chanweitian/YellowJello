@@ -155,7 +155,7 @@ public class PaybackServlet extends HttpServlet {
 			double investmentCost = numOfFixture * lampPerFixture * costPerLamp + numOfFixture * installationCostPerFixture;
 			double annualSavings = currentAnnualCost - annualCost;
 			
-			double payback = annualSavings / investmentCost;
+			double payback =  investmentCost / annualSavings;
 			
 			double newRating = (actualConsumption - (currentAnnualKwh - annualKwh)) / benchmark * 100;
 			
