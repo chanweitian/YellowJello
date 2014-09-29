@@ -90,8 +90,7 @@ if (link != null) { %>
             GTL Energy Certificate Questionnaire
         </div>
                 
-		<form id="master_form" action="processmaster" class="form-horizontal" method="post">
-		
+		<form id="master_form" method="post" class="form-horizontal">
 		<%-- Get previous year --%>
 		<%String company = (String) session.getAttribute("company");
 		int month = PeriodManager.getMonthInt(company);
@@ -105,131 +104,42 @@ if (link != null) { %>
 		}%>
 		
 		<%
-		//initialise array to get values from SiteDef form
-		String[] building_array = request.getParameterValues("building_name[]");
-		String[] zone_name_array;
-		String[] zone_type_array;
-		String[] zone_heating_cooling_array;
-		String[] zone_min_temp_array;
-		String[] zone_max_temp_array;
-		String[] zone_operation_array;
 		
 		ArrayList<String> zone_list = new ArrayList<String>();
 		ArrayList<String> identifiers_list = new ArrayList<String>();
 		
 		
 		int year = Calendar.getInstance().get(Calendar.YEAR); 
-		
-		//DB details
-		String tableName = ""; 
-		String values = "";
-		
+	
 		//zone details to pass to process_master.jsp
 		String zone_details = "";
 		
 		String fromEdit = request.getParameter("fromEdit");
+		
+		String fromAddZone = (String) session.getAttribute("fromAddZone");
+		if (fromAddZone != null) {
+			session.removeAttribute("fromAddZone");
+		}
 		//if fromEdit is null AND fromLink is false means it's a new questionnaire		
-		if (fromEdit == null && fromLink == false) {
-			quest_id = (SQLManager.getRowCount("questionnaire") + 1) + "";
+		if (fromEdit == null && fromLink == false && fromAddZone == null) {
+		
+			zone_details = (String) session.getAttribute("zone_details");
+			session.removeAttribute("zone_details");
 			
-			//store in QUESTIONNAIRE table
-			String values_quest = "";
-			values_quest = values_quest + "\'" + quest_id  + "\',";
-			values_quest = values_quest + "\'" + request.getParameter("site_id")  + "\',";
-			values_quest = values_quest + "\'" + previousYear  + "\',";
-			for (int i = 0; i < 76; i++) {
-				values_quest = values_quest + "\'\',";
+			String zone_string = (String) session.getAttribute("zone_string");
+			String[] zone_string_array = zone_string.split("//");
+			for (String z : zone_string_array) {
+				zone_list.add(z);
 			}
-			values_quest = values_quest + "0";
-			values_quest = values_quest + ",\'\',\'\'";
-			SQLManager.insertRecord("questionnaire",values_quest);
-			
-			if (session.getAttribute("fromLink") == null) {
-				session.setAttribute("quest_id",quest_id);
-			}
-			
-			//site_def_details and site_def_activity to store in SITE_DEFINITION table
-			String site_def_details = "";
-			String site_def_activity = "";
-			String site_def_building_name = "";
-	
-			for (int i = 0; i < building_array.length; i++) {
-				int num = i+1;
-				zone_type_array = request.getParameterValues("b" + num + "_zone_activity[]");
-				zone_name_array = request.getParameterValues("b" + num + "_zone_name[]");
-				zone_heating_cooling_array = request.getParameterValues("b" + num + "_zone_heating_cooling[]");	
-				zone_min_temp_array = request.getParameterValues("b" + num + "_zone_min_temp[]");
-				zone_max_temp_array = request.getParameterValues("b" + num + "_zone_max_temp[]");
-				zone_operation_array = request.getParameterValues("b" + num + "_zone_operation[]");
-				
-				site_def_building_name = site_def_building_name + building_array[i] + "*";
-				
-				for (int j = 0; j < zone_type_array.length; j++) {
-					String zone_type = zone_type_array[j];
-					//add to zone_list
-					String zone_element = building_array[i] + "," + zone_name_array[j] + "," + zone_type_array[j];
-					zone_list.add(zone_element);
-					
-					//add to zone_details string
-					zone_details = zone_details + zone_element + "//";
-					
-					//add to site_info_details string to store in SITE_DEFINITION DB
-					site_def_details = site_def_details + quest_id + "-" + building_array[i] + "_" + zone_name_array[j] + "*";
-					site_def_activity = site_def_activity + zone_type + "*";
-				
-					
-					//add to DB
-					values = "";
-					values = values + "\'" + quest_id  + "\',";
-					values = values + "\'" + quest_id + "-" + building_array[i] + "_" + zone_name_array[j]  + "\',";
-					
-					values = values + "\'" + (i+1)  + "\',";
-					values = values + "\'" + (j+1)  + "\',";
-					
-					values = values + "\'" + building_array[i]  + "\',";
-					values = values + "\'" + zone_name_array[j]  + "\',";
-					values = values + "\'" + zone_type_array[j]  + "\',";
-					values = values + "\'" + zone_heating_cooling_array[j]  + "\',";
-					values = values + "\'" + zone_min_temp_array[j]  + "\',";
-					values = values + "\'" + zone_max_temp_array[j]  + "\',";
-					values = values + "\'" + zone_operation_array[j]  + "\'";
-					
-					
-					if (zone_type.equals("wh_mezzanine")) {
-						tableName = "mezzanine_form";
-						values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					} else if (zone_type.equals("wh_ground_to_roof")) {
-						tableName = "ground_to_roof_form";
-						values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					} else if (zone_type.equals("wh_value_add")) {
-						tableName = "warehouse_value_add_form";
-						values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					} else if (zone_type.equals("offices")) {
-						tableName = "office_form";
-						values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					}
-					
-					SQLManager.insertRecord(tableName, values);
-					
-				}
-				//delimit site_def_details and site_def_activity by ^ (to separate by buildings)
-				site_def_details = site_def_details.substring(0,site_def_details.length()-1) + "^";
-				site_def_activity = site_def_activity.substring(0,site_def_activity.length()-1) + "^";
-			} 
-			
-			//store site_def_details and site_def_activity in SITE_DEFINITION table
-			site_def_details = site_def_details.substring(0,site_def_details.length()-1);
-			site_def_activity = site_def_activity.substring(0,site_def_activity.length()-1);
-			site_def_building_name = site_def_building_name.substring(0,site_def_building_name.length()-1);
-			String site_def_values = "\'" + quest_id + "\',\'" + site_def_details + "\',\'" + site_def_activity + "\',\'" + site_def_building_name + "\'";
-			SQLManager.insertRecord("site_definition",site_def_values);
 		
 		//if fromEdit is not null OR fromLink is not null means need to put values from db for the saved questionnaire
 		} else {
-			if (!fromLink) {
+			if (!fromLink && fromAddZone == null) {
+				System.out.println("here");
 				quest_id = request.getParameter("quest_id");
 				session.setAttribute("quest_id",quest_id);	
 			} else {
+				System.out.println("here2");
 				quest_id = (String) session.getAttribute("quest_id");
 			}
 			
@@ -284,7 +194,10 @@ if (link != null) { %>
 		
 		//set zone_details as a hidden field to pass to process_master.jsp 
 		zone_details = zone_details.substring(0,zone_details.length()-2);
+		
+		
 		%>
+		
 		<input type="hidden" name="zone_details" value="<%=zone_details%>" />
 		<%-- Thread.sleep(10000); //QN: What is this thread sleep for?--%>
 			<ul class="nav nav-tabs" role="tablist" id="myTab">
@@ -358,7 +271,7 @@ if (link != null) { %>
 			}
 			  %>
 			</ul>
-			
+
 			<%-- Include SiteDef (fields disabled), SiteInfo and Usage parts in Questionnaire.jsp --%>
 			
 			<div class="tab-content">
@@ -478,7 +391,6 @@ if (link != null) { %>
 			%>
   
 			</div>
-			
 			<script>
 			  $(function () {
 			    $('#myTab a:first').tab('show')
@@ -507,7 +419,7 @@ if (link != null) { %>
 			<div>
 		        <div class="col-md-offset-9">
 		            <% if (!fromLink) {%>
-		            <button type="submit" class="btn btn-primary" name="action" value="submit">Submit Questionnaire</button>
+		            <button type="submit" class="btn btn-primary" name="action" value="submit" onclick="submitFunction()">Submit Questionnaire</button>
 					<% } %>
 				</div>
 				<br><br>
@@ -524,74 +436,9 @@ if (link != null) { %>
 		    <%-- <a data-toggle="modal" data-target="#assignModal">Assign Questions</a> --%>
 		</div>
 	<% } %>
-	<%-- Modal for Assign Questions --%>
-	<div class="modal fade" id="assignModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	    <div class="modal-dialog" style="left:0px">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-	                <h4 class="modal-title">Assign Questions</h4>
-	            </div>
 	
-	            <div class="modal-body">
-	                <!-- The form is placed inside the body of modal -->
-	                <form name="assign-form" method="GET" action="processsendemail" class="form-horizontal" id="assign-form">
-					    <div class="form-group">
-					        <label class="col-md-5 control-label">Receiver's Name</label>
-					        <div class="col-md-5">
-					            <input type="text" class="form-control" name="receiver_name" />
-					        </div>
-					    </div>
-					    <div class="form-group">
-					        <label class="col-md-5 control-label">Receiver's Email</label>
-					        <div class="col-md-5">
-					            <input type="text" class="form-control" name="receiver_email" />
-					        </div>
-					    </div>
-					    <div class="form-group">
-					        <label class="col-md-5 control-label">Message to Receiver</label>
-					        <div class="col-md-5">
-					            <textarea class="form-control" name="message"></textarea>
-					        </div>
-					    </div>    
-					    <div class="form-group">
-							<label class="col-lg-5 control-label" for="sections_assigned">Sections Assigned</label>
-							<div class="col-lg-6">
-								<div class="checkbox">
-									<label><input type="checkbox" name="sections_assigned" value="a" />Site Information</label><br>
-									<label><input type="checkbox" name="sections_assigned" value="b" />Usage</label><br>
-									<% 
-									for (int i = 0; i < zone_list.size(); i++) {
-										String[] this_zone = zone_list.get(i).split(",");
-										
-										String building_name = this_zone[0];
-										String zone_name = this_zone[1];
-										
-										String tab_title = building_name + "_" + zone_name;
-										
-									%>
-										<label><input type="checkbox" name="sections_assigned" value="<%=i%>" /><%=tab_title%></label><br>
-									<%
-									}
-									%>
-								</div>
-							</div>
-						</div>               
-					    <div class="form-group">
-					        <div class="col-md-5 col-md-offset-5">
-					            <button type="submit" class="btn btn-primary">Send Email</button>
-					        </div>
-					    </div>
-					    <div class="form-group">
-					        <div class="col-md-5 col-md-offset-5">
-					        	<font color="maroon"><div id="result"></div></font>
-					        </div>
-					    </div>
-					</form>
-	            </div>
-	        </div>
-	    </div>
-	</div>	
+	<%@include file="modals.jsp" %>
+		
 </body>
 
 	<script type="text/javascript">

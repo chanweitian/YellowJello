@@ -205,18 +205,28 @@ $(document).ready(function() {
     		electricity_usage_required: {
             	selector: '[id="electricity_usage_required"]',
                 validators: {
-                	notEmpty: {
-                        message: 'This field is required'
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
                     },
-                    integer: {
+                    numeric: {
                         message: 'Enter a valid number'
+                    },
+                    notEmpty: {
+                        message: 'This field is required'
                     }
                 }
             },
             electricity_usage_optional: {
             	selector: '[id="electricity_usage_optional"]',
                 validators: {
-                    integer: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
                         message: 'Enter a valid number'
                     }
                 }
@@ -472,11 +482,27 @@ $(document).ready(function() {
                     }
                 }
             },
+            integer_positive_required: {
+            	selector: '[id="integer_positive_required"]',
+                validators: {
+                    integer: {
+                        message: 'Enter an integer'
+                    },
+                    greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+		            notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
             valid_date: {
             	selector: '[id="valid_date"]',
                 validators: {
                     date: {
-                        format: 'MM/DD/YYYY',
+                        format: 'DD/MM/YYYY',
                         message: 'This is not a valid date'
                     }
                 }
@@ -489,6 +515,36 @@ $(document).ready(function() {
                     },
                     integer: {
                         message: 'Enter an integer'
+                    }
+                }
+            },
+            site_info_truck_loading_bays: {
+            	validators: {
+                	notEmpty: {
+                        message: 'This field is required'
+                    },
+                    integer: {
+                        message: 'Enter an integer'
+                    },
+                    greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Please enter a value greater than or equals to 0'
+                    }
+                }
+            },
+            site_info_bays_dock_seals: {
+            	validators: {
+                	notEmpty: {
+                        message: 'This field is required'
+                    },
+                    integer: {
+                        message: 'Enter an integer'
+                    },
+                    greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Please enter a value greater than or equals to 0'
                     }
                 }
             }

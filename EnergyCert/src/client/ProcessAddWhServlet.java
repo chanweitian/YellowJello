@@ -65,6 +65,8 @@ public class ProcessAddWhServlet extends HttpServlet {
 		String street = request.getParameter("street");
 		String city = request.getParameter("city");
 		String postal = request.getParameter("postal");
+		String totalSize = request.getParameter("totalSize");
+		
 		String addWhMsg = null;
 		
 		if (city.equals("Others")) {
@@ -92,40 +94,48 @@ public class ProcessAddWhServlet extends HttpServlet {
 			addWhMsg = "Please input city";
 		} else if (postal.trim().length()==0) {
 			addWhMsg = "Please input postal";
-		} else {
+		} else if (totalSize.trim().length()==0) {
+			addWhMsg = "Please input total size";
 			
-			boolean isUnique = false;
-			String warehouseID = null;
-			int temp = 0;
-			while (!isUnique) {
-				warehouseID = tempCompany + site.replaceAll("\\s+","");
-				if (warehouseID.length()>28) {
-					warehouseID = warehouseID.substring(0,28);
-				}
-				warehouseID = warehouseID + temp;
-				RetrievedObject ro = SQLManager.retrieveRecords("site", "Site_ID=\'"+warehouseID+"\'");
-				ResultSet rs = ro.getResultSet();
-				boolean unique = true;
-				try {
-					while (rs.next()) {
-						unique = false;
-						temp++;
+		} else {
+			try {
+				int sizeInt = Integer.parseInt(totalSize);
+				boolean isUnique = false;
+				String warehouseID = null;
+				int temp = 0;
+				while (!isUnique) {
+					warehouseID = tempCompany + site.replaceAll("\\s+","");
+					if (warehouseID.length()>28) {
+						warehouseID = warehouseID.substring(0,28);
 					}
-					if (unique) {
-						isUnique = true;
+					warehouseID = warehouseID + temp;
+					RetrievedObject ro = SQLManager.retrieveRecords("site", "Site_ID=\'"+warehouseID+"\'");
+					ResultSet rs = ro.getResultSet();
+					boolean unique = true;
+					try {
+						while (rs.next()) {
+							unique = false;
+							temp++;
+						}
+						if (unique) {
+							isUnique = true;
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					ro.close();
 				}
-				ro.close();
-			}
 
-			String values = "\'" + warehouseID + "\',\'" + company + "\',\'" + site + "\',\'" + country + "\',\'" + region 
-					+ "\',\'" + street + "\',\'" + city + "\',\'" + postal + "\'";
-			SQLManager.insertRecord("site", values);
-			addWhMsg = "Site added. SiteID: " + warehouseID;
-			success = true;
+				String values = "\'" + warehouseID + "\',\'" + company + "\',\'" + site + "\',\'" + country + "\',\'" + region 
+						+ "\',\'" + street + "\',\'" + city + "\',\'" + postal + "\',\'" + totalSize + "\'";
+				SQLManager.insertRecord("site", values);
+				addWhMsg = "Site added. SiteID: " + warehouseID;
+				success = true;
+			} catch (NumberFormatException e) {
+				addWhMsg = "Total size has to be an integer";
+			}
+			
 		}
 		
 		session.setAttribute("addWhMsg", addWhMsg);
@@ -134,6 +144,7 @@ public class ProcessAddWhServlet extends HttpServlet {
 			session.setAttribute("addWhCountry", country);
 			session.setAttribute("addWhRegion", region);
 			session.setAttribute("addWhStreet", street);
+			session.setAttribute("addWhSize", totalSize);
 			session.setAttribute("addWhCity", request.getParameter("city"));
 			session.setAttribute("otherCity", request.getParameter("otherCity"));
 			session.setAttribute("addWhPostal", postal);

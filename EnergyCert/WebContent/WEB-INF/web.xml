@@ -101,6 +101,22 @@
     <url-pattern>/admin/processedit</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>ProcessEditPaybackServlet</servlet-name>
+    <servlet-class>admin.ProcessEditPaybackServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessEditPaybackServlet</servlet-name>
+    <url-pattern>/admin/processeditpayback</url-pattern>
+  </servlet-mapping>
+   <servlet>
+    <servlet-name>PaybackServlet</servlet-name>
+    <servlet-class>visual.PaybackServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PaybackServlet</servlet-name>
+    <url-pattern>/visual/payback</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>ProcessEditWeatherServlet</servlet-name>
     <servlet-class>admin.ProcessEditWeatherServlet</servlet-class>
   </servlet>
@@ -155,6 +171,22 @@
   <servlet-mapping>
     <servlet-name>ProcessImportWhServlet</servlet-name>
     <url-pattern>/client/processimportwh</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ProcessUploadLogoServlet</servlet-name>
+    <servlet-class>client.ProcessUploadLogoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessUploadLogoServlet</servlet-name>
+    <url-pattern>/client/processuploadlogo</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>GetLogoServlet</servlet-name>
+    <servlet-class>client.GetLogoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetLogoServlet</servlet-name>
+    <url-pattern>/client/getlogo</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>ProcessAddWhServlet</servlet-name>
@@ -227,5 +259,29 @@
   <servlet-mapping>
     <servlet-name>GenerateChart</servlet-name>
     <url-pattern>/visual/generate</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ProcessAddZoneServlet</servlet-name>
+    <servlet-class>form.ProcessAddZoneServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessAddZoneServlet</servlet-name>
+    <url-pattern>/form/processaddzone</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ProcessDeleteZoneServlet</servlet-name>
+    <servlet-class>form.ProcessDeleteZoneServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessDeleteZoneServlet</servlet-name>
+    <url-pattern>/form/processdeletezone</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ProcessSiteDefServlet</servlet-name>
+    <servlet-class>form.ProcessSiteDefServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProcessSiteDefServlet</servlet-name>
+    <url-pattern>/form/processsitedef</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -16,6 +16,13 @@ String[] details_array = details.split("\\^");
 String[] activity_array = activity.split("\\^");
 String[] building_name_array = bName.split("\\*");
 
+RetrievedObject questionnaire_ro = SQLManager.retrieveRecords("questionnaire", where);
+ResultSet questionnaire_rs = questionnaire_ro.getResultSet();
+String year = "";
+while (questionnaire_rs.next()) {
+	year = questionnaire_rs.getString("year");
+}
+
 %>
 
 <div class="container">
@@ -26,21 +33,6 @@ String[] building_name_array = bName.split("\\*");
                 <div class="page-header" style="padding-left:0em;">
                     <img src="../icons/icon_definition.png" height="5%" width="5%">&nbsp;&nbsp;Site Definition
                 </div>
-                <% if (!fromLink) {%>
-                <div id="buildingButtons" style="display:inline-flex;">
-                    <div class="form-group" style="padding-right:2em;">
-                    	<div class="col-lg-4">
-                            <button type="button" data-toggle="modal" data-target="#addZoneModal" class="btn btn-default" style="width:100px;">Add Zone</button>
-                        </div>
-					</div>
-				
-					<div class="form-group" style="padding-right:2em;">
-                    	<div class="col-lg-4">
-                            <button type="button" data-toggle="modal" data-target="#deleteZoneModal" class="btn btn-default" style="width:100px;">Delete Zone</button>
-                        </div>
-					</div>
-				</div>  
-				<% } %>  
                     <% 
                     for (int i = 0; i < details_array.length; i++) { 
                     	String det = details_array[i];
@@ -85,7 +77,7 @@ String[] building_name_array = bName.split("\\*");
 							</div>
 							<div class="form-group" style="width:16%;">
 								<div class="col-lg-12">
-									<label>Months of Zone Operation in <%=previousYear %></label>
+									<label>Months of Zone Operation in <%=year %></label>
 								</div>
 							</div>
 						</div>
@@ -218,10 +210,7 @@ String[] building_name_array = bName.split("\\*");
 	            	</div>
 	            	<% } %>
 	            	
-	            	
-	            	<div class="btn-group" style="margin-left:88%">
-                    	<button class="btn" id="nexttab" type="button" onclick="next_tab();">Next</button>
-					</div>
+	            
             
             </div>
 		</section>

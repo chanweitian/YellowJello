@@ -99,8 +99,19 @@ String site_id = request.getParameter("site_id");
 			<div class="header">
 	            GTL Energy Certificate Questionnaire
 	        </div>
+<<<<<<< HEAD
 	    
 	        <form id="questionnaire" method="post" class="form-horizontal" action="processsitedef">
+=======
+
+		<div id="site-def-alert" style="width: 35%; padding-left: 2em; display: none;">
+			<div id="site-def-alert-text" class="alert alert-danger">
+			</div>
+		</div>
+
+
+		<form id="questionnaire" method="post" class="form-horizontal" action="processsitedef">
+>>>>>>> FETCH_HEAD
 	        	<input type="hidden" name="site_id" value="<%=site_id %>" />
 	        	
 	        	<div class="container">
@@ -513,15 +524,20 @@ String site_id = request.getParameter("site_id");
 	        <br>
 	        <div>
 		        <div class="col-md-offset-9">
-		            <button type="submit" id="generatequest" class="btn btn-primary">Generate Questionnaire</button>
+		            <button type="submit" id="generatequest" onclick="submitSiteDefFunction()" class="btn btn-primary">Generate Questionnaire</button>
 		        </div>
 		    </div>
 	       <br><br>
 	        </form>
 	    </div>
 	</body>
+<<<<<<< HEAD
 	
 </html>
+=======
+</html>
+
+>>>>>>> FETCH_HEAD
 <script>
 function submitSiteDefFunction() {
 	var form = $('#questionnaire');
@@ -555,4 +571,8 @@ function submitSiteDefFunction() {
 		return false;
 	});
 }
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> FETCH_HEAD

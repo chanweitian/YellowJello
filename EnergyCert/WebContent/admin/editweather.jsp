@@ -96,7 +96,7 @@
       	</div>
 		<% } %>
     	
-    	<p>The following are the Average Monthly Temperature (°C) of the different States.</p>
+    	<p>The following are the Average Monthly Temperature (°C) of the different Cities/ States.</p>
       
       <form class="form-horizontal" role="form" method="post" action="processeditweather">
       <div class="form-group">

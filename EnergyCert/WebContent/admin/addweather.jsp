@@ -200,7 +200,7 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label for="city" class="col-sm-1 control-label">State</label>
+		    <label for="city" class="col-sm-1 control-label">City/ State</label>
 		    <div class="col-sm-4">
 		    <% 
 		      try {

@@ -76,7 +76,7 @@ if (today.before(cal)) {
 		<form action="../visual/calculate" class="form-horizontal" method="post">
 			<%-- to pass to VisualOutput.jsp --%>
 			<input type="hidden" name="quest_id" value="<%=quest_id%>" />
-			<%@include file="SiteDef.jsp" %>
+			<%@include file="PastQuestionnaire/SiteDef.jsp" %>
 			
 			<div class="container">
 				<div class="row">

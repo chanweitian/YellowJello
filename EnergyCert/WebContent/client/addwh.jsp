@@ -123,6 +123,8 @@
   	String addWhCity = (String) session.getAttribute("addWhCity");
   	String addWhPostal = (String) session.getAttribute("addWhPostal");
   	String otherCity = (String) session.getAttribute("otherCity");
+  	String addWhSize = (String) session.getAttribute("addWhSize");
+  	session.removeAttribute("addWhSize");
   	session.removeAttribute("addWhMsg");
   	session.removeAttribute("addWhSite");
   	session.removeAttribute("addWhCountry");
@@ -214,7 +216,7 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label for="city" class="col-sm-1 control-label">State</label>
+		    <label for="city" class="col-sm-1 control-label">City/ State</label>
 		    <div class="col-sm-4">
 		     
 		     <% 
@@ -271,6 +273,16 @@
 	    		<input type="text" class="form-control" id="postal" name="postal" value="<%=addWhPostal %>" required>
 		      <% } else { %>
 		      <input type="text" class="form-control" id="postal" name="postal" required>
+		      <% } %>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="totalSize" class="col-sm-1 control-label">Total Size (Sq M)</label>
+		    <div class="col-sm-4">
+		      <% if (addWhSize!=null) { %>
+	    		<input type="text" class="form-control" id="totalSize" name="totalSize" value="<%=addWhSize %>" required>
+		      <% } else { %>
+		      <input type="text" class="form-control" id="totalSize" name="totalSize" required>
 		      <% } %>
 		    </div>
 		  </div>

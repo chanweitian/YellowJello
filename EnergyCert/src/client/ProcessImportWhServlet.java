@@ -119,13 +119,14 @@ public class ProcessImportWhServlet extends HttpServlet {
 	                fis.close();
 	            }
 	        }
-	
 	        importWhMsg = showExelData(sheetData,request);
-	        success = true;
-	        
+	        if (importWhMsg.contains("Site added")) {
+	        	success = true;
+	        }
         } catch(InvalidOperationException ioe) {
         	importWhMsg = "Please input a valid file";
         }
+        System.out.println(importWhMsg);
         session.setAttribute("importWhMsg", importWhMsg);
         if (!success) {
         	response.sendRedirect("importwh.jsp");
@@ -142,86 +143,144 @@ public class ProcessImportWhServlet extends HttpServlet {
 			tempCompany = tempCompany.substring(0,6);
 		}
     	String importWhMsg = "";
-    	
+    	String errorMsg = "";
         //
         // Iterates the data and print it out to the console.
         //
-        for (int i = 0; i < sheetData.size(); i++) {
-            List list = (List) sheetData.get(i);
-            
-            if (i>0) {
-            	String region = null;
-            	String country = null;
-            	String site = null;
-            	String street = null;
-            	String city = null;
-            	String postal = null;
-            	
-	            for (int j = 0; j < list.size(); j++) {
-	                XSSFCell cell = (XSSFCell) list.get(j);
-	                System.out.print(cell.getRichStringCellValue().getString());
-	                switch (j) {
-	                case 0:
-	                	region = cell.getRichStringCellValue().getString();
-	                	break;
-	                case 1:
-	                	country = cell.getRichStringCellValue().getString();
-	                	break;
-	                case 2:
-	                	site = cell.getRichStringCellValue().getString();
-	                	break;
-	                case 3:
-	                	street = cell.getRichStringCellValue().getString();
-	                	break;
-	                case 4:
-	                	city = cell.getRichStringCellValue().getString();
-	                	break;
-	                case 5:
-	                	postal = cell.getRichStringCellValue().getString();
-	                	break;
-	                }
-	                if (j < list.size() - 1) {
-	                    System.out.print(", ");
-	                }
+    	if (sheetData.size()==1) {
+    		errorMsg += "Please insert data into file<br />";
+    	} else {
+	    	for (int i = 0; i < sheetData.size(); i++) {
+	            List list = (List) sheetData.get(i);
+	            
+	            if (i>0) {
+	            	String region = null;
+	            	String country = null;
+	            	String site = null;
+	            	String street = null;
+	            	String city = null;
+	            	String postal = null;
+	            	int size = 0;
+	            	
+	            	if (list.size()!=7) {
+	            		errorMsg += "Row " + (i+1) + " has missing value(s)<br />";
+	            	} else {
+			            for (int j = 0; j < list.size(); j++) {
+			                XSSFCell cell = (XSSFCell) list.get(j);
+			                switch (j) {
+			                case 0:
+			                	region = cell.getRichStringCellValue().getString();
+			                	break;
+			                case 1:
+			                	country = cell.getRichStringCellValue().getString();
+			                	break;
+			                case 2:
+			                	site = cell.getRichStringCellValue().getString();
+			                	break;
+			                case 3:
+			                	street = cell.getRichStringCellValue().getString();
+			                	break;
+			                case 4:
+			                	city = cell.getRichStringCellValue().getString();
+			                	break;
+			                case 5:
+			                	postal = cell.getRichStringCellValue().getString();
+			                	break;
+			                case 6:
+			                	try {
+				                	size = (int) cell.getNumericCellValue();
+			                	} catch (Exception e) {
+			                		errorMsg += "Row " + (i+1) + " total size has to be an integer<br />";
+			                	}
+			                	break;
+			                }
+			            }
+		            }
+	            }
+	    	}
+    	}
+    	
+    	if (errorMsg.equals("")) {
+	        for (int i = 0; i < sheetData.size(); i++) {
+	            List list = (List) sheetData.get(i);
+	            
+	            if (i>0) {
+	            	String region = null;
+	            	String country = null;
+	            	String site = null;
+	            	String street = null;
+	            	String city = null;
+	            	String postal = null;
+	            	int size = 0;
+	            	
+		            for (int j = 0; j < list.size(); j++) {
+		                XSSFCell cell = (XSSFCell) list.get(j);
+		                switch (j) {
+		                case 0:
+		                	region = cell.getRichStringCellValue().getString();
+		                	break;
+		                case 1:
+		                	country = cell.getRichStringCellValue().getString();
+		                	break;
+		                case 2:
+		                	site = cell.getRichStringCellValue().getString();
+		                	break;
+		                case 3:
+		                	street = cell.getRichStringCellValue().getString();
+		                	break;
+		                case 4:
+		                	city = cell.getRichStringCellValue().getString();
+		                	break;
+		                case 5:
+		                	postal = cell.getRichStringCellValue().getString();
+		                	break;
+		                case 6:
+		                	size = (int) cell.getNumericCellValue();
+		                	break;
+		                }
+		                if (j < list.size() - 1) {
+		                    System.out.print(", ");
+		                }
+		            }
+		            
+		            boolean isUnique = false;
+					String warehouseID = null;
+					int temp = 0;
+					while (!isUnique) {
+						warehouseID = tempCompany + site.replaceAll("\\s+","");
+						if (warehouseID.length()>28) {
+							warehouseID = warehouseID.substring(0,28);
+						}
+						warehouseID = warehouseID + temp;
+						RetrievedObject ro = SQLManager.retrieveRecords("site", "Site_ID=\'"+warehouseID+"\'");
+						ResultSet rs = ro.getResultSet();
+						boolean unique = true;
+						try {
+							while (rs.next()) {
+								unique = false;
+								temp++;
+							}
+							if (unique) {
+								isUnique = true;
+							}
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						ro.close();
+					}
+	
+					String values = "\'" + warehouseID + "\',\'" + company + "\',\'" + site + "\',\'" + country + "\',\'" + region 
+							+ "\',\'" + street + "\',\'" + city + "\',\'" + postal + "\',\'" + size + "\'";
+					SQLManager.insertRecord("site", values);
+					importWhMsg += "Site added. SiteID: " + warehouseID + "<br />";	    			
 	            }
 	            
-	            boolean isUnique = false;
-				String warehouseID = null;
-				int temp = 0;
-				while (!isUnique) {
-					warehouseID = tempCompany + site.replaceAll("\\s+","");
-					if (warehouseID.length()>28) {
-						warehouseID = warehouseID.substring(0,28);
-					}
-					warehouseID = warehouseID + temp;
-					RetrievedObject ro = SQLManager.retrieveRecords("site", "Site_ID=\'"+warehouseID+"\'");
-					ResultSet rs = ro.getResultSet();
-					boolean unique = true;
-					try {
-						while (rs.next()) {
-							unique = false;
-							temp++;
-						}
-						if (unique) {
-							isUnique = true;
-						}
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					ro.close();
-				}
-
-				String values = "\'" + warehouseID + "\',\'" + company + "\',\'" + site + "\',\'" + country + "\',\'" + region 
-						+ "\',\'" + street + "\',\'" + city + "\',\'" + postal + "\'";
-				SQLManager.insertRecord("site", values);
-				importWhMsg += "Site added. SiteID: " + warehouseID + "<br />";
-				System.out.println();
-    			
-            }
-            
-        }
-        return importWhMsg;
+	        }
+	        return importWhMsg;
+    	} else {
+    		return errorMsg;
+    	}
     }
 
 	private String getFileName(final Part part) {
