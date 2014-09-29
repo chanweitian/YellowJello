@@ -64,9 +64,14 @@ String site_id = request.getParameter("site_id");
 			<div class="header">
 	            GTL Energy Certificate Questionnaire
 	        </div>
-	    
-	        
-	        <form id="questionnaire" method="post" class="form-horizontal" action="processsitedef">
+
+		<div id="site-def-alert" style="width: 35%; padding-left: 2em; display: none;">
+			<div id="site-def-alert-text" class="alert alert-danger">
+			</div>
+		</div>
+
+
+		<form id="questionnaire" method="post" class="form-horizontal" action="processsitedef">
 	        	<input type="hidden" name="site_id" value="<%=site_id %>" />
 	        	
 	        	<div class="container">
@@ -472,7 +477,7 @@ String site_id = request.getParameter("site_id");
 	        <br><br>
 	        <div>
 		        <div class="col-md-offset-9">
-		            <button type="submit" id="generatequest" class="btn btn-primary">Generate Questionnaire</button>
+		            <button type="submit" id="generatequest" onclick="submitSiteDefFunction()" class="btn btn-primary">Generate Questionnaire</button>
 		        </div>
 		    </div>
 	       
@@ -480,3 +485,38 @@ String site_id = request.getParameter("site_id");
 	    </div>
 	</body>
 </html>
+
+<script>
+function submitSiteDefFunction() {
+	var form = $('#questionnaire');
+	form.submit(function (e) {
+		$.ajax({
+			type: form.attr('method'),
+			url: form.attr('action'),
+			data: form.serialize(),
+			success: function (data) {
+				var result=data;
+				//$('#resultAdd').text(result);
+				if (data.trim() == "yes") {
+					setTimeout(function () {
+						window.location.replace("Questionnaire.jsp");
+					}, 2000);
+				} else {
+					var e = document.getElementById('site-def-alert-text');
+					var text = "<b>Error!</b> ";
+					var data_array = data.split(";");
+					for (var x = 0 ; x < data_array.length; x++) {
+						text = text + "<br />" + data_array[x];
+					}
+					e.innerHTML = text;
+					document.getElementById('site-def-alert').style.display = 'block';
+				}
+				
+			}
+		});
+		e.preventDefault(); //STOP default action
+		e.unbind(); //unbind. to stop multiple form submit.
+		return false;
+	});
+}
+</script>

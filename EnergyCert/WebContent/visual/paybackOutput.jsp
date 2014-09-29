@@ -167,7 +167,7 @@ if (today.before(cal)) {
 		    Payback Analysis
 		</div>
 		
-         <form id="payback_form" method="post" action="">
+         <form id="payback_form" method="post" action="payback">
 		
 			<%
 			String desc = (String) session.getAttribute("userdesc");

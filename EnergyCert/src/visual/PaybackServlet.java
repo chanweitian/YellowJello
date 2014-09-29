@@ -70,15 +70,19 @@ public class PaybackServlet extends HttpServlet {
 		paybackMap = new HashMap<String, ArrayList<String>>();
 
 		String[] zoneString = request.getParameter("zone_id").split("//");
-		String zone_id = zoneString[0];
-		String zoneT = zoneString[1];
+		String zone_id = zoneString[0].trim();
+		String zoneT = zoneString[1].trim();
 		
 		String questionare_id = request.getParameter("site_id");
 		
-		zone_id = questionare_id +"_"+ zone_id; 
+		zone_id = questionare_id +"-"+ zone_id; 
 		
 		actualConsumption = Double.parseDouble(request.getParameter("actual_consumption_electricity"));
-		costPerKwh = Double.parseDouble(request.getParameter("electricity_cost")) / actualConsumption;
+		costPerKwh = Double.parseDouble(request.getParameter("electricity_cost"));
+				 // actualConsumption;
+		
+		System.out.println("actualConsumption:"+actualConsumption);
+		System.out.println("costPerKwh:"+costPerKwh);
 		
 		try {
 		
@@ -105,10 +109,15 @@ public class PaybackServlet extends HttpServlet {
 		double powerRating = Double.parseDouble(request.getParameter("current_power_rating"));
 		double efficacy = Double.parseDouble(request.getParameter("current_efficacy"));
 		double ballastFactor = Double.parseDouble(request.getParameter("current_ballast_factor"));
-		double opsHoursRed = Double.parseDouble(request.getParameter("current_op_hours"));
+		double opsHoursRed = Double.parseDouble(request.getParameter("current_op_hours")) / 100;
 		
 		double currentAnnualKwh = numOfFixture * lampPerFixture * powerRating * operationHoursPerYear / 1000 * opsHoursRed;
+		double currentAnnualCost = currentAnnualKwh * costPerKwh;
 		double currentLightOuput = numOfFixture * lampPerFixture * powerRating * efficacy * ballastFactor;
+		
+		System.out.println("currentAnnualKwh:"+currentAnnualKwh);
+		System.out.println("currentAnnualCost:"+currentAnnualCost);
+		System.out.println("currentLightOuput:"+currentLightOuput);
 		
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("1");
@@ -122,6 +131,9 @@ public class PaybackServlet extends HttpServlet {
 		String[] zoneList = request.getParameterValues("types[]");
 		
 		for(String zone: zoneList){
+			
+			name = zone;
+			
 			list = new ArrayList<String>();
 			
 			numOfFixture = Double.parseDouble(request.getParameter(zone+"_num_fixtures"));
@@ -129,29 +141,57 @@ public class PaybackServlet extends HttpServlet {
 			powerRating = Double.parseDouble(request.getParameter(zone+"_power_rating"));
 			efficacy = Double.parseDouble(request.getParameter(zone+"_efficacy"));
 			ballastFactor = Double.parseDouble(request.getParameter(zone+"_ballast_factor"));
-			opsHoursRed = Double.parseDouble(request.getParameter(zone+"_op_hours"));
+			opsHoursRed = Double.parseDouble(request.getParameter(zone+"_op_hours")) / 100;
+
+			System.out.println("operationHoursPerYear:"+operationHoursPerYear);
 			
 			double annualKwh = numOfFixture * lampPerFixture * powerRating * operationHoursPerYear / 1000 * opsHoursRed;
 			double annualCost = annualKwh * costPerKwh;
 			
 			double lightOutput = numOfFixture * lampPerFixture * powerRating * efficacy * ballastFactor;
 
-			double costPerLamp = Double.parseDouble(request.getParameter("t5_cost_lamp"));
-			double installationCostPerFixture = Double.parseDouble(request.getParameter("t5_installation_cost"));
-			double investmentCost = 0;
-			double annualSavings = 0;
+			double costPerLamp = Double.parseDouble(request.getParameter(zone+"_cost_lamp"));
+			double installationCostPerFixture = Double.parseDouble(request.getParameter(zone+"_installation_cost"));
+			double investmentCost = numOfFixture * lampPerFixture * costPerLamp + numOfFixture * installationCostPerFixture;
+			double annualSavings = currentAnnualCost - annualCost;
 			
-			double payback = annualSavings / investmentCost;
+			double payback =  investmentCost / annualSavings;
 			
 			double newRating = (actualConsumption - (currentAnnualKwh - annualKwh)) / benchmark * 100;
 			
 			double ratingPercentage = (currentRating - newRating)/ currentRating * 100; 		
 					
 			double lightOuputPercentage = (lightOutput - currentLightOuput)/ currentLightOuput * 100;
-					
+			
+			
+			
 			list.add(payback+"");
 			list.add(ratingPercentage+"");
 			list.add(lightOuputPercentage+"");
+
+			System.out.println("=============="+zone);
+			
+			System.out.println("numOfFixture:"+numOfFixture);
+			System.out.println("lampPerFixture:"+lampPerFixture);
+			System.out.println("powerRating:"+powerRating);
+			System.out.println("efficacy:"+efficacy);
+			System.out.println("ballastFactor:"+ballastFactor);
+			System.out.println("opsHoursRed:"+opsHoursRed);
+		
+			System.out.println("annualKwh:"+annualKwh);
+			System.out.println("annualCost:"+annualCost);
+			System.out.println("lightOutput:"+lightOutput);
+			
+			System.out.println("costPerLamp:"+costPerLamp);
+			System.out.println("installationCostPerFixture:"+installationCostPerFixture);
+			System.out.println("investmentCost:"+investmentCost);
+			System.out.println("annualSavings:"+annualSavings);
+
+			System.out.println("currentRating:"+currentRating);
+			System.out.println("newRating:"+newRating);
+			System.out.println("payback:"+payback);
+			System.out.println("ratingPercentage:"+ratingPercentage);
+			System.out.println("lightOuputPercentage:"+lightOuputPercentage);
 			
 			paybackMap.put(name,list);
 		}
@@ -239,7 +279,7 @@ public class PaybackServlet extends HttpServlet {
 			System.out.println("Qustionnare_id NOT FOUND");
 		} else {
 
-			currentRating = Integer.parseInt(rs.getString("rating"));
+			currentRating = rs.getInt("energy_rating");
 			
 		}
 		
@@ -250,6 +290,9 @@ public class PaybackServlet extends HttpServlet {
 	private void fetchZoneData(String zoneT, String zone_id) throws NumberFormatException, SQLException{
 		
 		String tableName = "";
+	
+		System.out.println(zoneT);
+		
 		
 		switch (zoneT) {
 
@@ -266,17 +309,26 @@ public class PaybackServlet extends HttpServlet {
 				tableName = "warehouse_value_add_form";
 				break;
 			default:
-				System.out.println("here");
+				System.out.println("Zone Type:"+zoneT);
 				break;
 		}
+		
+		System.out.println("zone id:"+zone_id);
 		
 		ro = SQLManager.retrieveRecords(tableName, "zone_id=\'"
 				+ zone_id + "\'");
 		rs = ro.getResultSet();
 		
-		benchmark = Double.parseDouble(rs.getString("benchmark"));
-		double operationHoursPerWeek = getOperationHours(rs);
-		operationHoursPerYear = operationHoursPerWeek * 52;
+		if(rs.next()){
+			benchmark = Double.parseDouble(rs.getString("benchmark"));
+			benchmark = 400000;
+			System.out.println("benchmark:"+benchmark);
+			double operationHoursPerWeek = getOperationHours(rs);
+			System.out.println("operationHoursPerWeek:"+operationHoursPerWeek);
+			operationHoursPerYear = operationHoursPerWeek * 52;
+		}
+		
+
 		
 	}
 	
