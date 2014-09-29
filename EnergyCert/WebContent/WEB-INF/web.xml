@@ -108,6 +108,14 @@
     <servlet-name>ProcessEditPaybackServlet</servlet-name>
     <url-pattern>/admin/processeditpayback</url-pattern>
   </servlet-mapping>
+   <servlet>
+    <servlet-name>PaybackServlet</servlet-name>
+    <servlet-class>visual.PaybackServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PaybackServlet</servlet-name>
+    <url-pattern>/visual/payback</url-pattern>
+  </servlet-mapping>
   <servlet>
     <servlet-name>ProcessEditWeatherServlet</servlet-name>
     <servlet-class>admin.ProcessEditWeatherServlet</servlet-class>

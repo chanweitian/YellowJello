@@ -21,10 +21,12 @@
 
 <%
 
-	//HashMap<String, ArrayList<String>> paybackMap = (HashMap<String,ArrayList<String>>) request.getAttribute("paybackMap");
+	HashMap<String, ArrayList<String>> paybackMap = (HashMap<String,ArrayList<String>>) request.getAttribute("paybackMap");
 
-	HashMap<String, ArrayList<String>> paybackMap = new HashMap<String, ArrayList<String>>();
+
+//	HashMap<String, ArrayList<String>> paybackMap = new HashMap<String, ArrayList<String>>();
 	
+/*
 	ArrayList<String> list1 = new ArrayList<String>();
 	//1.2	117	 6,327,720 
 	list1.add("1.2");
@@ -39,7 +41,7 @@
 	list1.add("0");
 	list1.add("0");
 	paybackMap.put("Cur", list1);
-	*/
+	
 	
 	list1 = new ArrayList<String>();
 	list1.add("1.3");
@@ -60,7 +62,7 @@
 	
 	Set<String> keySet = paybackMap.keySet();
 	
-	String[] arr = {"192,262,63","82,225,203","255, 26, 0","110, 16, 232","2, 213, 255"};
+	String[] arr = {"192,262,63","82,225,203","255,26,0","110,16,232","2,213,255"};
 	
 	//220,220,220
 

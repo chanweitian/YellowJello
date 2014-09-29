@@ -153,8 +153,6 @@ public class CalculateServlet extends HttpServlet {
 		zoneCount = 0;
 		
 		
-		
-		
 		siteInfoMap = new HashMap<String, String>();
 
 		HttpSession session = request.getSession();
@@ -305,10 +303,6 @@ public class CalculateServlet extends HttpServlet {
             	
 			}
 			site_def_ro.close();
-			//calculateTotalConsumption("offices", questionnaire_id);
-			//calculateTotalConsumption("wh_ground_to_roof", questionnaire_id);
-			//calculateTotalConsumption("wh_mezzanine", questionnaire_id);
-			//calculateTotalConsumption("wh_value_add", questionnaire_id);
 			
 			// get consumption
 			String year1_electrical_use = getElectricalUsage(consumptionYear);
@@ -338,15 +332,10 @@ public class CalculateServlet extends HttpServlet {
 			siteInfoMap.put("business_unit", business_unit);
 			siteInfoMap.put("facility_contact", facility_contact);
 			
-			
-			
 			String country = siteInfoMap.get("site_info_address_country");
 			
 			String emission_factor_electrical_use = getEmissionFactor(country,"Electricity, non renewable");
 			String emission_factor_nat_gas_use = getEmissionFactor(country,"Natural Gas (Methane)");
-			
-			System.out.println("EF Electrical"+emission_factor_electrical_use);
-			System.out.println("NG Electrical"+emission_factor_electrical_use);
 			
 			siteInfoMap.put("emission_factor_electrical_use",emission_factor_electrical_use);
 			siteInfoMap.put("emission_factor_nat_gas_use", emission_factor_nat_gas_use);
@@ -529,8 +518,6 @@ public class CalculateServlet extends HttpServlet {
 	private void calculateTotalConsumption(String zoneT, String questionnaire_id)
 			throws NumberFormatException, SQLException {
 
-		
-		
 		String tableName = "";
 		
 		System.out.println("Calculating Total Consumption for Zone: "+zoneT+":"+questionnaire_id);
@@ -569,9 +556,8 @@ public class CalculateServlet extends HttpServlet {
 			double minTemp = Double.parseDouble(rs.getString("zone_min_temp"));
 
 			if (zoneT.equals("offices")) {
-System.out.println("Hello "+area);
 				officeFloorArea += area;
-				System.out.println("Hello "+officeFloorArea);	
+				
 				
 			} else {
 				warehouseFloorArea += area;
@@ -633,6 +619,9 @@ System.out.println("Hello "+area);
 			String loc = siteInfoMap.get("site_info_address_city");
 			String country = siteInfoMap.get("site_info_address_country");
 			
+			double zoneCoolConsumption = 0;
+			double zoneHeatConsumption = 0;
+			
 			for (int month = 1; month <= 12; month++) {
 
 				String monthStr = getMonth(month);
@@ -653,7 +642,7 @@ System.out.println("Hello "+area);
 					double diff = externalTemp - maxTemp;
 					double electricConsumption = total * diff * Days_In_Month
 							* hoursPerDay / 1000;
-					coolConsumption += electricConsumption;
+					zoneCoolConsumption += electricConsumption;
 					
 					if(zoneT.equals("offices")){
 						officeCooled = "Yes";
@@ -666,7 +655,7 @@ System.out.println("Hello "+area);
 					double diff = minTemp - externalTemp;
 					double electricConsumption = total * diff * Days_In_Month
 							* hoursPerDay / 1000;
-					heatConsumption += electricConsumption;
+					zoneHeatConsumption += electricConsumption;
 
 					
 					if(zoneT.equals("offices")){
@@ -680,23 +669,46 @@ System.out.println("Hello "+area);
 
 			}
 			
+			coolConsumption += zoneCoolConsumption;
 			
-
-			lightingConsumption += getLightingConsumption(zoneT, area,
+			heatConsumption += zoneHeatConsumption;
+			
+			double zoneLightingConsumption = getLightingConsumption(zoneT, area,
 					hoursPerDay, daysPerWeek);
-
-			extLightingConsumption += getExtLightingConsumption(area,
+			double zoneExtLightingConsumption = getExtLightingConsumption(area,
 					hoursLitPerWeek);
 
-			hotWaterConsumption += getHotWaterConsumption(zoneT, area,
+			double zoneHotWaterConsumption = getHotWaterConsumption(zoneT, area,
 					hoursPerDay, daysPerWeek);
 
-			mheConsumption += getMHE();
+			double zoneMheConsumption = getMHE();
 
-			operationsConsumption += getOperationsConsumption(hoursPerDay,
+			double zoneOperationsConsumption = getOperationsConsumption(hoursPerDay,
 					daysPerWeek, numOfPeople);
+			
+			
+			
 
+			lightingConsumption += zoneLightingConsumption;
+
+			extLightingConsumption += zoneExtLightingConsumption;
+
+			hotWaterConsumption += zoneHotWaterConsumption;
+
+			mheConsumption += zoneMheConsumption;
+
+			operationsConsumption += zoneOperationsConsumption;
+			
+			double benchmark = lightingConsumption + extLightingConsumption + hotWaterConsumption + mheConsumption + operationsConsumption;
+			
+			System.out.println("Inserting Benchmark");
+			
+			// store benchmrak
+			SQLManager.updateRecords(tableName, "benchmark="+benchmark, "zone_id=\'" + rs.getString("zone_id") + "\'");
+			
 		}
+		
+		
 		
 		
 		ro.close();

@@ -182,6 +182,7 @@ public class ProcessSiteDefServlet extends HttpServlet {
 					site_def_details = site_def_details + quest_id + "-" + building_array[i] + "_" + zone_name_array[j] + "*";
 					site_def_activity = site_def_activity + zone_type + "*";
 				
+<<<<<<< HEAD
 					
 					//add to DB
 					values = "";
@@ -216,6 +217,20 @@ public class ProcessSiteDefServlet extends HttpServlet {
 					
 					SQLManager.insertRecord(tableName, values);
 					
+=======
+				if (zone_type.equals("wh_mezzanine")) {
+					tableName = "mezzanine_form";
+					values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				} else if (zone_type.equals("wh_ground_to_roof")) {
+					tableName = "ground_to_roof_form";
+					values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				} else if (zone_type.equals("wh_value_add")) {
+					tableName = "warehouse_value_add_form";
+					values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				} else if (zone_type.equals("offices")) {
+					tableName = "office_form";
+					values = values + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+>>>>>>> FETCH_HEAD
 				}
 				//delimit site_def_details and site_def_activity by ^ (to separate by buildings)
 				site_def_details = site_def_details.substring(0,site_def_details.length()-1) + "^";
