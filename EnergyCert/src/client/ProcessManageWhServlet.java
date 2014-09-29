@@ -52,6 +52,7 @@ public class ProcessManageWhServlet extends HttpServlet {
 		String street = request.getParameter("street");
 		String city = request.getParameter("city");
 		String postal = request.getParameter("postal");
+		String totalSize = request.getParameter("totalSize");
 		String manageWhMsg = null;
 		
 		if (city.equals("Others")) {
@@ -70,12 +71,18 @@ public class ProcessManageWhServlet extends HttpServlet {
 			manageWhMsg = "Please input city";
 		} else if (postal.trim().length()==0) {
 			manageWhMsg = "Please input postal";
+		} else if (totalSize.trim().length()==0) {
+			manageWhMsg = "Please input total size";
 		} else {
+			try {
+				int sizeInt = Integer.parseInt(totalSize);
 				String toSet = "site_info_name=\'" + site + "\',site_info_address_country=\'" + country + "\',Region=\'" + region 
-						+ "\',site_info_address_street=\'" + street + "\',site_info_address_city=\'" + city + "\',site_info_address_postal=\'" + postal + "\'";
+						+ "\',site_info_address_street=\'" + street + "\',site_info_address_city=\'" + city + "\',site_info_address_postal=\'" + postal + "\',\'" + totalSize + "\'";
 				SQLManager.updateRecords("site", toSet, "Site_ID=\'"+siteid+"\'");
 				manageWhMsg = "Site details have been successfully saved.";
-
+			} catch (NumberFormatException e) {
+				manageWhMsg = "Total size has to be an integer";
+			}
 		}
 		
 		HttpSession session = request.getSession();
@@ -84,6 +91,7 @@ public class ProcessManageWhServlet extends HttpServlet {
 		session.setAttribute("manageWhCountry", country);
 		session.setAttribute("manageWhRegion", region);
 		session.setAttribute("manageWhStreet", street);
+		session.setAttribute("manageWhSize", totalSize);
 		session.setAttribute("manageWhCity", request.getParameter("city"));
 		session.setAttribute("otherCity", request.getParameter("otherCity"));
 		session.setAttribute("manageWhPostal", postal);

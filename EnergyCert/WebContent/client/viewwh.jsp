@@ -103,6 +103,7 @@
 	            <th>Street</th>
 	            <th>State</th>
 	            <th>Postal</th>
+	            <th>Total Size (Sq M)</th>
 	          </tr>
 	        </thead>
 	        <tbody>
@@ -117,7 +118,8 @@
 			            <td><%=rs.getString("site_info_name") %></td>
 			            <td><%=rs.getString("site_info_address_street") %></td>
 			            <td><%=rs.getString("site_info_address_city") %></td>
-			            <td><%=rs.getString("site_info_address_postal") %>
+			            <td><%=rs.getString("site_info_address_postal") %></td>
+			            <td><%=rs.getString("Total_Size") %></td>
 			            <td>
 			            	<a class="btn btn-default" href="managewh.jsp?siteid=<%=rs.getString("Site_ID") %>">Modify</a>
 			            </td>

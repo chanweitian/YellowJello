@@ -127,6 +127,8 @@
   	String manageWhCity = (String) session.getAttribute("manageWhCity");
   	String manageWhPostal = (String) session.getAttribute("manageWhPostal");
   	String otherCity = (String) session.getAttribute("otherCity");
+  	String manageWhSize = (String) session.getAttribute("manageWhSize");
+  	session.removeAttribute("manageWhSize");
   	session.removeAttribute("manageWhMsg");
   	session.removeAttribute("manageWhSite");
   	session.removeAttribute("manageWhCountry");
@@ -153,6 +155,7 @@
 				manageWhStreet = rs.getString("site_info_address_street");
 				manageWhCity = rs.getString("site_info_address_city");
 				manageWhPostal = rs.getString("site_info_address_postal");
+				manageWhSize = "" + rs.getInt("Total_Size");
 			}
 	  	} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -228,7 +231,7 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label for="city" class="col-sm-1 control-label">State</label>
+		    <label for="city" class="col-sm-1 control-label">City/ State</label>
 		    <div class="col-sm-4">
 	    		<% 
 		      try {
@@ -287,6 +290,12 @@
 		    <label for="postal" class="col-sm-1 control-label">Postal</label>
 		    <div class="col-sm-4">
 	    		<input type="text" class="form-control" id="postal" name="postal" value="<%=manageWhPostal %>" required>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="totalSize" class="col-sm-1 control-label">Total Size (Sq M)</label>
+		    <div class="col-sm-4">
+	    		<input type="text" class="form-control" id="totalSize" name="totalSize" value="<%=manageWhSize %>" required>
 		    </div>
 		  </div>
 		  <div class="form-group">
