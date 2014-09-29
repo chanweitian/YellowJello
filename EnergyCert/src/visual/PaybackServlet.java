@@ -97,9 +97,6 @@ public class PaybackServlet extends HttpServlet {
 	
 	
 	private void calculateLightingAssessmentData(HttpServletRequest request){
-		
-		
-		
 		// get current
 		
 		String name = "Current";
@@ -122,17 +119,17 @@ public class PaybackServlet extends HttpServlet {
 
 		// get others
 		
-		String[] zoneList = request.getParameterValues("zoneList");
+		String[] zoneList = request.getParameterValues("types[]");
 		
 		for(String zone: zoneList){
 			list = new ArrayList<String>();
 			
-			numOfFixture = Double.parseDouble(request.getParameter("t5_num_fixtures"));
-			lampPerFixture = Double.parseDouble(request.getParameter("t5_lamp_fixture"));
-			powerRating = Double.parseDouble(request.getParameter("t5_power_rating"));
-			efficacy = Double.parseDouble(request.getParameter("t5_efficacy"));
-			ballastFactor = Double.parseDouble(request.getParameter("t5_ballast_factor"));
-			opsHoursRed = Double.parseDouble(request.getParameter("t5_op_hours"));
+			numOfFixture = Double.parseDouble(request.getParameter(zone+"_num_fixtures"));
+			lampPerFixture = Double.parseDouble(request.getParameter(zone+"_lamp_fixture"));
+			powerRating = Double.parseDouble(request.getParameter(zone+"_power_rating"));
+			efficacy = Double.parseDouble(request.getParameter(zone+"_efficacy"));
+			ballastFactor = Double.parseDouble(request.getParameter(zone+"_ballast_factor"));
+			opsHoursRed = Double.parseDouble(request.getParameter(zone+"_op_hours"));
 			
 			double annualKwh = numOfFixture * lampPerFixture * powerRating * operationHoursPerYear / 1000 * opsHoursRed;
 			double annualCost = annualKwh * costPerKwh;
@@ -250,7 +247,7 @@ public class PaybackServlet extends HttpServlet {
 		
 	}
 	
-	private void fetchZoneData(String zoneT, String zone_id){
+	private void fetchZoneData(String zoneT, String zone_id) throws NumberFormatException, SQLException{
 		
 		String tableName = "";
 		
@@ -272,8 +269,6 @@ public class PaybackServlet extends HttpServlet {
 				System.out.println("here");
 				break;
 		}
-		
-		
 		
 		ro = SQLManager.retrieveRecords(tableName, "zone_id=\'"
 				+ zone_id + "\'");

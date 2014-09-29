@@ -153,8 +153,6 @@ public class CalculateServlet extends HttpServlet {
 		zoneCount = 0;
 		
 		
-		
-		
 		siteInfoMap = new HashMap<String, String>();
 
 		HttpSession session = request.getSession();
