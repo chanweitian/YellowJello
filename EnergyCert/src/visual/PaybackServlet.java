@@ -321,6 +321,7 @@ public class PaybackServlet extends HttpServlet {
 		
 		if(rs.next()){
 			benchmark = Double.parseDouble(rs.getString("benchmark"));
+			benchmark = 400000;
 			System.out.println("benchmark:"+benchmark);
 			double operationHoursPerWeek = getOperationHours(rs);
 			System.out.println("operationHoursPerWeek:"+operationHoursPerWeek);
