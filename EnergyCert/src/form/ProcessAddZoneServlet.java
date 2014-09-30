@@ -16,66 +16,72 @@ import javax.servlet.http.HttpSession;
 import db.RetrievedObject;
 import db.SQLManager;
 
-
 /**
  * Servlet implementation class ProcessAddZoneServlet
  */
 @WebServlet("/ProcessAddZoneServlet")
 public class ProcessAddZoneServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ProcessAddZoneServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		processView(request,response);
+	public ProcessAddZoneServlet() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		processView(request,response);
+		processView(request, response);
 	}
 
-	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+		processView(request, response);
+	}
+
+	protected void processView(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+
 		PrintWriter out = response.getWriter();
-		
+
 		String buildingName = request.getParameter("building_name");
 		String zoneName = request.getParameter("zone_name");
 		String zoneActivity = request.getParameter("zone_activity");
-		String zoneHeatingCooling = request.getParameter("zone_heating_cooling");
+		String zoneHeatingCooling = request
+				.getParameter("zone_heating_cooling");
 		String zoneMinTemp = request.getParameter("zone_min_temp");
 		String zoneMaxTemp = request.getParameter("zone_max_temp");
 		String zoneOperation = request.getParameter("zone_operation");
-		
+
 		String site_def_building_name = "";
 		String site_def_info = "";
 		String site_def_activity = "";
-		
+
 		String new_zone_id = "";
-		
+
 		HttpSession session = request.getSession();
 		String quest_id = (String) session.getAttribute("quest_id");
-		
+
 		int buildingArrayPosition = 0;
 		int zoneNum = 0;
 		String zone_id = quest_id + "-" + buildingName + "_" + zoneName;
-		
+
 		String where = "questionnaire_id = \'" + quest_id + "\'";
-		RetrievedObject ro = SQLManager.retrieveRecords("site_definition", where);
+		RetrievedObject ro = SQLManager.retrieveRecords("site_definition",
+				where);
 		ResultSet rs = ro.getResultSet();
 		try {
 			while (rs.next()) {
@@ -87,7 +93,7 @@ public class ProcessAddZoneServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		String[] building_name_array = site_def_building_name.split("\\*");
 		ArrayList<String> zoneIDList = new ArrayList<String>();
 		String[] site_def_array = site_def_info.split("\\^");
@@ -98,14 +104,14 @@ public class ProcessAddZoneServlet extends HttpServlet {
 				zoneIDList.add(s_array[1]);
 			}
 		}
-		
-		
+
 		String error_message = "";
-		
+
 		new_zone_id = buildingName;
-		
+
 		if (buildingName.equals("add_new")) {
-			String new_building_name = request.getParameter("new_building_name");
+			String new_building_name = request
+					.getParameter("new_building_name");
 			new_zone_id = new_building_name;
 			if (new_building_name.equals("")) {
 				error_message = "New Building Name is required";
@@ -120,7 +126,7 @@ public class ProcessAddZoneServlet extends HttpServlet {
 				}
 			}
 		}
-		
+
 		if (error_message.length() == 0) {
 			if (zoneName.equals("")) {
 				error_message = "Zone Name is required";
@@ -136,7 +142,7 @@ public class ProcessAddZoneServlet extends HttpServlet {
 				}
 			}
 		}
-		
+
 		if (error_message.length() == 0) {
 			if (zoneActivity.equals("")) {
 				error_message = "Zone Activity is required";
@@ -150,40 +156,44 @@ public class ProcessAddZoneServlet extends HttpServlet {
 				error_message = "Max Temp is required";
 			} else if (!zoneMaxTemp.matches("^[-]?[0-9]+$")) {
 				error_message = "Max Temp: Integer only";
-			} else if (Integer.parseInt(zoneMinTemp) > Integer.parseInt(zoneMaxTemp)) {
+			} else if (Integer.parseInt(zoneMinTemp) > Integer
+					.parseInt(zoneMaxTemp)) {
 				error_message = "Min Temp cannot be larger than Max Temp";
 			} else if (zoneOperation.equals("")) {
 				error_message = "Months of Zone Operation is required";
-			} 
-		} 
-		
+			}
+		}
+
 		if (error_message.length() != 0) {
 			out.println(error_message);
 		} else {
-			System.out.println("add");	
+			System.out.println("add");
 
 			String new_site_def_info = "";
 			String new_site_def_activity = "";
-			String new_site_def_building_name= "";
-			
+			String new_site_def_building_name = "";
+
 			boolean addNew = false;
-			
+
 			if (buildingName.equals("add_new")) {
 				addNew = true;
-				String new_building_name = request.getParameter("new_building_name");
-				
+				String new_building_name = request
+						.getParameter("new_building_name");
+
 				zone_id = quest_id + "-" + new_building_name + "_" + zoneName;
 				new_site_def_info = site_def_info + "^" + zone_id;
 				new_site_def_activity = site_def_activity + "^" + zoneActivity;
-				
-				new_site_def_building_name = site_def_building_name + "*" + new_building_name;
+
+				new_site_def_building_name = site_def_building_name + "*"
+						+ new_building_name;
 				buildingArrayPosition = site_def_building_name.split("\\*").length;
 				zoneNum = 1;
 				buildingName = new_building_name;
 			} else {
-			
-				//find the position of the building in the building name array
-				String[] buildingNameArray = site_def_building_name.split("\\*");
+
+				// find the position of the building in the building name array
+				String[] buildingNameArray = site_def_building_name
+						.split("\\*");
 				for (int i = 0; i < buildingNameArray.length; i++) {
 					String name = buildingNameArray[i];
 					if (buildingName.equals(name)) {
@@ -191,60 +201,79 @@ public class ProcessAddZoneServlet extends HttpServlet {
 						break;
 					}
 				}
-				
-				//update site_def_info and site_def_activity
+
+				// update site_def_info and site_def_activity
 				String[] siteDefBuildingArray = site_def_info.split("\\^");
-				String[] siteDefZoneArray = siteDefBuildingArray[buildingArrayPosition].split("\\*");
+				String[] siteDefZoneArray = siteDefBuildingArray[buildingArrayPosition]
+						.split("\\*");
 				zoneNum = siteDefZoneArray.length + 1;
-				siteDefBuildingArray[buildingArrayPosition] = siteDefBuildingArray[buildingArrayPosition] + "*" + zone_id;
-				
+				siteDefBuildingArray[buildingArrayPosition] = siteDefBuildingArray[buildingArrayPosition]
+						+ "*" + zone_id;
+
 				String[] siteDefActivityArray = site_def_activity.split("\\^");
-				siteDefActivityArray[buildingArrayPosition] = siteDefActivityArray[buildingArrayPosition] + "*" + zoneActivity;
-				
+				siteDefActivityArray[buildingArrayPosition] = siteDefActivityArray[buildingArrayPosition]
+						+ "*" + zoneActivity;
+
 				for (String s : siteDefBuildingArray) {
 					new_site_def_info = new_site_def_info + s + "^";
 				}
-				new_site_def_info = new_site_def_info.substring(0,new_site_def_info.length()-1);
-			
+				new_site_def_info = new_site_def_info.substring(0,
+						new_site_def_info.length() - 1);
+
 				for (String s : siteDefActivityArray) {
 					new_site_def_activity = new_site_def_activity + s + "^";
 				}
-				new_site_def_activity = new_site_def_activity.substring(0,new_site_def_activity.length()-1);
+				new_site_def_activity = new_site_def_activity.substring(0,
+						new_site_def_activity.length() - 1);
 			}
-			
+
 			String values = "";
 			if (addNew) {
-				values = "site_def_info = \'" + new_site_def_info + "\', site_def_activity = \'" + new_site_def_activity + "\', site_def_building_name = \'" + new_site_def_building_name + "\'";
+				values = "site_def_info = \'" + new_site_def_info
+						+ "\', site_def_activity = \'" + new_site_def_activity
+						+ "\', site_def_building_name = \'"
+						+ new_site_def_building_name + "\'";
 			} else {
-				values = "site_def_info = \'" + new_site_def_info + "\', site_def_activity = \'" + new_site_def_activity + "\'";
+				values = "site_def_info = \'" + new_site_def_info
+						+ "\', site_def_activity = \'" + new_site_def_activity
+						+ "\'";
 			}
 			String whereUpdate = "questionnaire_id = \'" + quest_id + "\'";
 			System.out.println("values: " + values);
-			//update record 
+			// update record
 			SQLManager.updateRecords("site_definition", values, whereUpdate);
-				
-			String values_zone = "\'" + quest_id + "\',\'" + zone_id + "\',\'" + (buildingArrayPosition+1) + "\',\'" + zoneNum + "\',\'" + buildingName + "\',\'" + zoneName + "\',\'" + zoneActivity + "\',\'" + zoneHeatingCooling + "\',\'" + zoneMinTemp + "\',\'" + zoneMaxTemp + "\',\'" + zoneOperation + "\'";
+
+			String values_zone = "\'" + quest_id + "\',\'" + zone_id + "\',\'"
+					+ (buildingArrayPosition + 1) + "\',\'" + zoneNum + "\',\'"
+					+ buildingName + "\',\'" + zoneName + "\',\'"
+					+ zoneActivity + "\',\'" + zoneHeatingCooling + "\',\'"
+					+ zoneMinTemp + "\',\'" + zoneMaxTemp + "\',\'"
+					+ zoneOperation + "\'";
 			System.out.println("values_zone: " + values_zone);
 			String tableName = "";
 			if (zoneActivity.equals("wh_mezzanine")) {
 				tableName = "mezzanine_form";
-				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				values_zone = values_zone
+						+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
 			} else if (zoneActivity.equals("wh_ground_to_roof")) {
 				tableName = "ground_to_roof_form";
-				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				values_zone = values_zone
+						+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
 			} else if (zoneActivity.equals("wh_value_add")) {
 				tableName = "warehouse_value_add_form";
-				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				values_zone = values_zone
+						+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
 			} else if (zoneActivity.equals("offices")) {
 				tableName = "office_form";
-				values_zone = values_zone + ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+				values_zone = values_zone
+						+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
 			}
-			SQLManager.insertRecord(tableName,values_zone);
-			
+			SQLManager.insertRecord(tableName, values_zone);
+
 			out.println("New zone has been added! The page will be reloaded.");
 			System.out.println("Done");
 			session.setAttribute("quest_id", quest_id);
-			session.setAttribute("fromAddZone","true");
+			session.setAttribute("fromAddZone", "true");
 		}
 	}
 

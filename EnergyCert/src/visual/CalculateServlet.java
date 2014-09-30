@@ -62,7 +62,7 @@ public class CalculateServlet extends HttpServlet {
 	private static double ENERGY_CONSUMPTION_PER_PERSON;
 
 	// Benchmark Parameters
-		
+
 	private HashMap<String, int[]> mheMap = new HashMap<String, int[]>();
 
 	private double heatConsumption = 0.0;
@@ -79,9 +79,9 @@ public class CalculateServlet extends HttpServlet {
 	private String warehouseHeated = "No";
 	private String warehouseCooled = "No";
 	private String officeHeated = "No";
-	private String officeCooled = "No"; 
+	private String officeCooled = "No";
 	private String business_unit = "";
-	private String facility_contact = ""; 
+	private String facility_contact = "";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -113,37 +113,37 @@ public class CalculateServlet extends HttpServlet {
 	private int zoneCount = 0;
 
 	@Override
-	
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processView(request,response);
+		processView(request, response);
 	}
+
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processView(request,response);
+		processView(request, response);
 	}
-		
+
 	protected void processView(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		
-		RequestDispatcher rd = request.getRequestDispatcher("visualOutput.jsp");
-		
-		 heatConsumption = 0.0;
-		 coolConsumption = 0.0;
-		 lightingConsumption = 0.0;
-		 extLightingConsumption = 0.0;
-		 hotWaterConsumption = 0.0;
-		 mheConsumption = 0.0;
-		 operationsConsumption = 0.0;
 
-		 warehouseFloorArea = 0.0;
+		RequestDispatcher rd = request.getRequestDispatcher("visualOutput.jsp");
+
+		heatConsumption = 0.0;
+		coolConsumption = 0.0;
+		lightingConsumption = 0.0;
+		extLightingConsumption = 0.0;
+		hotWaterConsumption = 0.0;
+		mheConsumption = 0.0;
+		operationsConsumption = 0.0;
+
+		warehouseFloorArea = 0.0;
 		officeFloorArea = 0.0;
 		volume = 0.0;
 		warehouseHeated = "No";
 		warehouseCooled = "No";
 		officeHeated = "No";
-		officeCooled = "No"; 
-		
+		officeCooled = "No";
+
 		site_id = "";
 		actualConsumption = 0.0;
 		consumptionYear = 0;
@@ -151,108 +151,107 @@ public class CalculateServlet extends HttpServlet {
 		hoursLitPerWeek = 0;
 		location = "";
 		zoneCount = 0;
-		
-		
+
 		siteInfoMap = new HashMap<String, String>();
 
 		HttpSession session = request.getSession();
-		
+
 		String company = (String) session.getAttribute("company");
 		int month = PeriodManager.getMonthInt(company);
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MONTH,month);
-		cal.set(Calendar.DATE,1);
+		cal.set(Calendar.MONTH, month);
+		cal.set(Calendar.DATE, 1);
 		Calendar today = Calendar.getInstance();
 		int previousYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
 		if (today.before(cal)) {
 			previousYear -= 1;
 		}
-		
+
 		String utype = (String) session.getAttribute("usertype");
-	
-		
+
 		String questionnaire_id = request.getParameter("quest_id");
-		
-		System.out.println("Quest ID:"+questionnaire_id);
-		
-		if (questionnaire_id==null) {
+
+		System.out.println("Quest ID:" + questionnaire_id);
+
+		if (questionnaire_id == null) {
 			questionnaire_id = (String) session.getAttribute("quest_id");
 		}
-		
-		System.out.println("Session Quest ID:"+questionnaire_id);
-		
+
+		System.out.println("Session Quest ID:" + questionnaire_id);
+
 		String link = request.getParameter("link");
 		boolean fromLink = false;
-		if (link != null) { 
-			
+		if (link != null) {
+
 			String where_link = "questionnaire_link = \'" + link + "\'";
-			RetrievedObject ro_link = SQLManager.retrieveRecords("questionnaire_link", where_link);
+			RetrievedObject ro_link = SQLManager.retrieveRecords(
+					"questionnaire_link", where_link);
 			ResultSet rs_link = ro_link.getResultSet();
-			
+
 			boolean empty = true;
 			try {
-				while( rs_link.next() ) {
-				    // ResultSet processing here
-				    empty = false;
+				while (rs_link.next()) {
+					// ResultSet processing here
+					empty = false;
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
-				if (rs_link!=null){
-					try{
+				if (rs_link != null) {
+					try {
 						rs_link.close();
-					} catch(Exception e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			}
 			ro_link.close();
 
-			
-			
-			if(empty) {
-			    //forward to home page
+			if (empty) {
+				// forward to home page
 				response.sendRedirect("/EnergyCert");
 				return;
 			} else {
 				fromLink = true;
 			}
 		}
-		
 
-		
-		if(fromLink){
+		if (fromLink) {
 			System.out.println("Have Link");
 			request.setAttribute("fromLink", "YES");
 		} else {
-			
-			
-			
+
 			System.out.println("NO Link");
 			request.setAttribute("fromLink", "NO");
-			
-			if (utype==null || utype.contains("Admin")) {
+
+			if (utype == null || utype.contains("Admin")) {
 				response.sendRedirect("/EnergyCert");
 				return;
 			}
 
 		}
-		
+
 		try {
-			HashMap<String,Double> formulaHM = FormulaManager.getFormulaHM();
-			WINDOW_RATIO =  formulaHM.get("WindowRatio");
-			L_W_RATIO  =  formulaHM.get("L-W-ratio");
+			HashMap<String, Double> formulaHM = FormulaManager.getFormulaHM();
+			WINDOW_RATIO = formulaHM.get("WindowRatio");
+			L_W_RATIO = formulaHM.get("L-W-ratio");
 
 			OFFICE_PARAMS[0] = formulaHM.get("Office0");
 			OFFICE_PARAMS[1] = formulaHM.get("Office1");
 			OFFICE_PARAMS[2] = formulaHM.get("Office2");
-			WAREHOUSE_GROUND_TO_ROOF_PARAMS[0] = formulaHM.get("WarehouseGroundToRoof0");
-			WAREHOUSE_GROUND_TO_ROOF_PARAMS[1] = formulaHM.get("WarehouseGroundToRoof1");
-			WAREHOUSE_GROUND_TO_ROOF_PARAMS[2] = formulaHM.get("WarehouseGroundToRoof2");
-			WAREHOUSE_MEZZANINE_PARAMS[0] = formulaHM.get("WarehouseMezzanine0");
-			WAREHOUSE_MEZZANINE_PARAMS[1] = formulaHM.get("WarehouseMezzanine1");
-			WAREHOUSE_MEZZANINE_PARAMS[2] = formulaHM.get("WarehouseMezzanine2");
+			WAREHOUSE_GROUND_TO_ROOF_PARAMS[0] = formulaHM
+					.get("WarehouseGroundToRoof0");
+			WAREHOUSE_GROUND_TO_ROOF_PARAMS[1] = formulaHM
+					.get("WarehouseGroundToRoof1");
+			WAREHOUSE_GROUND_TO_ROOF_PARAMS[2] = formulaHM
+					.get("WarehouseGroundToRoof2");
+			WAREHOUSE_MEZZANINE_PARAMS[0] = formulaHM
+					.get("WarehouseMezzanine0");
+			WAREHOUSE_MEZZANINE_PARAMS[1] = formulaHM
+					.get("WarehouseMezzanine1");
+			WAREHOUSE_MEZZANINE_PARAMS[2] = formulaHM
+					.get("WarehouseMezzanine2");
 			WAREHOUSE_VALUE_ADD_PARAMS[0] = formulaHM.get("WarehouseValueAdd0");
 			WAREHOUSE_VALUE_ADD_PARAMS[1] = formulaHM.get("WarehouseValueAdd1");
 			WAREHOUSE_VALUE_ADD_PARAMS[2] = formulaHM.get("WarehouseValueAdd2");
@@ -264,16 +263,22 @@ public class CalculateServlet extends HttpServlet {
 			FLOOR_U = formulaHM.get("FloorU");
 			WINDOWS_U = formulaHM.get("WindowsU");
 			OFFICE_AIR_CHANGES_PER_HOUR = formulaHM.get("OfficeAirChanges");
-			WAREHOUSE_AIR_CHANGES_PER_HOUR = formulaHM.get("WarehouseAirChanges");
-			OFFICE_RADIATOR_EFFICIENCY = formulaHM.get("OfficeRadiatorEfficiency");
-			WAREHOUSE_BURNER_EFFICIENCY = formulaHM.get("WarehouseBurnerEfficiency");
+			WAREHOUSE_AIR_CHANGES_PER_HOUR = formulaHM
+					.get("WarehouseAirChanges");
+			OFFICE_RADIATOR_EFFICIENCY = formulaHM
+					.get("OfficeRadiatorEfficiency");
+			WAREHOUSE_BURNER_EFFICIENCY = formulaHM
+					.get("WarehouseBurnerEfficiency");
 
 			EXT_LIGHT = formulaHM.get("ExtLight");
 
 			WATER_REQ_OFFICE = formulaHM.get("OfficeWaterReq");
-			WATER_REQ_WAREHOUSE_GROUND_TO_ROOF = formulaHM.get("WarehouseGroundToRoofWaterReq");
-			WATER_REQ_WAREHOUSE_MEZZANINE = formulaHM.get("WarehouseMezzanineWaterReq");
-			WATER_REQ_WAREHOUSE_VALUE_ADD = formulaHM.get("WarehouseValueAddWaterReq");
+			WATER_REQ_WAREHOUSE_GROUND_TO_ROOF = formulaHM
+					.get("WarehouseGroundToRoofWaterReq");
+			WATER_REQ_WAREHOUSE_MEZZANINE = formulaHM
+					.get("WarehouseMezzanineWaterReq");
+			WATER_REQ_WAREHOUSE_VALUE_ADD = formulaHM
+					.get("WarehouseValueAddWaterReq");
 			TEMP_RISE = formulaHM.get("TempRise");
 			BOILER_SYS_EFFICIENCY = formulaHM.get("BoilerSysEfficiency");
 			SPECIFIC_HEAT_OF_WATER = formulaHM.get("SpecificHeatOfWater");
@@ -285,33 +290,34 @@ public class CalculateServlet extends HttpServlet {
 			fetchQuestionnareData(questionnaire_id);
 			fetchSiteData();
 			String where = "questionnaire_id = \'" + questionnaire_id + "\'";
-			RetrievedObject site_def_ro = SQLManager.retrieveRecords("site_definition", where);
+			RetrievedObject site_def_ro = SQLManager.retrieveRecords(
+					"site_definition", where);
 			ResultSet site_def_rs = site_def_ro.getResultSet();
 			String activity = "";
 			while (site_def_rs.next()) {
 				activity = site_def_rs.getString("site_def_activity");
 			}
 			String[] activity_array = activity.split("\\^");
-			for (int i = 0; i < activity_array.length; i++) { 
-            	String act = activity_array[i];
-            	String[] zone_act_array = act.split("\\*");
-            	
-            	for (int j = 0; j < zone_act_array.length; j++) {
+			for (int i = 0; i < activity_array.length; i++) {
+				String act = activity_array[i];
+				String[] zone_act_array = act.split("\\*");
+
+				for (int j = 0; j < zone_act_array.length; j++) {
 					String zone_act = zone_act_array[j];
 					calculateTotalConsumption(zone_act, questionnaire_id);
-            	}
-            	
+				}
+
 			}
 			site_def_ro.close();
-			
+
 			// get consumption
 			String year1_electrical_use = getElectricalUsage(consumptionYear);
-			String year2_electrical_use = getElectricalUsage(consumptionYear-1);
-			String year3_electrical_use = getElectricalUsage(consumptionYear-2);
-			
+			String year2_electrical_use = getElectricalUsage(consumptionYear - 1);
+			String year3_electrical_use = getElectricalUsage(consumptionYear - 2);
+
 			String year1_nat_gas_use = getNatGasUsage(consumptionYear);
-			String year2_nat_gas_use = getNatGasUsage(consumptionYear-1);
-			String year3_nat_gas_use = getNatGasUsage(consumptionYear-2);
+			String year2_nat_gas_use = getNatGasUsage(consumptionYear - 1);
+			String year3_nat_gas_use = getNatGasUsage(consumptionYear - 2);
 
 			siteInfoMap.put("year1_electrical_use", year1_electrical_use);
 			siteInfoMap.put("year2_electrical_use", year2_electrical_use);
@@ -320,39 +326,43 @@ public class CalculateServlet extends HttpServlet {
 			siteInfoMap.put("year1_nat_gas_use", year1_nat_gas_use);
 			siteInfoMap.put("year2_nat_gas_use", year2_nat_gas_use);
 			siteInfoMap.put("year3_nat_gas_use", year3_nat_gas_use);
-			
-			siteInfoMap.put("officeHeated", ""+officeHeated);
-			siteInfoMap.put("officeCooled", ""+officeCooled);
-			siteInfoMap.put("warehouseHeated", ""+warehouseHeated);
-			siteInfoMap.put("warehouseCooled", ""+warehouseCooled);
-			siteInfoMap.put("quest_id", ""+questionnaire_id);
-			
-			System.out.println("BU"+business_unit);
-			
+
+			siteInfoMap.put("officeHeated", "" + officeHeated);
+			siteInfoMap.put("officeCooled", "" + officeCooled);
+			siteInfoMap.put("warehouseHeated", "" + warehouseHeated);
+			siteInfoMap.put("warehouseCooled", "" + warehouseCooled);
+			siteInfoMap.put("quest_id", "" + questionnaire_id);
+
+			System.out.println("BU" + business_unit);
+
 			siteInfoMap.put("business_unit", business_unit);
 			siteInfoMap.put("facility_contact", facility_contact);
-			
+
 			String country = siteInfoMap.get("site_info_address_country");
-			
-			String emission_factor_electrical_use = getEmissionFactor(country,"Electricity, non renewable");
-			String emission_factor_nat_gas_use = getEmissionFactor(country,"Natural Gas (Methane)");
-			
-			siteInfoMap.put("emission_factor_electrical_use",emission_factor_electrical_use);
-			siteInfoMap.put("emission_factor_nat_gas_use", emission_factor_nat_gas_use);
-			
+
+			String emission_factor_electrical_use = getEmissionFactor(country,
+					"Electricity, non renewable");
+			String emission_factor_nat_gas_use = getEmissionFactor(country,
+					"Natural Gas (Methane)");
+
+			siteInfoMap.put("emission_factor_electrical_use",
+					emission_factor_electrical_use);
+			siteInfoMap.put("emission_factor_nat_gas_use",
+					emission_factor_nat_gas_use);
+
 			request.setAttribute("actualConsumption", actualConsumption + "");
-			request.setAttribute("heatConsumption",
-					heatConsumption / zoneCount + "");
-			request.setAttribute("coolConsumption",
-					coolConsumption / zoneCount + "");
+			request.setAttribute("heatConsumption", heatConsumption / zoneCount
+					+ "");
+			request.setAttribute("coolConsumption", coolConsumption / zoneCount
+					+ "");
 			request.setAttribute("lightingConsumption", lightingConsumption
 					/ zoneCount + "");
 			request.setAttribute("extLightingConsumption",
 					extLightingConsumption / zoneCount + "");
 			request.setAttribute("hotWaterConsumption", hotWaterConsumption
 					/ zoneCount + "");
-			request.setAttribute("mheConsumption",
-					mheConsumption / zoneCount + "");
+			request.setAttribute("mheConsumption", mheConsumption / zoneCount
+					+ "");
 			request.setAttribute("operationsConsumption", operationsConsumption
 					/ zoneCount + "");
 
@@ -361,7 +371,7 @@ public class CalculateServlet extends HttpServlet {
 			request.setAttribute("warehouseFloorArea", warehouseFloorArea + "");
 			request.setAttribute("officeFloorArea", officeFloorArea + "");
 			request.setAttribute("volume", volume + "");
-			
+
 			request.setAttribute("siteInfoMap", siteInfoMap);
 
 		} catch (NumberFormatException e) {
@@ -382,75 +392,76 @@ public class CalculateServlet extends HttpServlet {
 
 		rd.forward(request, response);
 	}
-	
-	private String getEmissionFactor(String country, String type) throws SQLException{
-		
+
+	private String getEmissionFactor(String country, String type)
+			throws SQLException {
+
 		ro = SQLManager.retrieveRecords("emission", "country LIKE \'%"
-				+ country + "%\' AND type=\'"+type+"\'");
+				+ country + "%\' AND type=\'" + type + "\'");
 		rs = ro.getResultSet();
-		
-		if (!rs.next()) {
-			if(rs != null) ro.close();
-			return "0";
-			
-		} 
 
-		String factor =  rs.getDouble("gCO2")+"";
-		
+		if (!rs.next()) {
+			if (rs != null)
+				ro.close();
+			return "0";
+
+		}
+
+		String factor = rs.getDouble("gCO2") + "";
+
 		ro.close();
-		
+
 		return factor;
-		
-	}
-	
-	
-	private String getElectricalUsage(int consumptionYear) throws SQLException{
-		
-		ro = SQLManager.retrieveRecords("questionnaire", "site_id=\'"
-				+ site_id + "\' AND year=\'"+consumptionYear+"\'");
-		rs = ro.getResultSet();
-		
-		if (!rs.next()) {
-			if(rs != null) ro.close();
-			return "0";
-			
-		} 
 
-		String usage =  rs.getString("usage_electricity_use");
-		
-		ro.close();
-		
-		return usage;
-		
 	}
-	
-	private String getNatGasUsage(int year) throws SQLException{
-		
-		ro = SQLManager.retrieveRecords("questionnaire", "site_id=\'"
-				+ site_id + "\' AND year=\'"+year+"\'");
-		rs = ro.getResultSet();
-		
-		if (!rs.next()) {
-			if(rs != null) ro.close();
-			return "0";
-			
-		} 
 
-		String usage =  rs.getString("usage_nat_gas_use");
-		
-		System.out.println("Year Nat Gas:"+year +":"+usage);
-		
+	private String getElectricalUsage(int consumptionYear) throws SQLException {
+
+		ro = SQLManager.retrieveRecords("questionnaire", "site_id=\'" + site_id
+				+ "\' AND year=\'" + consumptionYear + "\'");
+		rs = ro.getResultSet();
+
+		if (!rs.next()) {
+			if (rs != null)
+				ro.close();
+			return "0";
+
+		}
+
+		String usage = rs.getString("usage_electricity_use");
+
 		ro.close();
-		
+
 		return usage;
-		
+
 	}
-	
-	
+
+	private String getNatGasUsage(int year) throws SQLException {
+
+		ro = SQLManager.retrieveRecords("questionnaire", "site_id=\'" + site_id
+				+ "\' AND year=\'" + year + "\'");
+		rs = ro.getResultSet();
+
+		if (!rs.next()) {
+			if (rs != null)
+				ro.close();
+			return "0";
+
+		}
+
+		String usage = rs.getString("usage_nat_gas_use");
+
+		System.out.println("Year Nat Gas:" + year + ":" + usage);
+
+		ro.close();
+
+		return usage;
+
+	}
+
 	private void fetchQuestionnareData(String questionnaire_id)
 			throws SQLException {
 
-		
 		ro = SQLManager.retrieveRecords("questionnaire", "Questionnaire_ID=\'"
 				+ questionnaire_id + "\'");
 		rs = ro.getResultSet();
@@ -463,18 +474,17 @@ public class CalculateServlet extends HttpServlet {
 			actualConsumption = Double.parseDouble(rs
 					.getString("usage_electricity_use"));
 			consumptionYear = Integer.parseInt(rs.getString("year"));
-			System.out.println("TEST consumptionyear is " + rs.getString("year"));
+			System.out.println("TEST consumptionyear is "
+					+ rs.getString("year"));
 			extArea = Double.parseDouble(rs
 					.getString("site_info_ext_area_illuminated"));
 			hoursLitPerWeek = Double.parseDouble(rs
 					.getString("site_info_hours_area_lit"));
-			business_unit = rs
-					.getString("site_info_business_unit");
-			facility_contact = rs
-					.getString("site_info_contact_name");
-			
+			business_unit = rs.getString("site_info_business_unit");
+			facility_contact = rs.getString("site_info_contact_name");
+
 		}
-		
+
 		ro.close();
 
 	}
@@ -489,7 +499,7 @@ public class CalculateServlet extends HttpServlet {
 		} else {
 
 			String site_info_name = rs.getString("site_info_name");
-			
+
 			String site_info_address_street = rs
 					.getString("site_info_address_street");
 			String site_info_address_city = rs
@@ -514,13 +524,13 @@ public class CalculateServlet extends HttpServlet {
 		ro.close();
 	}
 
-
 	private void calculateTotalConsumption(String zoneT, String questionnaire_id)
 			throws NumberFormatException, SQLException {
 
 		String tableName = "";
-		
-		System.out.println("Calculating Total Consumption for Zone: "+zoneT+":"+questionnaire_id);
+
+		System.out.println("Calculating Total Consumption for Zone: " + zoneT
+				+ ":" + questionnaire_id);
 
 		switch (zoneT) {
 
@@ -538,18 +548,17 @@ public class CalculateServlet extends HttpServlet {
 			break;
 		}
 
-		
 		ro = SQLManager.retrieveRecords(tableName, "questionnaire_id=\'"
 				+ questionnaire_id + "\'");
 		rs = ro.getResultSet();
-		
+
 		if (!rs.next()) {
 			System.out.println("questionare_id is NOT FOUND: "
 					+ questionnaire_id);
 		} else {
-			
+
 			zoneCount++;
-			
+
 			// get zone type
 			double area = Double.parseDouble(rs.getString("zone_floorarea"));
 			double maxTemp = Double.parseDouble(rs.getString("zone_max_temp"));
@@ -557,46 +566,44 @@ public class CalculateServlet extends HttpServlet {
 
 			if (zoneT.equals("offices")) {
 				officeFloorArea += area;
-				
-				
+
 			} else {
 				warehouseFloorArea += area;
 			}
 
 			double height = 3;
-			
+
 			String tmpNumOfFloor = "";
 			double numOfFloor = 1;
-			
-			try{
+
+			try {
 				tmpNumOfFloor = rs.getString("zone_numoffloors");
 				numOfFloor = Double.parseDouble(tmpNumOfFloor);
-			} catch (Exception e){
-				
+			} catch (Exception e) {
+
 			}
-			
-			
+
 			if (zoneT.equals("office") || zoneT.equals("wh_value_add")) {
 				height = height * numOfFloor;
 			}
-			
+
 			volume += area * height;
 
 			double[] operationHours = getOperationHours(rs);
 
 			double hoursPerDay = operationHours[1]; // get hours per day
 			double daysPerWeek = operationHours[0]; // get days per week
-			
+
 			String avgEmployee = "0";
-			
+
 			try {
-				avgEmployee = rs
-						.getString("zone_aveemployees");
-			} catch(Exception e){
+				avgEmployee = rs.getString("zone_aveemployees");
+			} catch (Exception e) {
 				System.out.println("Not applicable");
 			}
-			
-			int numOfPeople = Integer.parseInt(avgEmployee); //only exists in office
+
+			int numOfPeople = Integer.parseInt(avgEmployee); // only exists in
+																// office
 			int year = Calendar.getInstance().get(Calendar.YEAR);
 			;
 
@@ -618,17 +625,16 @@ public class CalculateServlet extends HttpServlet {
 
 			String loc = siteInfoMap.get("site_info_address_city");
 			String country = siteInfoMap.get("site_info_address_country");
-			
+
 			double zoneCoolConsumption = 0;
 			double zoneHeatConsumption = 0;
-			
+
 			for (int month = 1; month <= 12; month++) {
 
 				String monthStr = getMonth(month);
-				
-				// 
-				double externalTemp = getWeatherData(loc, monthStr,country); 
-			
+
+				//
+				double externalTemp = getWeatherData(loc, monthStr, country);
 
 				// Create a calendar object and set year and month
 				Calendar mycal = new GregorianCalendar(year, month, 0);
@@ -643,8 +649,8 @@ public class CalculateServlet extends HttpServlet {
 					double electricConsumption = total * diff * Days_In_Month
 							* hoursPerDay / 1000;
 					zoneCoolConsumption += electricConsumption;
-					
-					if(zoneT.equals("offices")){
+
+					if (zoneT.equals("offices")) {
 						officeCooled = "Yes";
 					} else {
 						warehouseCooled = "Yes";
@@ -657,37 +663,32 @@ public class CalculateServlet extends HttpServlet {
 							* hoursPerDay / 1000;
 					zoneHeatConsumption += electricConsumption;
 
-					
-					if(zoneT.equals("offices")){
+					if (zoneT.equals("offices")) {
 						officeHeated = "Yes";
 					} else {
 						warehouseHeated = "Yes";
 					}
 
-					
 				}
 
 			}
-			
+
 			coolConsumption += zoneCoolConsumption;
-			
+
 			heatConsumption += zoneHeatConsumption;
-			
-			double zoneLightingConsumption = getLightingConsumption(zoneT, area,
-					hoursPerDay, daysPerWeek);
+
+			double zoneLightingConsumption = getLightingConsumption(zoneT,
+					area, hoursPerDay, daysPerWeek);
 			double zoneExtLightingConsumption = getExtLightingConsumption(area,
 					hoursLitPerWeek);
 
-			double zoneHotWaterConsumption = getHotWaterConsumption(zoneT, area,
-					hoursPerDay, daysPerWeek);
+			double zoneHotWaterConsumption = getHotWaterConsumption(zoneT,
+					area, hoursPerDay, daysPerWeek);
 
 			double zoneMheConsumption = getMHE();
 
-			double zoneOperationsConsumption = getOperationsConsumption(hoursPerDay,
-					daysPerWeek, numOfPeople);
-			
-			
-			
+			double zoneOperationsConsumption = getOperationsConsumption(
+					hoursPerDay, daysPerWeek, numOfPeople);
 
 			lightingConsumption += zoneLightingConsumption;
 
@@ -698,31 +699,30 @@ public class CalculateServlet extends HttpServlet {
 			mheConsumption += zoneMheConsumption;
 
 			operationsConsumption += zoneOperationsConsumption;
-			
-			double benchmark = lightingConsumption + extLightingConsumption + hotWaterConsumption + mheConsumption + operationsConsumption;
-			
+
+			double benchmark = lightingConsumption + extLightingConsumption
+					+ hotWaterConsumption + mheConsumption
+					+ operationsConsumption;
+
 			System.out.println("Inserting Benchmark");
-			
+
 			// store benchmrak
-			SQLManager.updateRecords(tableName, "benchmark="+benchmark, "zone_id=\'" + rs.getString("zone_id") + "\'");
-			
+			SQLManager.updateRecords(tableName, "benchmark=" + benchmark,
+					"zone_id=\'" + rs.getString("zone_id") + "\'");
+
 		}
-		
-		
-		
-		
+
 		ro.close();
 
 	}
-	
-	
-	private double getWeatherData(String loc, String month, String country) throws SQLException {
-		
 
-		month = month.substring(0,3);
-		
-		System.out.println("Calling weather"+loc+month);
-		
+	private double getWeatherData(String loc, String month, String country)
+			throws SQLException {
+
+		month = month.substring(0, 3);
+
+		System.out.println("Calling weather" + loc + month);
+
 		double temp = 9999;
 		temp = WeatherManager.getTemp(loc, month);
 		if (temp == 9999) {
@@ -731,13 +731,12 @@ public class CalculateServlet extends HttpServlet {
 				temp = 0;
 			}
 		}
-		
-		System.out.println("Temp for "+month+":"+temp);
-		
+
+		System.out.println("Temp for " + month + ":" + temp);
+
 		return temp;
-		
+
 	}
-	
 
 	private double[] getOperationHours(ResultSet zone_rs)
 			throws NumberFormatException, SQLException {
@@ -858,10 +857,9 @@ public class CalculateServlet extends HttpServlet {
 				* ENERGY_CONSUMPTION_PER_PERSON;
 
 	}
-	
-	
+
 	private String getMonth(int month) {
-	    return new DateFormatSymbols().getMonths()[month-1];
+		return new DateFormatSymbols().getMonths()[month - 1];
 	}
 
 }

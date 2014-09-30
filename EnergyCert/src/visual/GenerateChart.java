@@ -55,8 +55,8 @@ public class GenerateChart extends HttpServlet {
 							+ "\'");
 			ResultSet rs = ro.getResultSet();
 
-			JSONObject json      = new JSONObject();
-			JSONArray  sites = new JSONArray();
+			JSONObject json = new JSONObject();
+			JSONArray sites = new JSONArray();
 			JSONObject site;
 			response.setContentType("application/JSON");
 			PrintWriter out = response.getWriter();
@@ -67,55 +67,66 @@ public class GenerateChart extends HttpServlet {
 				String region = rs.getString("Region");
 				String company = rs.getString("Company");
 				if (filter.equals("Region")) {
-					if(region.equals(value) && qnYear.equals(year) && companyName.equals(company)){
+					if (region.equals(value) && qnYear.equals(year)
+							&& companyName.equals(company)) {
 						String siteName = rs.getString("site_info_name");
 						String energyRating = rs.getString("energy_rating");
-						String electricityUse = rs.getString("usage_electricity_use");
+						String electricityUse = rs
+								.getString("usage_electricity_use");
 						String natGasUse = rs.getString("usage_nat_gas_use");
-						String electricityEmmission = rs.getString("emission_electrical_use");
-						String gasEmmission = rs.getString("emission_nat_gas_use");
+						String electricityEmmission = rs
+								.getString("emission_electrical_use");
+						String gasEmmission = rs
+								.getString("emission_nat_gas_use");
 						site = new JSONObject();
-					    site.put("siteName", siteName);
-					    site.put("energyRating", energyRating);
-					    site.put("elec", electricityUse);
-					    site.put("gas", natGasUse);
-					    site.put("elecEmi", electricityEmmission);
-					    site.put("gasEmi", gasEmmission);
-					    sites.add(site);
+						site.put("siteName", siteName);
+						site.put("energyRating", energyRating);
+						site.put("elec", electricityUse);
+						site.put("gas", natGasUse);
+						site.put("elecEmi", electricityEmmission);
+						site.put("gasEmi", gasEmmission);
+						sites.add(site);
 					}
 				} else if (filter.equals("Country")) {
-					if(country.equals(value) && qnYear.equals(year) && companyName.equals(company)){
+					if (country.equals(value) && qnYear.equals(year)
+							&& companyName.equals(company)) {
 						String siteName = rs.getString("site_info_name");
 						String energyRating = rs.getString("energy_rating");
-						String electricityUse = rs.getString("usage_electricity_use");
+						String electricityUse = rs
+								.getString("usage_electricity_use");
 						String natGasUse = rs.getString("usage_nat_gas_use");
-						String electricityEmmission = rs.getString("emission_electrical_use");
-						String gasEmmission = rs.getString("emission_nat_gas_use");
+						String electricityEmmission = rs
+								.getString("emission_electrical_use");
+						String gasEmmission = rs
+								.getString("emission_nat_gas_use");
 						site = new JSONObject();
-					    site.put("siteName", siteName);
-					    site.put("energyRating", energyRating);
-					    site.put("elec", electricityUse);
-					    site.put("gas", natGasUse);
-					    site.put("elecEmi", electricityEmmission);
-					    site.put("gasEmi", gasEmmission);
-					    sites.add(site);
+						site.put("siteName", siteName);
+						site.put("energyRating", energyRating);
+						site.put("elec", electricityUse);
+						site.put("gas", natGasUse);
+						site.put("elecEmi", electricityEmmission);
+						site.put("gasEmi", gasEmmission);
+						sites.add(site);
 					}
 				} else {
-					if(qnYear.equals(year) && companyName.equals(company)){
+					if (qnYear.equals(year) && companyName.equals(company)) {
 						String siteName = rs.getString("site_info_name");
 						String energyRating = rs.getString("energy_rating");
-						String electricityUse = rs.getString("usage_electricity_use");
+						String electricityUse = rs
+								.getString("usage_electricity_use");
 						String natGasUse = rs.getString("usage_nat_gas_use");
-						String electricityEmmission = rs.getString("emission_electrical_use");
-						String gasEmmission = rs.getString("emission_nat_gas_use");
+						String electricityEmmission = rs
+								.getString("emission_electrical_use");
+						String gasEmmission = rs
+								.getString("emission_nat_gas_use");
 						site = new JSONObject();
-					    site.put("siteName", siteName);
-					    site.put("energyRating", energyRating);
-					    site.put("elec", electricityUse);
-					    site.put("gas", natGasUse);
-					    site.put("elecEmi", electricityEmmission);
-					    site.put("gasEmi", gasEmmission);
-					    sites.add(site);
+						site.put("siteName", siteName);
+						site.put("energyRating", energyRating);
+						site.put("elec", electricityUse);
+						site.put("gas", natGasUse);
+						site.put("elecEmi", electricityEmmission);
+						site.put("gasEmi", gasEmmission);
+						sites.add(site);
 					}
 				}
 			}

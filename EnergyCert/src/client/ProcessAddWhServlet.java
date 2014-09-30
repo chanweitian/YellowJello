@@ -30,32 +30,37 @@ import db.SQLManager;
 @WebServlet("/ProcessAddWhServlet")
 public class ProcessAddWhServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ProcessAddWhServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		processView(request,response);
+	public ProcessAddWhServlet() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		processView(request,response);
+		processView(request, response);
 	}
-	
-	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		processView(request, response);
+	}
+
+	protected void processView(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String site = request.getParameter("site");
 		String country = request.getParameter("country");
@@ -66,37 +71,37 @@ public class ProcessAddWhServlet extends HttpServlet {
 		String city = request.getParameter("city");
 		String postal = request.getParameter("postal");
 		String totalSize = request.getParameter("totalSize");
-		
+
 		String addWhMsg = null;
-		
+
 		if (city.equals("Others")) {
 			city = request.getParameter("otherCity");
 		}
-		
+
 		HttpSession session = request.getSession();
 		String company = (String) session.getAttribute("company");
-		String tempCompany = company.replaceAll("\\s+","");
-		if (tempCompany.length()>5) {
-			tempCompany = tempCompany.substring(0,6);
+		String tempCompany = company.replaceAll("\\s+", "");
+		if (tempCompany.length() > 5) {
+			tempCompany = tempCompany.substring(0, 6);
 		}
-		
-		boolean success=false;
-		
-		if (site.trim().length()==0) {
+
+		boolean success = false;
+
+		if (site.trim().length() == 0) {
 			addWhMsg = "Please input site";
-		} else if (country.trim().length()==0) {
+		} else if (country.trim().length() == 0) {
 			addWhMsg = "Please input country";
-		} else if (region.trim().length()==0) {
+		} else if (region.trim().length() == 0) {
 			addWhMsg = "Please input region";
-		} else if (street.trim().length()==0) {
+		} else if (street.trim().length() == 0) {
 			addWhMsg = "Please input street";
-		} else if (city.trim().length()==0) {
+		} else if (city.trim().length() == 0) {
 			addWhMsg = "Please input city";
-		} else if (postal.trim().length()==0) {
+		} else if (postal.trim().length() == 0) {
 			addWhMsg = "Please input postal";
-		} else if (totalSize.trim().length()==0) {
+		} else if (totalSize.trim().length() == 0) {
 			addWhMsg = "Please input total size";
-			
+
 		} else {
 			try {
 				int sizeInt = Integer.parseInt(totalSize);
@@ -104,12 +109,13 @@ public class ProcessAddWhServlet extends HttpServlet {
 				String warehouseID = null;
 				int temp = 0;
 				while (!isUnique) {
-					warehouseID = tempCompany + site.replaceAll("\\s+","");
-					if (warehouseID.length()>28) {
-						warehouseID = warehouseID.substring(0,28);
+					warehouseID = tempCompany + site.replaceAll("\\s+", "");
+					if (warehouseID.length() > 28) {
+						warehouseID = warehouseID.substring(0, 28);
 					}
 					warehouseID = warehouseID + temp;
-					RetrievedObject ro = SQLManager.retrieveRecords("site", "Site_ID=\'"+warehouseID+"\'");
+					RetrievedObject ro = SQLManager.retrieveRecords("site",
+							"Site_ID=\'" + warehouseID + "\'");
 					ResultSet rs = ro.getResultSet();
 					boolean unique = true;
 					try {
@@ -127,17 +133,19 @@ public class ProcessAddWhServlet extends HttpServlet {
 					ro.close();
 				}
 
-				String values = "\'" + warehouseID + "\',\'" + company + "\',\'" + site + "\',\'" + country + "\',\'" + region 
-						+ "\',\'" + street + "\',\'" + city + "\',\'" + postal + "\',\'" + totalSize + "\'";
+				String values = "\'" + warehouseID + "\',\'" + company
+						+ "\',\'" + site + "\',\'" + country + "\',\'" + region
+						+ "\',\'" + street + "\',\'" + city + "\',\'" + postal
+						+ "\',\'" + totalSize + "\'";
 				SQLManager.insertRecord("site", values);
 				addWhMsg = "Site added. SiteID: " + warehouseID;
 				success = true;
 			} catch (NumberFormatException e) {
 				addWhMsg = "Total size has to be an integer";
 			}
-			
+
 		}
-		
+
 		session.setAttribute("addWhMsg", addWhMsg);
 		if (!success) {
 			session.setAttribute("addWhSite", site);

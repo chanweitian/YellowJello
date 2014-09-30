@@ -16,36 +16,41 @@ import db.SQLManager;
 @WebServlet("/ProcessDeletionServlet")
 public class ProcessDeletionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ProcessDeletionServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		processView(request,response);
+	public ProcessDeletionServlet() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		processView(request,response);
+		processView(request, response);
 	}
-	
-	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		processView(request, response);
+	}
+
+	protected void processView(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String userid = request.getParameter("userid");
-		SQLManager.deleteRecords("account", "Userid=\'"+userid+"\'");
-		
+		SQLManager.deleteRecords("account", "Userid=\'" + userid + "\'");
+
 		HttpSession session = request.getSession();
 		session.setAttribute("deletionFlag", "true");
 		response.sendRedirect("viewco.jsp");

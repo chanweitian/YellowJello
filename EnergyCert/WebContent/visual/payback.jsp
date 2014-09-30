@@ -14,7 +14,7 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="../js/bootstrap.js"></script>
 <script type="text/javascript" src="../js/Chart.js"></script>
-
+<link href="../css/questionnaire.css" rel="stylesheet">
 
 
 
@@ -71,7 +71,7 @@
 <script>
 
 var radarChartData = {
-	labels: ["Payback", "Rating", "Lighting"],
+	labels: ["Payback (Year)", "Rating (% change)", "Lighting Output (% change)"],
 	datasets: [
 	           <%
 	           int count = 0;
@@ -112,19 +112,22 @@ window.onload = function(){
 
 <body>
 <%@include file="../header.jsp" %>
-<br/>
-<br/>
 
+<br />
 
-<br/>
+<div class="header">
+    Payback Output	
+</div>
+
 <div id="main">
 
+		
 
 
 
-<canvas id="canvas" width="400" height="400"></canvas>
+<canvas id="canvas" width="800" height="600"></canvas>
 <div class='my-legend'>
-<div class='legend-title'>Lighting Payback</div>
+<div class='legend-title'>Legend</div>
 <div class='legend-scale'>
   <ul class='legend-labels'>
   	<%

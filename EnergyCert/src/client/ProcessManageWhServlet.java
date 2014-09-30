@@ -16,32 +16,37 @@ import db.SQLManager;
 @WebServlet("/ProcessManageWhServlet")
 public class ProcessManageWhServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ProcessManageWhServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		processView(request,response);
+	public ProcessManageWhServlet() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		processView(request,response);
+		processView(request, response);
 	}
-	
-	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		processView(request, response);
+	}
+
+	protected void processView(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String siteid = request.getParameter("siteid");
 		String site = request.getParameter("site");
@@ -54,37 +59,43 @@ public class ProcessManageWhServlet extends HttpServlet {
 		String postal = request.getParameter("postal");
 		String totalSize = request.getParameter("totalSize");
 		String manageWhMsg = null;
-		
+
 		if (city.equals("Others")) {
 			city = request.getParameter("otherCity");
 		}
-		
-		if (site.trim().length()==0) {
+
+		if (site.trim().length() == 0) {
 			manageWhMsg = "Please input site";
-		} else if (country.trim().length()==0) {
+		} else if (country.trim().length() == 0) {
 			manageWhMsg = "Please input country";
-		} else if (region.trim().length()==0) {
+		} else if (region.trim().length() == 0) {
 			manageWhMsg = "Please input region";
-		} else if (street.trim().length()==0) {
+		} else if (street.trim().length() == 0) {
 			manageWhMsg = "Please input street";
-		} else if (city.trim().length()==0) {
+		} else if (city.trim().length() == 0) {
 			manageWhMsg = "Please input city";
-		} else if (postal.trim().length()==0) {
+		} else if (postal.trim().length() == 0) {
 			manageWhMsg = "Please input postal";
-		} else if (totalSize.trim().length()==0) {
+		} else if (totalSize.trim().length() == 0) {
 			manageWhMsg = "Please input total size";
 		} else {
 			try {
 				int sizeInt = Integer.parseInt(totalSize);
-				String toSet = "site_info_name=\'" + site + "\',site_info_address_country=\'" + country + "\',Region=\'" + region 
-						+ "\',site_info_address_street=\'" + street + "\',site_info_address_city=\'" + city + "\',site_info_address_postal=\'" + postal + "\',\'" + totalSize + "\'";
-				SQLManager.updateRecords("site", toSet, "Site_ID=\'"+siteid+"\'");
+				String toSet = "site_info_name=\'" + site
+						+ "\',site_info_address_country=\'" + country
+						+ "\',Region=\'" + region
+						+ "\',site_info_address_street=\'" + street
+						+ "\',site_info_address_city=\'" + city
+						+ "\',site_info_address_postal=\'" + postal + "\',\'"
+						+ totalSize + "\'";
+				SQLManager.updateRecords("site", toSet, "Site_ID=\'" + siteid
+						+ "\'");
 				manageWhMsg = "Site details have been successfully saved.";
 			} catch (NumberFormatException e) {
 				manageWhMsg = "Total size has to be an integer";
 			}
 		}
-		
+
 		HttpSession session = request.getSession();
 		session.setAttribute("manageWhMsg", manageWhMsg);
 		session.setAttribute("manageWhSite", site);
@@ -95,8 +106,8 @@ public class ProcessManageWhServlet extends HttpServlet {
 		session.setAttribute("manageWhCity", request.getParameter("city"));
 		session.setAttribute("otherCity", request.getParameter("otherCity"));
 		session.setAttribute("manageWhPostal", postal);
-		response.sendRedirect("managewh.jsp?siteid="+siteid);
-		
+		response.sendRedirect("managewh.jsp?siteid=" + siteid);
+
 	}
 
 }

@@ -22,32 +22,37 @@ import db.SQLManager;
 @WebServlet("/ProcessLoginServlet")
 public class ProcessLoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ProcessLoginServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		processView(request,response);
+	public ProcessLoginServlet() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		processView(request,response);
+		processView(request, response);
 	}
 
-	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		processView(request, response);
+	}
+
+	protected void processView(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String userid = request.getParameter("userid");
 		String password = request.getParameter("password");
@@ -55,16 +60,17 @@ public class ProcessLoginServlet extends HttpServlet {
 		String company = null;
 		String type = null;
 		String description = null;
-		
-		if (userid.trim().length()==0) {
+
+		if (userid.trim().length() == 0) {
 			loginError = "Please input userid";
-		} else if (password.trim().length()==0) {
+		} else if (password.trim().length() == 0) {
 			loginError = "Please input password";
 		} else {
-			
+
 			boolean hasUserid = false;
-			
-			RetrievedObject ro = SQLManager.retrieveRecords("account", "Userid=\'"+userid+"\'");
+
+			RetrievedObject ro = SQLManager.retrieveRecords("account",
+					"Userid=\'" + userid + "\'");
 			ResultSet rs = ro.getResultSet();
 			try {
 				while (rs.next()) {
@@ -73,7 +79,7 @@ public class ProcessLoginServlet extends HttpServlet {
 						loginError = "Invalid userid/password";
 					} else {
 						company = rs.getString("Company");
-						type  = rs.getString("Type");
+						type = rs.getString("Type");
 						description = rs.getString("Description");
 					}
 				}
@@ -86,9 +92,9 @@ public class ProcessLoginServlet extends HttpServlet {
 			}
 			ro.close();
 		}
-		
+
 		HttpSession session = request.getSession();
-		if (loginError!=null) {
+		if (loginError != null) {
 			session.setAttribute("loginError", loginError);
 			session.setAttribute("loginUserid", userid);
 			session.setAttribute("loginPassword", password);

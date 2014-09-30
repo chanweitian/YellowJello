@@ -25,45 +25,50 @@ import db.SQLManager;
 @WebServlet("/GetLogoServlet")
 public class GetLogoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GetLogoServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		processView(request,response);
+	public GetLogoServlet() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		processView(request,response);
+		processView(request, response);
 	}
-	
-	protected void processView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		processView(request, response);
+	}
+
+	protected void processView(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		PrintWriter out = response.getWriter();
-		
+
 		RetrievedObject ro = SQLManager.retrieveRecords("pic", "idpic=1");
 		ResultSet rs = ro.getResultSet();
 		try {
-		    while (rs.next()) {
-		    	Blob b = rs.getBlob("img");
-		    	InputStream is = new BufferedInputStream(b.getBinaryStream());
-	            Image image = ImageIO.read(is);
-		        // Use a label to display the image
-		        out.println(image);
-		    }
+			while (rs.next()) {
+				Blob b = rs.getBlob("img");
+				InputStream is = new BufferedInputStream(b.getBinaryStream());
+				Image image = ImageIO.read(is);
+				// Use a label to display the image
+				out.println(image);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

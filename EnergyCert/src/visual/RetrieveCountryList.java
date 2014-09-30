@@ -24,67 +24,73 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/RetrieveCountryList")
 public class RetrieveCountryList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public RetrieveCountryList() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-	private ResultSet rs;
-	
+
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public RetrieveCountryList() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	private ResultSet rs;
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+
 		try {
 			HttpSession session = request.getSession();
 			String companyName = (String) session.getAttribute("company");
 			String year = (String) request.getParameter("year");
-			RetrievedObject ro = SQLManager.retrieveRecords("site s, questionnaire q", "s.site_id = q.site_id and s.company=\'" + companyName + "\'");
+			RetrievedObject ro = SQLManager.retrieveRecords(
+					"site s, questionnaire q",
+					"s.site_id = q.site_id and s.company=\'" + companyName
+							+ "\'");
 			ResultSet rs = ro.getResultSet();
-			
-				HashSet<String> unique = new HashSet<String>();	
-				
-				while(rs.next()){	
-					String country = rs.getString("site_info_address_country");
-					String qnYear = rs.getString("year");
-					if(qnYear.equals(year)){
-					unique.add(country);
-					}
-				}
-				ro.close();
-				
-				JSONObject json = new JSONObject();
-				response.setContentType("application/JSON");
-				PrintWriter out = response.getWriter();
-				
-				Iterator<String> iter = unique.iterator();
-				while (iter.hasNext()) {
-					String temp = iter.next();
-					json.put("country", temp);		
-				}
-				
-				String output = json.toString();
-				out.println(output);
-				out.close();
 
-				
+			HashSet<String> unique = new HashSet<String>();
+
+			while (rs.next()) {
+				String country = rs.getString("site_info_address_country");
+				String qnYear = rs.getString("year");
+				if (qnYear.equals(year)) {
+					unique.add(country);
+				}
+			}
+			ro.close();
+
+			JSONObject json = new JSONObject();
+			response.setContentType("application/JSON");
+			PrintWriter out = response.getWriter();
+
+			Iterator<String> iter = unique.iterator();
+			while (iter.hasNext()) {
+				String temp = iter.next();
+				json.put("country", temp);
+			}
+
+			String output = json.toString();
+			out.println(output);
+			out.close();
+
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
 
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
 

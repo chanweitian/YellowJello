@@ -99,6 +99,60 @@ $(document).ready(function() {
     })
 });
 
+
+$(document).ready(function() {
+    $('#whaifform').bootstrapValidator({
+    	
+    	feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+    	fields: {
+    		heatFac: {
+            	selector: '[id="heatFac"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'This must be a number'
+                    }
+                }
+            },
+            coolFac: {
+            	selector: '[id="coolFac"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'This must be a number'
+                    }
+                }
+            },
+            lightFac: {
+            	selector: '[id="lightFac"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'This must be a number'
+                    }
+                }
+            }
+            
+        }
+    })
+});
+
 $(document).ready(function() {
     $('#payback_form').bootstrapValidator({
     	

@@ -24,9 +24,14 @@
 <!-- Bootstrap-->
 <link href="../css/bootstrap.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="../css/va_stylesheet.css"> 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<%-- JQuery script --%>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="../js/bootstrap.js"></script>
+
+<link rel="stylesheet" href="../css/bootstrapValidator.min.css"/>
+<script type="text/javascript" src="../js/bootstrapValidator.min.js"></script>	
+<script type="text/javascript" src="../js/validation.js"></script>	
 
 
 
@@ -454,25 +459,26 @@ function getLightingMultiplier(){
         <h4 class="modal-title" id="myModalLabel">What If</h4>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-							<label class="col-md-5 control-label">Cooling Factor</label>
-							<div class="col-md-5">
-								<input type="text" class="form-control" name="coolFac" id="coolFac" data-toggle="tooltip" title="Cooling Facter refers to the factor of improvement that will be achieve after a new cooling technology is implemented." />
-							</div>
+     				<form id="whaifform" class="form-horizontal">
+					<div class="form-group">
+					<label class="col-lg-5 control-label">Cooling Factor</label>
+					<div class="col-lg-6">
+						<input type="text" class="form-control" name="coolFac" id="coolFac" data-toggle="tooltip" title="Cooling Factor refers to the factor of improvement that will be achieve after a new cooling technology is implemented." />
+					</div>
+					</div>
+					<div class="form-group">	
+							<label class="col-lg-5 control-label">Lighting Factor</label>
+						<div class="col-lg-6">
+							<input type="text" class="form-control" name="lightFac" id="lightFac"  data-toggle="tooltip" title="Lighting Factor refers to the factor of improvement that will be achieve after a new lighting technology is implemented." />
 						</div>
-						<div class="form-group">	
-								<label class="col-md-5 control-label">Lighting Factor</label>
-							<div class="col-md-5">
-								<input type="text" class="form-control" name="lightFac" id="lightFac"  data-toggle="tooltip" title="Lighting Facter refers to the factor of improvement that will be achieve after a new lighting technology is implemented." />
-							</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-5 control-label">Heating Factor</label>
+						<div class="col-lg-6">
+							<input type="text" class="form-control" name="heatFac" id="heatFac"  data-toggle="tooltip" title="Heating Factor refers to the factor of improvement that will be achieve after a new heating technology is implemented." />
 						</div>
-						<div class="form-group">
-						
-							<label class="col-md-5 control-label">Heating Factor</label>
-							<div class="col-md-5">
-								<input type="text" class="form-control" name=""heatFac"" id="heatFac"  data-toggle="tooltip" title="Heating Facter refers to the factor of improvement that will be achieve after a new heating technology is implemented." />
-							</div>
-						</div>
+					</div>
+				</form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-info" data-dismiss="modal" id="whatifButton">What If!</button>
@@ -508,14 +514,17 @@ function getLightingMultiplier(){
 		</div>
 	</div> 
 
-
+<%
+String co = (String) session.getAttribute("company");
+co = co.replaceAll(" ","");
+%>
 
 <br/>
 <div id="main">
 <div id="General_Info">
 <div id="logo_container">
-<!--  <div id="company_logo" style="float: left"><img src="../img/DHL_Logo.png" height="23"/></div> --> 
-<div id="dhl_logo" ><img src="../img/DHL_Logo.png" height="23" /></div>
+<div id="company_logo" style="float: left"><img src="../img/<%=co %>.jpg" height="23" width="105" /></div>
+<div id="dhl_logo" ><img src="../img/DHL_Logo.png" height="23" width="105" /></div>
 </div>
 
   
