@@ -151,6 +151,14 @@ $(document).ready(function() {
             
         }
     })
+    .on('error.field.bv', function(e, data) {
+	    console.log('error.field.bv -->', data);
+	    document.getElementById("whatifButton").disabled = true; 
+	})
+	.on('success.field.bv', function(e, field, $field) {
+		console.log(field, $field, '-->success');
+		document.getElementById("whatifButton").disabled = false; 
+    });
 });
 
 $(document).ready(function() {
@@ -239,6 +247,14 @@ $(document).ready(function() {
                     },
                     notEmpty: {
                         message: 'This field is required'
+                    }
+                }
+            },
+            required_value: {
+            	selector: '[id="required_value"]',
+            	validators: { 
+                    notEmpty: {
+                        message: 'Please select at least one type of lighting for analysis'
                     }
                 }
             }

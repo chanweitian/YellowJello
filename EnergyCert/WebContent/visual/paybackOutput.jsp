@@ -34,7 +34,7 @@
 		<%-- This is for SiteDef.jsp --%>
 		<script type="text/javascript" src="../js/siteDef.js"></script>
 	
-	<style type="text/css">
+<style type="text/css">
 /* Adjust feedback icon position */
 #payback_form .form-control-feedback {
     top: 25px;
@@ -43,6 +43,11 @@
 #payback_form .selectContainer .form-control-feedback {
     top: 25px;
     right: 25px;
+}
+
+#payback_form .btn-group .form-control-feedback {
+    top: 0;
+    right: -30px;
 }
 </style>
 
@@ -239,28 +244,28 @@ if (today.before(cal)) {
 			        <label class="control-label">Select Types of Lighting for Analysis</label><br>
 			            <div class="btn-group" data-toggle="buttons">
 			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" value="t5" onchange="updateTable()" />T5
+			                    <input type="checkbox" name="types[]" id="required_value" value="t5" onchange="updateTable()" />T5
 			                </label>
 			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" value="t5_sensors" onchange="updateTable()" />T5 with sensors
+			                    <input type="checkbox" name="types[]" id="required_value" value="t5_sensors" onchange="updateTable()" />T5 with sensors
 			                </label>
 			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" value="t8" onchange="updateTable()" />T8
+			                    <input type="checkbox" name="types[]" id="required_value" value="t8" onchange="updateTable()" />T8
 			                </label>
 			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" value="t8_sensors" onchange="updateTable()" />T8 with sensors
+			                    <input type="checkbox" name="types[]" id="required_value" value="t8_sensors" onchange="updateTable()" />T8 with sensors
 			                </label>
 			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" value="LED" onchange="updateTable()">LED
+			                    <input type="checkbox" name="types[]" id="required_value" value="LED" onchange="updateTable()" />LED
 			                </label>
 			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" value="induction" onchange="updateTable()">Induction
+			                    <input type="checkbox" name="types[]" id="required_value" value="induction" onchange="updateTable()" />Induction
 			                </label>
 			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" value="metal_halide" onchange="updateTable()">Metal Halide
+			                    <input type="checkbox" name="types[]" id="required_value" value="metal_halide" onchange="updateTable()" />Metal Halide
 			                </label>
 			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" value="CFL" onchange="updateTable()">CFL
+			                    <input type="checkbox" name="types[]" id="required_value" value="CFL" onchange="updateTable()" />CFL
 			                </label>
 			            </div>
 			        </div>
