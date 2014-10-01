@@ -284,4 +284,12 @@
     <servlet-name>ProcessSiteDefServlet</servlet-name>
     <url-pattern>/form/processsitedef</url-pattern>
   </servlet-mapping>
+    <servlet>
+    <servlet-name>PortfolioEmail</servlet-name>
+    <servlet-class>visual.PortfolioEmail</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PortfolioEmail</servlet-name>
+    <url-pattern>/visual/porfolioEmail</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import db.RetrievedObject;
@@ -61,6 +62,21 @@ public class RetrieveCountryList extends HttpServlet {
 				if (qnYear.equals(year)) {
 					unique.add(country);
 				}
+				ro.close();
+				
+				JSONArray json = new JSONArray();
+				response.setContentType("application/JSON");
+				PrintWriter out = response.getWriter();
+				
+				Iterator<String> iter = unique.iterator();
+				while (iter.hasNext()) {
+					String temp = iter.next();
+					json.add(temp);
+				}
+				
+				String output = json.toString();
+				out.println(output);
+				out.close();
 			}
 			ro.close();
 

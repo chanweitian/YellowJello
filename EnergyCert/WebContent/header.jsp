@@ -41,6 +41,7 @@
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Portfolio Analysis <span class="caret"></span></a>
 	          <ul class="dropdown-menu" role="menu">
 	          	<li><a href="/EnergyCert/visual/portfolio">Manage Site Portfolio</a></li>
+	          	<li><a href="#">Historical Warehouse Trend</a></li>
 	            <li><a href="#">Global Visualization of Sites</a></li>
 	          </ul>
 	        </li>  
