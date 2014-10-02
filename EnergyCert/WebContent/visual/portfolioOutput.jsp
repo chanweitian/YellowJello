@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=US-ASCII" pageEncoding="US-ASCII"%>
+<%@ page language="java" contentType="text/html; charset=US-ASCII"
+	pageEncoding="US-ASCII"%>
 <%@ page import="db.*,java.util.*,java.sql.*,visual.*"%>
 <%@include file="../protectusers.jsp"%>
 
@@ -34,20 +35,25 @@
 	//convert Java ArrayList to js
 %>
 <script>
-	google.load("visualization", "1", {packages:["corechart"]});
+	google.load("visualization", "1", {
+		packages : [ "corechart" ]
+	});
 	var years = [];
 	var regionList = [];
 	var countryList = [];
 	var master = [];
 	var year = "";
-	var selectFilter = "";
+	var selectFilter = "none";
 	var filterValue = "";
-	var axis ="";
+	var axis = "carbon";
 <%//Pushing the data into years
 	for(int i = 0; i <years.size(); i++){%>
 	years.push(
 <%=years.get(i)%>
 	);
+	year =
+<%=years.get(0)%>
+	
 <%}%>
 	// methods for dynamically adding options to text box
 	var addOption = function(selectbox, text, value) {
@@ -56,15 +62,14 @@
 		optn.value = value;
 		selectbox.options.add(optn);
 	}
-	
-	var removeOption = function(selectbox){
+
+	var removeOption = function(selectbox) {
 		var select = selectbox, option = null, next_desc = null;
-		  var len = select.options.length;
-		  
-		  for (var i = 0; i < len; i++)
-	    {
-	        select.remove(0);
-	    }
+		var len = select.options.length;
+
+		for (var i = 0; i < len; i++) {
+			select.remove(0);
+		}
 	}
 </script>
 
@@ -75,77 +80,54 @@
 	<%@include file="../header.jsp"%>
 	<br />
 	<br />
-	<div style="width:50%;margin:0 auto;" class="header">Manage Warehouse Portfolio!</div>
+	<div style="width: 50%; margin: 0 auto;" class="header">Manage
+		Warehouse Portfolio!</div>
 
 	<%
 		if(status){
 	%>
-	<div style="width:50%;margin:0 auto;">
-	<form name="form1" action="" method="get">
-		Please select year of visualisation: 
-		<select id="year">
-			<script>
-				//dynamically generates dropdown options
-				var yearOptions = document.forms["form1"].elements["year"];
+	Please select year of visualisation:
+	<select id="year" onChange="setYear(this.value)">
+		<script>
+			//dynamically generates dropdown options
+			var yearOptions = document.getElementById("year");
 
-				for (var i = 0; i < years.length; ++i) {
-					addOption(yearOptions, years[i], years[i]);
-				}
-			</script>
-		</select>
-		<br> You may choose to filter the data by: 
-		<select id="filter">
-			<option selected>No filter (show all data)</option>
-			<option>Country</option>
-			<option>Region</option>
-		</select>
-		<br> 
-		<input type="button"  class="btn-small btn-primary" name="button" value="Proceed" onClick="yearAndFilter(this.form)">
-	</form>
-	</div>
-	
-	<div id = "secondForm" style="width:50%; margin:0 auto;">
+			for (var i = 0; i < years.length; ++i) {
+				addOption(yearOptions, years[i], years[i]);
+			}
+		</script>
+	</select>
+	<br> You may choose to filter the data by:
+	<select id="filter" onChange="yearAndFilter(this.value)">
+		<option selected>No filter (show all data)</option>
+		<option>Country</option>
+		<option>Region</option>
+	</select>
 	<br>
-	<form id ="yearOnly" style="display: none;" action = "" method= "get">
-			 Please select the axis desired:
-			 <select id="axis">
+	<form id="country" style="display: none;">
+		Please select the country desired: <select id="country" onChange="">
+		</select> <br> Please select the axis desired: <select id="axis">
 			<option>Carbon Emission</option>
 			<option>Energy Consumption</option>
-			</select> <br>
-			<input type="hidden" id="filter" value="none">			
-			<input type="button" class="btn-small btn-primary" name="button" value="Generate"
-			onClick="generate(this.form, 'null')">
+		</select> <br> <input type="button" class="btn-small btn-primary"
+			name="button" value="Generate" onClick="generate(this.form)">
 	</form>
-	
-	<form id="country" style="display: none;" action=""
-		method="get">
-		Please select the country desired: <select id="country">
-		</select><br>
-		Please select the axis desired: 
-		<select id="axis">
+	<form id="region" style="display: none;">
+		Please select the region desired: <select id="region" onChange="">
+		</select> <br> Please select the axis desired: <select id="axis">
 			<option>Carbon Emission</option>
 			<option>Energy Consumption</option>
-			</select><br>
-		<input type="hidden" id="filter" value="Country">	
-		 <input type="button" class="btn-small btn-primary" name="button" value="Generate - Country"
-			onClick="generate(this.form)">
+		</select> <br> <input type="button" class="btn-small btn-primary"
+			name="button" value="Generate" onClick="generate(this.form)">
+	</form>
+	<form id="showAll">
+		Please select the axis desired: <select id="axis">
+			<option>Carbon Emission</option>
+			<option>Energy Consumption</option>
+		</select> <br> <input type="button" class="btn-small btn-primary"
+			name="button" value="Generate" onClick="generate(this.form)">
 	</form>
 
-	<form id="region" style="display: none;" action=""
-		method="get">
-		Please select the region desired: <select id="region">
-		</select> <br>
-		Please select the axis desired: 
-		<select id="axis">
-			<option>Carbon Emission</option>
-			<option>Energy Consumption</option>
-			</select><br>
-		<input type="hidden" id="filter" value="Region">	
-		<input type="button" class="btn-small btn-primary" name="button" value="Generate - Region"
-			onClick="generate(this.form)">
-	</form>
-	<br>
-	</div>
 	<%
 		}else{
 	%>
@@ -158,195 +140,133 @@
 		}
 	%>
 
-	<div style="width:50%;margin:0 auto;" id=chart></div>
+	<div id=chart></div>
 
 	<script type="text/javascript">
-	var drawCarbon = function(data) {
-		var data3 = new google.visualization.DataTable();
-		data3.addColumn('number', 'Carbon');
-		for (i = 0; i < data.sites.length; i++) { 
-			   var siteName = data.sites[i].siteName;
-			   data3.addColumn('number', siteName);
-		}
-		var j = 1;
-		var k = data.sites.length+1;
-		for (i = 0; i < data.sites.length; i++) { 
-			   var siteName = data.sites[i].siteName;
-			   var energyRating = data.sites[i].energyRating;
-			   var elecEmi = data.sites[i].elecEmi;
-			   var gasEmi = data.sites[i].gasEmi;
-			   var elec = Number(data.sites[i].elec);
-			   var gas = Number(data.sites[i].gas);
-			   var totalConsp = gas + elec;
-			   var totalEmi = gasEmi+elecEmi;
-			   data3.addRows(1);
-			   data3.setCell(i, 0, parseInt(totalEmi));
-			   data3.setCell(i, j, parseInt(energyRating));
-			   j++;
-
-		}
-	       var options = {
-	          title: 'Warehouse Portfolio',
-	          hAxis: {title: 'Carbon Emission'},
-	          vAxis: {title: 'Efficiency Rating'},
-	          legend: '',
-	          'width':1024,
-	          'height':720
-	        };
-
-	        var chart = new google.visualization.ScatterChart(document.getElementById('chart'));
-
-	        chart.draw(data3, options);
-	        
-	}
-	
-	
-	/*	var drawCarbon = function(data) {
-			master = [];
-			for (i = 0; i < data.sites.length; i++) { 
-			   var siteName = data.sites[i].siteName;
-			   var energyRating = data.sites[i].siteName;
-			   var elecEmi = data.sites[i].elecEmi;
-			   var gasEmi = data.sites[i].gasEmi;
-			   var elec = Number(data.sites[i].elec);
-			   var gas = Number(data.sites[i].gas);
-			   var totalConsp = gas + elec;
-			   var totalEmi = gasEmi+elecEmi;
-			   
-			   var site = {"effRating": energyRating, "carbon": totalEmi, "energy": totalConsp , "siteName": siteName};
-			   master.push(site);
-			   
+		var drawCarbon = function(data) {
+			var data3 = new google.visualization.DataTable();
+			data3.addColumn('number', 'Carbon');
+			for (i = 0; i < data.sites.length; i++) {
+				var siteName = data.sites[i].siteName;
+				data3.addColumn('number', siteName);
 			}
-			
+			var j = 1;
+			var k = data.sites.length + 1;
+			for (i = 0; i < data.sites.length; i++) {
+				var siteName = data.sites[i].siteName;
+				var energyRating = data.sites[i].energyRating;
+				var elecEmi = data.sites[i].elecEmi;
+				var gasEmi = data.sites[i].gasEmi;
+				var elec = Number(data.sites[i].elec);
+				var gas = Number(data.sites[i].gas);
+				var totalConsp = gas + elec;
+				var totalEmi = gasEmi + elecEmi;
+				data3.addRows(1);
+				data3.setCell(i, 0, parseInt(totalEmi));
+				data3.setCell(i, j, parseInt(energyRating));
+				j++;
+
+			}
 			var options = {
-				width : 720,
-				height : 400,
-				xValue : 'carbon',
-				yValue : 'effRating',
-				series : 'siteName'
+				title : 'Warehouse Portfolio',
+				hAxis : {
+					title : 'Carbon Emission'
+				},
+				vAxis : {
+					title : 'Efficiency Rating'
+				},
+				legend : '',
+				'width' : 1024,
+				'height' : 720
 			};
-			var div = document.getElementById("chart");
-			div.innerHTML = "";
 
-			var scatter = new Scatter('#chart', options);
-			scatter.render(master);
-			scatter.xlabel("carbon emission");
-			scatter.ylabel("efficiency rating");
-			scatter.legend();
-			console.log(scatter);
+			var chart = new google.visualization.ScatterChart(document
+					.getElementById('chart'));
+
+			chart.draw(data3, options);
+
 		}
-	*/
-	
-	var drawEnergy = function(data) {
-		var data3 = new google.visualization.DataTable();
-		data3.addColumn('number', 'Energy');
-		for (i = 0; i < data.sites.length; i++) { 
-			   var siteName = data.sites[i].siteName;
-			   data3.addColumn('number', siteName);
-		}
-		var j = 1;
-		var k = data.sites.length+1;
-		for (i = 0; i < data.sites.length; i++) { 
-			   var siteName = data.sites[i].siteName;
-			   var energyRating = data.sites[i].energyRating;
-			   var elecEmi = data.sites[i].elecEmi;
-			   var gasEmi = data.sites[i].gasEmi;
-			   var elec = Number(data.sites[i].elec);
-			   var gas = Number(data.sites[i].gas);
-			   var totalConsp = gas + elec;
-			   var totalEmi = gasEmi+elecEmi;
-			   data3.addRows(1);
-			   data3.setCell(i, 0, parseInt(totalConsp));
-			   data3.setCell(i, j, parseInt(energyRating));
-			   j++;
-		}
-
-	       var options = {
-	          title: 'Warehouse Portfolio',
-	          hAxis: {title: 'Energy Consumption'},
-	          vAxis: {title: 'Efficiency Rating'},
-	          legend: '',
-	          'width':1024,
-	          'height':720
-	        };
-
-	        var chart = new google.visualization.ScatterChart(document.getElementById('chart'));
-
-	        chart.draw(data3, options);
-	        
-	}
-	
-	/*
 
 		var drawEnergy = function(data) {
-			master = [];
-			for (i = 0; i < data.sites.length; i++) { 
-			   var siteName = data.sites[i].siteName;
-			   var energyRating = data.sites[i].siteName;
-			   var elecEmi = data.sites[i].elecEmi;
-			   var gasEmi = data.sites[i].gasEmi;
-			   var elec = Number(data.sites[i].elec);
-			   var gas = Number(data.sites[i].gas);
-			   var totalConsp = gas + elec;
-			   var totalEmi = gasEmi+elecEmi;
-			   
-			   var site = {"effRating": energyRating, "carbon": totalConsp, "energy": totalConsp , "siteName": siteName};
-			   master.push(site);
-			   
+			var data3 = new google.visualization.DataTable();
+			data3.addColumn('number', 'Energy');
+			for (i = 0; i < data.sites.length; i++) {
+				var siteName = data.sites[i].siteName;
+				data3.addColumn('number', siteName);
+			}
+			var j = 1;
+			var k = data.sites.length + 1;
+			for (i = 0; i < data.sites.length; i++) {
+				var siteName = data.sites[i].siteName;
+				var energyRating = data.sites[i].energyRating;
+				var elecEmi = data.sites[i].elecEmi;
+				var gasEmi = data.sites[i].gasEmi;
+				var elec = Number(data.sites[i].elec);
+				var gas = Number(data.sites[i].gas);
+				var totalConsp = gas + elec;
+				var totalEmi = gasEmi + elecEmi;
+				data3.addRows(1);
+				data3.setCell(i, 0, parseInt(totalConsp));
+				data3.setCell(i, j, parseInt(energyRating));
+				j++;
 			}
 
-			
 			var options = {
-				width : 720,
-				height : 400,
-				xValue : 'energy',
-				yValue : 'effRating',
-				series : 'siteName'
+				title : 'Warehouse Portfolio',
+				hAxis : {
+					title : 'Energy Consumption'
+				},
+				vAxis : {
+					title : 'Efficiency Rating'
+				},
+				legend : '',
+				'width' : 1024,
+				'height' : 720
 			};
 
-			var div = document.getElementById("chart");
-			div.innerHTML = "";
+			var chart = new google.visualization.ScatterChart(document
+					.getElementById('chart'));
 
-			var scatter = new Scatter('#chart', options);
-			scatter.render(master);
-			scatter.xlabel("energy consumption");
-			scatter.ylabel("efficiency rating");
-			scatter.legend();
-			console.log(scatter);
+			chart.draw(data3, options);
+
 		}
-		*/
-		
+
 		//retrieve master data with no filter and generate the charts
-		var generate = function(form){
-		 	axis = form.axis.value
-			selectFilter = form.filter.value
-			console.log(selectFilter);
+		var generate = function(form) {
+			axis = form.axis.value
 			var request = '';
-			switch(selectFilter){
+			switch (selectFilter) {
 			case 'Region':
 				filterValue = form.region.value;
-				request = new XMLHttpRequest(), typeValue = "get", urlValue = "generate?year=" + year + "&filter=" + selectFilter + "&value=" + filterValue;
+				request = new XMLHttpRequest(), typeValue = "get",
+						urlValue = "generate?year=" + year + "&filter="
+								+ selectFilter + "&value=" + filterValue;
 				break;
 			case 'Country':
 				filterValue = form.country.value;
-				request = new XMLHttpRequest(), typeValue = "get", urlValue = "generate?year=" + year + "&filter=" + selectFilter + "&value=" + filterValue;
+				request = new XMLHttpRequest(), typeValue = "get",
+						urlValue = "generate?year=" + year + "&filter="
+								+ selectFilter + "&value=" + filterValue;
 				break;
 			case 'none':
 				filterValue = 'null';
-				request = new XMLHttpRequest(), typeValue = "get", urlValue = "generate?year=" + year + "&filter=" + selectFilter + "&value=" + filterValue;
+				request = new XMLHttpRequest(), typeValue = "get",
+						urlValue = "generate?year=" + year + "&filter="
+								+ selectFilter + "&value=" + filterValue;
 				break;
-			};
-			
+			}
+			;
+
 			request.onreadystatechange = function() {
-				if (request.readyState == 4 && request.status == 200){
+				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);
-					if (axis == 'Carbon Emission'){
-					document.getElementById("share").style.display = "block";
-					drawCarbon(result);
-			
-					}else{
-					document.getElementById("share").style.display = "block";
-					drawEnergy(result);	
+					if (axis == 'Carbon Emission') {
+						document.getElementById("share").style.display = "block";
+						drawCarbon(result);
+
+					} else {
+						document.getElementById("share").style.display = "block";
+						drawEnergy(result);
 					}
 				}
 			}
@@ -356,9 +276,10 @@
 
 		//goes to the servlet to get relevant countries for a selected year
 		var retrieveCountry = function(form, callback) {
-			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "retrieveCountry?year=" + year;
+			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "retrieveCountry?year="
+					+ year;
 			request.onreadystatechange = function() {
-				if (request.readyState == 4 && request.status == 200){
+				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);
 					callback(result);
 				}
@@ -366,12 +287,13 @@
 			request.open('GET', urlValue, true);
 			request.send();
 		}
-		
+
 		//goes to the servlet to get relevant regions for a selected year
 		var retrieveRegion = function(form, callback) {
-			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "retrieveRegion?year=" + year;
+			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "retrieveRegion?year="
+					+ year;
 			request.onreadystatechange = function() {
-				if (request.readyState == 4 && request.status == 200){
+				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);
 					callback(result);
 				}
@@ -379,93 +301,87 @@
 			request.open('GET', urlValue, true);
 			request.send();
 		}
-		
+
 		//populates the relevant countries in the javascript
 		var generateCountryList = function(data) {
-	        countryList = [];
-			for(var i in data)
-	        { 
-	            countryList.push(data[i]); 
-	        };
-	        var countryOptions = document.forms["country"].elements["country"];
-	        removeOption(countryOptions);
+			countryList = [];
+			for ( var i in data) {
+				countryList.push(data[i]);
+			}
+			;
+			var countryOptions = document.forms["country"].elements["country"];
+			removeOption(countryOptions);
 			for (var i = 0; i < countryList.length; ++i) {
 				addOption(countryOptions, countryList[i], countryList[i]);
 			}
 		}
-		
+
 		//populates the relevant regions in the javascript
 		var generateRegionList = function(data) {
-	        regionList = [];
-	        console.log(data);
-	        
-			for(var i in data)
-	        { 
-	            regionList.push(data[i]);
-	        };
-	        var regionOptions = document.forms["region"].elements["region"];
-	        removeOption(regionOptions);
+			regionList = [];
+
+			for ( var i in data) {
+				regionList.push(data[i]);
+			}
+			;
+			var regionOptions = document.forms["region"].elements["region"];
+			removeOption(regionOptions);
 			for (var i = 0; i < regionList.length; i++) {
-				console.log(regionList.length);
 				addOption(regionOptions, regionList[i], regionList[i]);
 			}
 		}
-		
-		function clear(){
+
+		function clear() {
 			var a = document.getElementById("country").style.display;
 			var b = document.getElementById("region").style.display;
-			var c = document.getElementById("yearOnly").style.display;
 			a.innerHTML = "";
 			b.innerHTML = "";
-			c.innerHTML = "";
 		}
-		
-		//logic for showing the relevant section after filling in form 1
-		function yearAndFilter(form) {
-			year = null;
-			year = form.year.value;
-			var filter = form.filter.value;
-						
-			switch (filter) {
+
+		function setYear(val) {
+			year = val;
+		}
+
+		function yearAndFilter(val) {
+			switch (val) {
 			case 'Country':
-				filter = "Country";
-				retrieveCountry(form, generateCountryList);
+				selectFilter = "Country";
+				retrieveCountry(val, generateCountryList);
 				document.getElementById("country").style.display = "block";
 				document.getElementById("region").style.display = "none";
-				document.getElementById("yearOnly").style.display = "none";
+				document.getElementById("showAll").style.display = "none";
 				break;
 			case 'Region':
-				filter = "Region";
-				retrieveRegion(form, generateRegionList);
+				selectFilter = "Region";
+				retrieveRegion(val, generateRegionList);
 				document.getElementById("country").style.display = "none";
 				document.getElementById("region").style.display = "block";
-				document.getElementById("yearOnly").style.display = "none";
+				document.getElementById("showAll").style.display = "none";
 				break;
 			default:
-				filter = "none";
+				selectFilter = "none";
 				document.getElementById("region").style.display = "none";
 				document.getElementById("country").style.display = "none";
-				document.getElementById("yearOnly").style.display = "block";
+				document.getElementById("showAll").style.display = "block";
 				break;
 			}
 
 		}
-		
 	</script>
-		<form id ="share" style="width:50%; min-height:100%; margin:0 auto; display: none;" action = "portfolioEmail" method= "post">
-			If you wish to share this chart, please enter the email address of the intended receipient: 
-			<br>
-			<input type=hidden id=year value = "<script>year</script>" >
-			<input type=hidden id=axis value = "<script>axis</script>" >
-			<input type=hidden id=selectFilter value = "<script>selectFilter</script>">
-			<input type=hidden id=filterValue value = "<script>filterValue</script>">
-			<input type="text" id="Email" placeholder="Enter receipient Email">
-			<input type="submit" class="btn-small btn-primary" name="submit" value="Email">
+	<form id="share"
+		style="display: none;"
+		action="portfolioEmail" method="post">
+		If you wish to share this chart, please enter the email address of the
+		intended receipient: <br> <input type=hidden id=year
+			value="<script>year</script>"> <input type=hidden id=axis
+			value="<script>axis</script>"> <input type=hidden
+			id=selectFilter value="<script>selectFilter</script>"> <input
+			type=hidden id=filterValue value="<script>filterValue</script>">
+		<input type="text" id="Email" placeholder="Enter receipient Email">
+		<input type="submit" class="btn-small btn-primary" name="submit"
+			value="Email">
 	</form>
-	
-	<div style="width:50%; min-height:100%; margin:0 auto;">
- 	If you require further details shown on this report please email
-	energycertificate@dhl.com
-	</div>
+	<br> If you require further details shown on this report please
+	email energycertificate@dhl.com
 </body>
 </html>
