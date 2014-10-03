@@ -129,7 +129,7 @@ ro_usage.close();
 												<label class="col-lg-6 control-label" for="usage_renew_electricity_use">How many kWh of renewable electricity did your site use in <%=previousYear%>?
 												</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_renew_electricity_use" style="width: 200px;" value="<%=usage_renew_electricity_use%>"></input>
+													<input type="text" class="form-control" id="renewable_usage_optional" name="usage_renew_electricity_use" style="width: 200px;" value="<%=usage_renew_electricity_use%>"></input>
 												</div>
 												</div>
 											<td>
@@ -162,7 +162,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_renew_electricty_cost">How much did this renewable electricity cost?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_renew_electricty_cost" style="width: 200px;" value="<%=usage_renew_electricty_cost%>"></input>&nbsp;&nbsp;Euro
+													<input type="text" class="form-control" id="renewable_cost_optional" name="usage_renew_electricty_cost" style="width: 200px;" value="<%=usage_renew_electricty_cost%>"></input>&nbsp;&nbsp;Euro
 												</div>
 												</div>
 											</td>
@@ -182,7 +182,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_nat_gas_use">How many kWh of Natural Gas did your site use in <%=previousYear%>? <font color="red">* </font></label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_required" name="usage_nat_gas_use" style="width: 200px;" value="<%=usage_nat_gas_use%>"></input>
+													<input type="text" class="form-control" id="nat_gas_usage_required" name="usage_nat_gas_use" style="width: 200px;" value="<%=usage_nat_gas_use%>"></input>
 												</div>
 												</div>
 											</td>
@@ -218,7 +218,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_nat_gas_cost">How much did this Natural Gas cost? <font color="red">* </font></label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_required" name="usage_nat_gas_cost" style="width: 200px;" value="<%=usage_nat_gas_cost%>"></input>&nbsp;&nbsp;Euro
+													<input type="text" class="form-control" id="nat_gas_cost_required" name="usage_nat_gas_cost" style="width: 200px;" value="<%=usage_nat_gas_cost%>"></input>&nbsp;&nbsp;Euro
 												</div>
 												</div>
 											</td>
@@ -232,7 +232,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_fuel_oil_use">How many litres of Fuel Oil did your site use in <%=previousYear%>?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_fuel_oil_use" style="width: 200px;" value="<%=usage_fuel_oil_use%>"></input>
+													<input type="text" class="form-control" id="fuel_oil_usage_optional" name="usage_fuel_oil_use" style="width: 200px;" value="<%=usage_fuel_oil_use%>"></input>
 												</div>
 												</div>
 											</td>
@@ -267,7 +267,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_fuel_oil_cost">How much did this Fuel Oil cost?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_fuel_oil_cost" style="width: 200px;" value="<%=usage_fuel_oil_cost%>"></input>&nbsp;&nbsp;Euro
+													<input type="text" class="form-control" id="fuel_oil_cost_optional" name="usage_fuel_oil_cost" style="width: 200px;" value="<%=usage_fuel_oil_cost%>"></input>&nbsp;&nbsp;Euro
 												</div>
 												</div>
 											</td>
@@ -281,7 +281,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_diesel_use">How many litres of diesel did your site use in <%=previousYear%>?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_diesel_use" style="width: 200px;" value="<%=usage_diesel_use%>"></input>
+													<input type="text" class="form-control" id="diesel_usage_optional" name="usage_diesel_use" style="width: 200px;" value="<%=usage_diesel_use%>"></input>
 												</div>
 												</div>
 											</td>
@@ -315,7 +315,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_diesel_cost">How much did this diesel cost?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_diesel_cost" style="width: 200px;" value="<%=usage_diesel_cost%>"></input>&nbsp;&nbsp;Euro
+													<input type="text" class="form-control" id="diesel_cost_optional" name="usage_diesel_cost" style="width: 200px;" value="<%=usage_diesel_cost%>"></input>&nbsp;&nbsp;Euro
 												</div>
 												</div>
 											</td>
@@ -329,7 +329,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_lpg_use">How many litres of LPG (Heating use only) did your site use in <%=previousYear%>?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_lpg_use" style="width: 200px;" value="<%=usage_lpg_use%>"></input>
+													<input type="text" class="form-control" id="lpg_usage_optional" name="usage_lpg_use" style="width: 200px;" value="<%=usage_lpg_use%>"></input>
 												</div>
 												</div>
 											</td>
@@ -364,7 +364,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_lpg_cost">How much did this LPG cost?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_lpg_cost" style="width: 200px;" value="<%=usage_lpg_cost%>"></input>&nbsp;&nbsp;Euro
+													<input type="text" class="form-control" id="lpg_cost_optional" name="usage_lpg_cost" style="width: 200px;" value="<%=usage_lpg_cost%>"></input>&nbsp;&nbsp;Euro
 												</div>
 												</div>
 											</td>
@@ -378,7 +378,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_district_heating_use">How many kWh of District Heating did your site use in <%=previousYear%>?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_district_heating_use" style="width: 200px;" value="<%=usage_district_heating_use%>"></input>
+													<input type="text" class="form-control" id="district_heating_usage_optional" name="usage_district_heating_use" style="width: 200px;" value="<%=usage_district_heating_use%>"></input>
 												</div>
 												</div>
 											</td>
@@ -412,7 +412,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_district_heating_cost">How much did this heating cost?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_district_heating_cost" style="width: 200px;" value="<%=usage_district_heating_cost%>"></input>&nbsp;&nbsp;Euro
+													<input type="text" class="form-control" id="district_heating_cost_optional" name="usage_district_heating_cost" style="width: 200px;" value="<%=usage_district_heating_cost%>"></input>&nbsp;&nbsp;Euro
 												</div>
 												</div>
 											</td>
@@ -426,7 +426,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_district_cooling_use">How many kWh of District Cooling did your site use in <%=previousYear%>?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_district_cooling_use" style="width: 200px;" value="<%=usage_district_cooling_use%>"></input>
+													<input type="text" class="form-control" id="district_cooling_usage_optional" name="usage_district_cooling_use" style="width: 200px;" value="<%=usage_district_cooling_use%>"></input>
 												</div>
 												</div>
 											<td>
@@ -459,7 +459,7 @@ ro_usage.close();
 												<div class="form-group">
 												<label class="col-lg-6 control-label" for="usage_district_cooling_cost">How much did this cooling cost?</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="electricity_usage_optional" name="usage_district_cooling_cost" style="width: 200px;" value="<%=usage_district_cooling_cost%>"></input>&nbsp;&nbsp;Euro
+													<input type="text" class="form-control" id="district_cooling_cost_optional" name="usage_district_cooling_cost" style="width: 200px;" value="<%=usage_district_cooling_cost%>"></input>&nbsp;&nbsp;Euro
 												</div>
 												</div>
 											</td>

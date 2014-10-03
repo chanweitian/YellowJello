@@ -288,8 +288,199 @@ $(document).ready(function() {
                     }
                 }
             },
-            electricity_usage_optional: {
-            	selector: '[id="electricity_usage_optional"]',
+            electricity_cost_required: {
+            	selector: '[id="electricity_usage_cost"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    },
+                    notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            renewable_usage_optional: {
+            	selector: '[id="renewable_usage_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            renewable_cost_optional: {
+            	selector: '[id="renewable_cost_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            nat_gas_usage_required: {
+            	selector: '[id="nat_gas_usage_required"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    },
+                    notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            nat_gas_cost_required: {
+            	selector: '[id="nat_gas_cost_required"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    },
+                    notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            fuel_oil_usage_optional: {
+            	selector: '[id="fuel_oil_usage_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            fuel_oil_cost_optional: {
+            	selector: '[id="fuel_oil_cost_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            diesel_usage_optional: {
+            	selector: '[id="diesel_usage_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            diesel_cost_optional: {
+            	selector: '[id="diesel_cost_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            lpg_usage_optional: {
+            	selector: '[id="lpg_usage_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            lpg_cost_optional: {
+            	selector: '[id="lpg_cost_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            district_heating_usage_optional: {
+            	selector: '[id="district_heating_usage_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            district_heating_cost_optional: {
+            	selector: '[id="district_heating_cost_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            district_cooling_usage_optional: {
+            	selector: '[id="district_cooling_usage_optional"]',
+                validators: {
+                	greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive number'
+                    },
+                    numeric: {
+                        message: 'Enter a valid number'
+                    }
+                }
+            },
+            district_cooling_cost_optional: {
+            	selector: '[id="district_cooling_cost_optional"]',
                 validators: {
                 	greaterThan: {
                         value: 0,
@@ -307,9 +498,8 @@ $(document).ready(function() {
                     notEmpty: {
                         message: 'This field is required'
                     },
-                    regexp: {
-                        regexp: /^[0-9\.]+$/i,
-                        message: 'Digits only'
+                    numeric: {
+                        message: 'This must be a number'
                     },
                     greaterThan: {
                         value: 0,
@@ -337,8 +527,120 @@ $(document).ready(function() {
                         max: 24,
                         message: 'Please enter a number between 0 and 24'
                     },
-                    valid_spacing: {
-                        message: 'Omit * ^ , and spacing'
+                    numeric: {
+                        message: 'This must be a number'
+                    },
+		            notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            hours_per_day_mon: {
+            	selector: '[id="hours_per_day_mon"]',
+                validators: {
+                	between: {
+                        min: 0,
+                        max: 24,
+                        message: 'Please enter a number between 0 and 24'
+                    },
+                    numeric: {
+                        message: 'This must be a number'
+                    },
+		            notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            hours_per_day_tue: {
+            	selector: '[id="hours_per_day_tue"]',
+                validators: {
+                	between: {
+                        min: 0,
+                        max: 24,
+                        message: 'Please enter a number between 0 and 24'
+                    },
+                    numeric: {
+                        message: 'This must be a number'
+                    },
+		            notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            hours_per_day_wed: {
+            	selector: '[id="hours_per_day_wed"]',
+                validators: {
+                	between: {
+                        min: 0,
+                        max: 24,
+                        message: 'Please enter a number between 0 and 24'
+                    },
+                    numeric: {
+                        message: 'This must be a number'
+                    },
+		            notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            hours_per_day_thu: {
+            	selector: '[id="hours_per_day_thu"]',
+                validators: {
+                	between: {
+                        min: 0,
+                        max: 24,
+                        message: 'Please enter a number between 0 and 24'
+                    },
+                    numeric: {
+                        message: 'This must be a number'
+                    },
+		            notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            hours_per_day_fri: {
+            	selector: '[id="hours_per_day_fri"]',
+                validators: {
+                	between: {
+                        min: 0,
+                        max: 24,
+                        message: 'Please enter a number between 0 and 24'
+                    },
+                    numeric: {
+                        message: 'This must be a number'
+                    },
+		            notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            hours_per_day_sat: {
+            	selector: '[id="hours_per_day_sat"]',
+                validators: {
+                	between: {
+                        min: 0,
+                        max: 24,
+                        message: 'Please enter a number between 0 and 24'
+                    },
+                    numeric: {
+                        message: 'This must be a number'
+                    },
+		            notEmpty: {
+                        message: 'This field is required'
+                    }
+                }
+            },
+            hours_per_day_sun: {
+            	selector: '[id="hours_per_day_sun"]',
+                validators: {
+                	between: {
+                        min: 0,
+                        max: 24,
+                        message: 'Please enter a number between 0 and 24'
+                    },
+                    numeric: {
+                        message: 'This must be a number'
                     },
 		            notEmpty: {
                         message: 'This field is required'
@@ -353,9 +655,8 @@ $(document).ready(function() {
                         inclusive: false,
                         message: 'Please enter a digit greater than 0'
                     },
-                    regexp: {
-                        regexp: /^[0-9\.]+$/i,
-                        message: 'Digits only'
+                    numeric: {
+                        message: 'This must be a number'
                     }
                 }
             },
@@ -473,7 +774,7 @@ $(document).ready(function() {
                 }
             },
             zone_grf_sorting_machine: {
-            	selector: '[id="sorting_machine"]',
+            	selector: '[id="zone_grf_sorting_machine"]',
                 validators: {
                     notEmpty: {
                         message: 'The field is required'
@@ -621,19 +922,48 @@ $(document).ready(function() {
             
         }
     })
+        // Called when a field is invalid
     .on('error.field.bv', function(e, data) {
-	    console.log('error.field.bv -->', data);
-	    var bootstrapValidator = $("#master_form").data('bootstrapValidator');
-    	bootstrapValidator.disableSubmitButtons(false);
-	})
-	.on('success.field.bv', function(e, field, $field) {
-		console.log(field, $field, '-->success');
-		var bootstrapValidator = $("#master_form").data('bootstrapValidator');
-    	bootstrapValidator.disableSubmitButtons(false);
+        // data.element --> The field element
+        var $tabPane = data.element.parents('.tab-pane'),
+            tabId    = $tabPane.attr('id');
+
+        $('a[href="#' + tabId + '"][data-toggle="tab"]')
+            .parent()
+            .find('span')
+            .addClass('glyphicon-remove')
+            .removeClass('glyphicon-ok');
+        
+        var bootstrapValidator = $("#master_form").data('bootstrapValidator');
+        bootstrapValidator.disableSubmitButtons(false);
     })
-    .on('status.field.bv', function(e, data) {
-    	var bootstrapValidator = $("#master_form").data('bootstrapValidator');
-    	bootstrapValidator.disableSubmitButtons(false);
+
+    // Called when a field is valid
+    .on('success.field.bv', function(e, data) {
+        // data.bv      --> The BootstrapValidator instance
+        // data.element --> The field element
+    	
+        var $tabPane = data.element.parents('.tab-pane'),
+            tabId    = $tabPane.attr('id'),
+            $icon    = $('a[href="#' + tabId + '"][data-toggle="tab"]')
+                        .parent()
+                        .find('span')
+                        .removeClass('glyphicon-remove glyphicon-ok');
+                        //.addClass('glyphicon-ok');
+        
+        var bootstrapValidator = $("#master_form").data('bootstrapValidator');
+        // Check if the submit button is clicked
+       // if (bootstrapValidator.getSubmitButton()) {
+            // Check if all fields in tab are valid
+            var isValidTab = bootstrapValidator.isValidContainer($tabPane);
+            //$icon.addClass(isValidTab ? 'glyphicon-ok' : 'glyphicon-remove');
+            if (isValidTab) {
+            	$icon.addClass('glyphicon-ok');
+            } else {
+            	$icon.addClass('glyphicon-remove');
+            }
+       // }
+        bootstrapValidator.disableSubmitButtons(false);
     });
     
     

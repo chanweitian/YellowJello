@@ -146,7 +146,7 @@ public class ProcessSiteDefServlet extends HttpServlet {
 			values_quest = values_quest + "\'"
 					+ request.getParameter("site_id") + "\',";
 			values_quest = values_quest + "\'" + previousYear + "\',";
-			for (int i = 0; i < 76; i++) {
+			for (int i = 0; i < 77; i++) {
 				values_quest = values_quest + "\'\',";
 			}
 			values_quest = values_quest + "0";

@@ -79,7 +79,7 @@
 								<br>
 									<label class="col-lg-5 control-label">Monday <font color="red">* </font></label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" id="hours_per_day"
+										<input type="text" class="form-control" id="hours_per_day_mon"
 											name="zone_operationalhrs_mon<%=identifier%>" value="<%=zone_operationalhrs_mon%>" />
 									</div>
 								</div>
@@ -87,7 +87,7 @@
 								<div class="form-group">
 									<label class="col-lg-5 control-label">Tuesday <font color="red">* </font></label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" id="hours_per_day"
+										<input type="text" class="form-control" id="hours_per_day_tue"
 											name="zone_operationalhrs_tues<%=identifier%>" value="<%=zone_operationalhrs_tues%>" />
 									</div>
 								</div>
@@ -95,7 +95,7 @@
 								<div class="form-group">
 									<label class="col-lg-5 control-label">Wednesday <font color="red">* </font></label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" id="hours_per_day"
+										<input type="text" class="form-control" id="hours_per_day_wed"
 											name="zone_operationalhrs_wed<%=identifier%>" value="<%=zone_operationalhrs_wed%>" />
 									</div>
 								</div>
@@ -103,7 +103,7 @@
 								<div class="form-group">
 									<label class="col-lg-5 control-label">Thursday <font color="red">* </font></label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" id="hours_per_day"
+										<input type="text" class="form-control" id="hours_per_day_thu"
 											name="zone_operationalhrs_thurs<%=identifier%>" value="<%=zone_operationalhrs_thurs%>" />
 									</div>
 								</div>
@@ -111,7 +111,7 @@
 								<div class="form-group">
 									<label class="col-lg-5 control-label">Friday <font color="red">* </font></label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" id="hours_per_day"
+										<input type="text" class="form-control" id="hours_per_day_fri"
 											name="zone_operationalhrs_fri<%=identifier%>" value="<%=zone_operationalhrs_fri%>" />
 									</div>
 								</div>
@@ -119,7 +119,7 @@
 								<div class="form-group">
 									<label class="col-lg-5 control-label">Saturday <font color="red">* </font></label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" id="hours_per_day"
+										<input type="text" class="form-control" id="hours_per_day_sat"
 											name="zone_operationalhrs_sat<%=identifier%>" value="<%=zone_operationalhrs_sat%>" />
 									</div>
 								</div>
@@ -127,7 +127,7 @@
 								<div class="form-group">
 									<label class="col-lg-5 control-label">Sunday <font color="red">* </font></label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" id="hours_per_day"
+										<input type="text" class="form-control" id="hours_per_day_sun"
 											name="zone_operationalhrs_sun<%=identifier%>" value="<%=zone_operationalhrs_sun%>" />
 									</div>
 								</div>

@@ -71,7 +71,6 @@ if (today.before(cal)) {
         </div>
         <% while (past_quest_rs.next()) { 
 		        String quest_year = past_quest_rs.getString("year");
-				int quest_previous_year = Integer.parseInt(quest_year) - 1;
 		%>
 		<form action="../visual/calculate" class="form-horizontal" method="post">
 			<%-- to pass to VisualOutput.jsp --%>
@@ -524,13 +523,13 @@ if (today.before(cal)) {
 					</div>		
 					<%-- Site Usage part --%>
 					<div class="page-header">
-						<br><img src="../icons/icon_info.png" height="4%" width="4%">&nbsp;&nbsp;Usage <%=quest_previous_year%>
+						<br><img src="../icons/icon_info.png" height="4%" width="4%">&nbsp;&nbsp;Usage <%=quest_year%>
 					</div>
 					<div class="quest_subtitle">
 						Electricity<br><br>
 					</div>
 					<div class="past_quest_table">
-						<div class="col1">How many kWh of electricity did your site use in <%=quest_previous_year%>?</div>
+						<div class="col1">How many kWh of electricity did your site use in <%=quest_year%>?</div>
 						<div class="col2"><%=past_quest_rs.getString("usage_electricity_use")%></div>
 						<div class="col3"></div>
 						<div class="col4">Data source</div>
@@ -545,7 +544,7 @@ if (today.before(cal)) {
 					</div>
 					<hr>
 					<div class="past_quest_table">
-						<div class="col1">How many kWh of renewable electricity did your site use in <%=quest_previous_year%>?</div>
+						<div class="col1">How many kWh of renewable electricity did your site use in <%=quest_year%>?</div>
 						<div class="col2"><%=past_quest_rs.getString("usage_renew_electricity_use")%></div>
 						<div class="col3"></div>
 						<div class="col4">Data source</div>
@@ -562,7 +561,7 @@ if (today.before(cal)) {
 						Other Fuels<br><br>
 					</div>
 					<div class="past_quest_table">
-						<div class="col1">How many kWh of Natural Gas did your site use in <%=quest_previous_year%>?</div>
+						<div class="col1">How many kWh of Natural Gas did your site use in <%=quest_year%>?</div>
 						<div class="col2"><%=past_quest_rs.getString("usage_nat_gas_use")%></div>
 						<div class="col3"></div>
 						<div class="col4">Data source</div>
@@ -577,7 +576,7 @@ if (today.before(cal)) {
 					</div>
 					<hr>
 					<div class="past_quest_table">
-						<div class="col1">How many litres of Fuel Oil did your site use in <%=quest_previous_year%>?</div>
+						<div class="col1">How many litres of Fuel Oil did your site use in <%=quest_year%>?</div>
 						<div class="col2"><%=past_quest_rs.getString("usage_fuel_oil_use")%></div>
 						<div class="col3"></div>
 						<div class="col4">Data source</div>
@@ -592,7 +591,7 @@ if (today.before(cal)) {
 					</div>
 					<hr>
 					<div class="past_quest_table">
-						<div class="col1">How many litres of diesel did your site use in <%=quest_previous_year%>?</div>
+						<div class="col1">How many litres of diesel did your site use in <%=quest_year%>?</div>
 						<div class="col2"><%=past_quest_rs.getString("usage_diesel_use")%></div>
 						<div class="col3"></div>
 						<div class="col4">Data source</div>

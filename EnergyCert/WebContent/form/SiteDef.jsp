@@ -31,13 +31,13 @@ String[] building_name_array = bName.split("\\*");
                 <div id="buildingButtons" style="display:inline-flex;">
                     <div class="form-group" style="padding-right:2em;">
                     	<div class="col-lg-4">
-                            <button type="button" data-toggle="modal" data-target="#addZoneModal" class="btn btn-default" style="width:100px;">Add Zone</button>
+                            <button type="button" data-toggle="modal" data-target="#addZoneModal" class="btn btn-default" style="width:120px;"><span class="glyphicon glyphicon-plus-sign"></span> Add Zone</button>
                         </div>
 					</div>
 				
 					<div class="form-group" style="padding-right:2em;">
                     	<div class="col-lg-4">
-                            <button type="button" data-toggle="modal" data-target="#deleteZoneModal" class="btn btn-default" style="width:100px;">Delete Zone</button>
+                            <button type="button" data-toggle="modal" data-target="#deleteZoneModal" class="btn btn-default" style="width:130px;"><span class="glyphicon glyphicon-minus-sign"></span> Delete Zone</button>
                         </div>
 					</div>
 				</div>  

@@ -495,6 +495,21 @@ public class ProcessMasterServlet extends HttpServlet {
 				+ request.getParameter("site_info_truck_loading_bays") + "\',";
 		values = values + "site_info_bays_dock_seals = \'"
 				+ request.getParameter("site_info_bays_dock_seals") + "\',";
+		
+		// Convert ampere_hours[] values into a string delimited by *
+		String[] ehe_type_array = request
+				.getParameterValues("ehe_type[]");
+		String ehe_type_string = "";
+		if (ehe_type_array != null) {
+			for (String e : ehe_type_array) {
+				ehe_type_string = ehe_type_string + e + "*";
+			}
+		}
+		if (ehe_type_string.length() != 0) {
+			ehe_type_string = ehe_type_string.substring(0,
+					ehe_type_string.length() - 2);
+		}
+		values = values + "ehe_type = \'" + ehe_type_string + "\',";
 
 		// Convert ampere_hours[] values into a string delimited by *
 		String[] ampere_hours_array = request

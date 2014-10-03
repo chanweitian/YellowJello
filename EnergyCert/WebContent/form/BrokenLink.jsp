@@ -39,7 +39,7 @@
   	<br><br>
   	<div class="main">
 		<div class="header">
-             Oops! The link has expired!
+			Oops! The link does not exist!
         </div>
 	</div>
 </body>

@@ -12,6 +12,10 @@ if (link != null) { %>
 	<% String where_link = "questionnaire_link = \'" + link + "\'";
 	RetrievedObject ro_link = SQLManager.retrieveRecords("questionnaire_link", where_link);
 	ResultSet rs_link = ro_link.getResultSet();
+	if (!rs_link.isBeforeFirst() ) { %>
+	    <jsp:forward page="BrokenLink.jsp" ></jsp:forward>
+	<%
+	}
 	while (rs_link.next()) {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
@@ -79,6 +83,11 @@ if (link != null) { %>
 		
 		<%-- This is for SiteDef.jsp --%>
 		<script type="text/javascript" src="../js/siteDef.js"></script>
+		
+		<!-- Support datetime picker plugin: http://eonasdan.github.io/bootstrap-datetimepicker/ -->
+	    <link rel="stylesheet" href="../css/bootstrap3-datetimepicker.css"/>
+	    <script type="text/javascript" src="../js/moments.min.js"></script>
+	    <script type="text/javascript" src="../js/bootstrap3-datetimepicker.js"></script>
 	
 </head>
 <body>
@@ -135,11 +144,9 @@ if (link != null) { %>
 		//if fromEdit is not null OR fromLink is not null means need to put values from db for the saved questionnaire
 		} else {
 			if (!fromLink && fromAddZone == null) {
-				System.out.println("here");
 				quest_id = request.getParameter("quest_id");
 				session.setAttribute("quest_id",quest_id);	
 			} else {
-				System.out.println("here2");
 				quest_id = (String) session.getAttribute("quest_id");
 			}
 			
@@ -201,7 +208,7 @@ if (link != null) { %>
 		<input type="hidden" name="zone_details" value="<%=zone_details%>" />
 		<%-- Thread.sleep(10000); //QN: What is this thread sleep for?--%>
 			<ul class="nav nav-tabs" role="tablist" id="myTab">
-			  <li class="active"><a href="#sitedef" role="tab" data-toggle="tab">1. Site Definition</a></li>
+			  <li class="active bv-tab-success"><a href="#sitedef" role="tab" data-toggle="tab">1. Site Definition <span class="glyphicon glyphicon-ok"></span></a></li>
 			<%
 			
 			int tab_count = 2;
@@ -211,23 +218,23 @@ if (link != null) { %>
 				for (String sec : sectionArray) {
 					if (sec.equals("a")) { 
 			%>
-						<li><a href="#siteinfo" role="tab" data-toggle="tab"><%=tab_count%>. Site Information</a></li>
+						<li><a href="#siteinfo" role="tab" data-toggle="tab"><%=tab_count%>. Site Information <span class="glyphicon"></span></a></li>
 			<% 	
 						tab_count++;
 					}
 					if (sec.equals("b")) {
 			%>
-						<li><a href="#usage" role="tab" data-toggle="tab"><%=tab_count%>. Usage</a></li>
+						<li><a href="#usage" role="tab" data-toggle="tab"><%=tab_count%>. Usage <span class="glyphicon"></span></a></li>
 			<% 
 						tab_count++;
 					}
 				}
 			} else { %>
-				<li><a href="#siteinfo" role="tab" data-toggle="tab"><%=tab_count%>. Site Information</a></li>
+				<li><a href="#siteinfo" role="tab" data-toggle="tab"><%=tab_count%>. Site Information <span class="glyphicon"></span></a></li>
 			<%
 				tab_count++;
 			%>	
-				<li><a href="#usage" role="tab" data-toggle="tab"><%=tab_count%>. Usage</a></li>
+				<li><a href="#usage" role="tab" data-toggle="tab"><%=tab_count%>. Usage <span class="glyphicon"></span></a></li>
 			<%	
 				tab_count++;
 			}
@@ -244,7 +251,7 @@ if (link != null) { %>
 					String tab_title = tab_count + ". " + building_name + "_" + zone_name;
 					String tab_id = building_name + "_" + zone_name;
 			%>		
-				<li><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%></a></li>
+				<li><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%> <span class="glyphicon"></span></a></li>
 			<%		
 				  	tab_count++;
 				  }
@@ -262,7 +269,7 @@ if (link != null) { %>
 						for (String sec : sectionArray) {
 							if (sec.equals(i+"")) {
 						%>
-								<li><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%></a></li>
+								<li><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%> <span class="glyphicon"></span></a></li>
 						<%		
 							}
 						}
@@ -425,14 +432,14 @@ if (link != null) { %>
 				<br><br>
 			</div>
 			<div class="navigation" style="position:fixed; right:100px; top:70px;">
-			    <button type="submit" class="btn btn-info" value="save" onclick="saveFunction()">Save and Exit</button>
+			    <button type="submit" class="btn btn-info" value="save" onclick="saveFunction()"><span class="glyphicon glyphicon-floppy-save"></span> Save and Exit</button>
 			</div>
 		</form>
 	</div>
 	
 	<% if (!fromLink) {%>
 		<div class="navigation" style="position:fixed; right:100px; top:115px;">
-			<button class="btn btn-info" data-toggle="modal" data-target="#assignModal">Assign Questions</button>
+			<button class="btn btn-info" data-toggle="modal" data-target="#assignModal"><span class="glyphicon glyphicon-envelope"></span> Assign Questions</button>
 		    <%-- <a data-toggle="modal" data-target="#assignModal">Assign Questions</a> --%>
 		</div>
 	<% } %>

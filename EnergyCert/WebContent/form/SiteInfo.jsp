@@ -24,6 +24,7 @@ String site_info_employee_awareness_program = "";
 String site_info_access_to_energy_data = "";
 String site_info_truck_loading_bays = "";
 String site_info_bays_dock_seals = "";
+String ehe_type = "";
 String ampere_hours = "";
 String voltage = "";
 String total_charges = "";
@@ -85,6 +86,7 @@ while (rs.next()) {
 	site_info_access_to_energy_data = rs.getString("site_info_access_to_energy_data");
 	site_info_truck_loading_bays = rs.getString("site_info_truck_loading_bays");
 	site_info_bays_dock_seals = rs.getString("site_info_bays_dock_seals");
+	ehe_type = rs.getString("ehe_type");
 	ampere_hours = rs.getString("ampere_hours");
 	voltage = rs.getString("voltage");
 	total_charges = rs.getString("total_charges");
@@ -344,7 +346,7 @@ ro.close();
 									<div class="form-group">
 									<label class="col-lg-5 control-label" for="site_info_targets_level">At what level are these targets set?</label>
 									<div class="col-lg-6">
-										<select name="site_info_targets_level">
+										<select name="site_info_targets_level" class="form-control">
 											<% if (site_info_targets_level.equals("")) { %>
 												<option value="" selected>-- Select one --</option>
 											<% } else { %>
@@ -488,34 +490,41 @@ ro.close();
 								
 										<%-- Headings in table --%>
 										<div class="EHE_headings" style="display:inline-flex;width:100%;">
-										<div class="form-group" style="padding-right:2em;width:24.5%;">
+										<div class="form-group" style="padding-right:2em;width:21.5%;">
 											<div class="col-lg-12">
-												<label>Ampere-hours (Ah) <font color="red">*</font></label>
+												<label>Type <font color="red">*</font></label>
 											</div>
 										</div>
-										<div class="form-group" style="width:24%;">
+										<div class="form-group" style="padding-right:2em;width:20.5%;">
+											<div class="col-lg-12">
+												<label>Ampere-hours <br> (Ah) <font color="red">*</font></label>
+											</div>
+										</div>
+										<div class="form-group" style="width:21%;">
 											<div class="col-lg-12">
 												<label>Voltage (V) <font color="red">*</font></label>
 											</div>
 										</div>
-										<div class="form-group" style="width:28%;">
+										<div class="form-group" style="width:24.5%;">
 											<div class="col-lg-12">
-												<label>Total number of charges <br> per week for all batteries <br> of this type <font color="red">*</font></label>
+												<label>Total number of <br> charges per week for all <br> batteries of this type <font color="red">*</font></label>
 											</div>
 										</div>
-										<div class="form-group" style="width:25%;">
+										<div class="form-group" style="width:22.5%;">
 												<div class="col-lg-12">
-													<label>Typical charge duration <br>for single charge (hours) <font color="red">*</font></label>
+													<label>Typical charge <br> duration for single <br> charge (hours) <font color="red">*</font></label>
 												</div>
 											</div>
 										</div>
 										
 										<%
+										String[] ehe_type_array = {""};
 										String[] ampere_hours_array = {""};
 										String[] voltage_array = {""};
 										String[] total_charges_array = {""};
 										String[] total_charge_duration_array = {""};
 										if (ampere_hours.length() != 0) {
+											ehe_type_array = ehe_type.split("\\*");
 											ampere_hours_array = ampere_hours.split("\\*");
 											voltage_array = voltage.split("\\*");
 											total_charges_array = total_charges.split("\\*");
@@ -526,30 +535,36 @@ ro.close();
 										<%-- 1st row of EHE in table --%>
 										<div class="elect_handling_equipment" style="display:inline-flex;width:100%;">
 											<div class="form-group" style="padding-right:2em;">
-											<div class="col-lg-12">
-												<input name="ampere_hours[]" type="text" id="integer" value="<%=ampere_hours_array[0]%>" class="form-control" style="width: 160px;"/>
+											<div class="col-lg-12 EHE">
+												<input name="ehe_type[]" type="text" id="required_value" value="<%=ehe_type_array[0]%>" class="form-control" style="width: 140px;"/>
+											</div>	
+											</div>
+											
+											<div class="form-group" style="padding-right:2em;">
+											<div class="col-lg-12 EHE">
+												<input name="ampere_hours[]" type="text" id="integer" value="<%=ampere_hours_array[0]%>" class="form-control" style="width: 140px;"/>
 											</div>	
 											</div>
 							               
 											<div class="form-group" style="padding-right:2em;">
-											<div class="col-lg-12">
-												<input name="voltage[]" type="text" id="integer"  value="<%=voltage_array[0]%>" class="form-control" style="width: 160px;"/>
+											<div class="col-lg-12 EHE">
+												<input name="voltage[]" type="text" id="integer"  value="<%=voltage_array[0]%>" class="form-control" style="width: 140px;"/>
 							               	</div>
 							               	</div>
 							               
 							               	<div class="form-group" style="padding-right:2em;">
-											<div class="col-lg-12">
-												<input name="total_charges[]" type="text" id="integer"  value="<%=total_charges_array[0]%>" class="form-control" style="width: 200px;"/>
+											<div class="col-lg-12 EHE">
+												<input name="total_charges[]" type="text" id="integer"  value="<%=total_charges_array[0]%>" class="form-control" style="width: 170px;"/>
 											</div>
 											</div>
 							
 											<div class="form-group" style="padding-right:2em;">
-											<div class="col-lg-12">
-												<input name="total_charge_duration[]" type="text" id="integer" value="<%=total_charge_duration_array[0]%>" class="form-control" style="width: 180px;"/>
+											<div class="col-lg-12 EHE">
+												<input name="total_charge_duration[]" type="text" id="integer" value="<%=total_charge_duration_array[0]%>" class="form-control" style="width: 150px;"/>
 											</div>	
 											</div>
 							
-							              	<div class="form-group" style="padding-right:2em;">
+							              	<div class="form-group" style="padding-right:0.5em;">
 							              	<div class="col-lg-4">
 							                       <button type="button" class="btn btn-default btn-sm add_EHE_Button" id="EHE_button" style="width:70px;" data-template="textbox">Add</button>
 							                </div>
@@ -563,30 +578,36 @@ ro.close();
 										%>
 												<div class="elect_handling_equipment" style="display:inline-flex;width:100%;">
 													<div class="form-group" style="padding-right:2em;">
-													<div class="col-lg-12">
-														<input name="ampere_hours[]" type="text" id="integer" value="<%=ampere_hours_array[i]%>" class="form-control" style="width: 160px;"/>
+													<div class="col-lg-12 EHE">
+														<input name="ehe_type[]" type="text" id="required_value" value="<%=ehe_type_array[i]%>" class="form-control" style="width: 140px;"/>
+													</div>	
+													</div>
+													
+													<div class="form-group" style="padding-right:2em;">
+													<div class="col-lg-12 EHE">
+														<input name="ampere_hours[]" type="text" id="integer" value="<%=ampere_hours_array[i]%>" class="form-control" style="width: 140px;"/>
 													</div>	
 													</div>
 									               
 													<div class="form-group" style="padding-right:2em;">
-													<div class="col-lg-12">
-														<input name="voltage[]" type="text" id="integer"  value="<%=voltage_array[i]%>" class="form-control" style="width: 160px;"/>
+													<div class="col-lg-12 EHE">
+														<input name="voltage[]" type="text" id="integer"  value="<%=voltage_array[i]%>" class="form-control" style="width: 140px;"/>
 									               	</div>
 									               	</div>
 									               
 									               	<div class="form-group" style="padding-right:2em;">
-													<div class="col-lg-12">
-														<input name="total_charges[]" type="text" id="integer"  value="<%=total_charges_array[i]%>" class="form-control" style="width: 200px;"/>
+													<div class="col-lg-12 EHE">
+														<input name="total_charges[]" type="text" id="integer"  value="<%=total_charges_array[i]%>" class="form-control" style="width: 170px;"/>
 													</div>
 													</div>
 									
 													<div class="form-group" style="padding-right:2em;">
-													<div class="col-lg-12">
-														<input name="total_charge_duration[]" type="text" id="integer" value="<%=total_charge_duration_array[i]%>" class="form-control" style="width: 180px;"/>
+													<div class="col-lg-12 EHE">
+														<input name="total_charge_duration[]" type="text" id="integer" value="<%=total_charge_duration_array[i]%>" class="form-control" style="width: 150px;"/>
 													</div>	
 													</div>
 									
-									              	<div class="form-group" style="padding-right:2em;">
+									              	<div class="form-group" style="padding-right:0.5em;">
 									              	<div class="col-lg-4">
 									                       <button type="button" class="btn btn-default btn-sm remove_EHE_Button" id="remove_EHE_Button" style="width:70px;">Remove</button>
 									                </div>
@@ -601,30 +622,36 @@ ro.close();
 						             	<%-- Hidden row of zone to be used for cloning --%>
 										<div id='elect_handling_equipment_row' class="elect_handling_equipment_row hide" style="display:inline-flex;width:100%;">
 											<div class="form-group" style="padding-right:2em;">
-											<div class="col-lg-12">
-												<input name="ampere_hours[]" type="text" class="form-control" style="width: 160px;"/>
+											<div class="col-lg-12 EHE">
+												<input name="ehe_type[]" type="text" class="form-control" style="width: 140px;"/>
+											</div>	
+											</div>
+											
+											<div class="form-group" style="padding-right:2em;">
+											<div class="col-lg-12 EHE">
+												<input name="ampere_hours[]" type="text" class="form-control" style="width: 140px;"/>
 												</div>	
 											</div>
      
 											<div class="form-group" style="padding-right:2em;">
-											<div class="col-lg-12">
-												<input name="voltage[]" type="text" class="form-control" style="width: 160px;"/>
+											<div class="col-lg-12 EHE">
+												<input name="voltage[]" type="text" class="form-control" style="width: 140px;"/>
 											</div>
 											</div>
 
 											<div class="form-group" style="padding-right:2em;">
-											<div class="col-lg-12">
-												<input name="total_charges[]" type="text" class="form-control" style="width: 200px;"/>
+											<div class="col-lg-12 EHE">
+												<input name="total_charges[]" type="text" class="form-control" style="width: 170px;"/>
 											</div>
 											</div>
 						
 											<div class="form-group" style="padding-right:2em;">
-											<div class="col-lg-12">
-												<input name="total_charge_duration[]" type="text" class="form-control" style="width: 180px;"/>
+											<div class="col-lg-12 EHE">
+												<input name="total_charge_duration[]" type="text" class="form-control" style="width: 150px;"/>
 											</div>	
 											</div>
 						              
-											<div class="form-group" style="padding-right:2em;">
+											<div class="form-group" style="padding-right:0.5em;">
 											<div class="col-lg-4">
 											       <button type="button" class="btn btn-default btn-sm remove_EHE_Button" style="width:70px;">Remove</button>
 											</div>
@@ -1167,9 +1194,9 @@ ro.close();
 									<div class="col-lg-6">
 										<div class="radio">
 										<% if (site_info_sub_meters.equals("Yes")) { %>
-											<label><input type="radio" id="site_info_sub_meters" name="site_info_sub_meters" value="Yes" checked />Yes</label>
+											<label><input type="radio" id="site_info_sub_meters" name="site_info_sub_meters" value="Yes" onchange="function1(this.id)" checked />Yes</label>
 										<% } else { %>
-											<label><input type="radio" id="site_info_sub_meters" name="site_info_sub_meters" value="Yes" />Yes</label>
+											<label><input type="radio" id="site_info_sub_meters" name="site_info_sub_meters" value="Yes" onchange="function1(this.id)" />Yes</label>
 										<% } %>
 										</div>
 										<div class="radio">
