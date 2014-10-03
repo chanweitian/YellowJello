@@ -182,15 +182,16 @@ public class PaybackServlet extends HttpServlet {
 			double newRating = (actualConsumption - (currentAnnualKwh - annualKwh))
 					/ benchmark * 100;
 			
-			double ratingPercentage = (currentRating - newRating)
+			
+			double ratingPercentage =  (currentRating - newRating)
 					/ currentRating;
 
 			double lightOuputPercentage = (lightOutput - currentLightOuput)
 					/ currentLightOuput;
 
 			list.add(payback + "");
-			list.add(ratingPercentage + "");
-			list.add(lightOuputPercentage + "");
+			list.add(1+ratingPercentage + "");
+			list.add(1+lightOuputPercentage + "");
 
 			System.out.println("==============" + zone);
 
@@ -204,7 +205,7 @@ public class PaybackServlet extends HttpServlet {
 			System.out.println("annualKwh:" + annualKwh);
 			System.out.println("annualCost:" + annualCost);
 			System.out.println("lightOutput:" + lightOutput);
-
+			System.out.println("currentLightOutput "+lightOutput);
 			System.out.println("costPerLamp:" + costPerLamp);
 			System.out.println("installationCostPerFixture:"
 					+ installationCostPerFixture);
@@ -298,8 +299,7 @@ public class PaybackServlet extends HttpServlet {
 			System.out.println("Qustionnare_id NOT FOUND");
 		} else {
 
-			currentRating = rs.getInt("energy_rating");
-
+			currentRating = Math.max(rs.getInt("energy_rating") , 1);
 		}
 
 		ro.close();
@@ -340,7 +340,7 @@ public class PaybackServlet extends HttpServlet {
 
 		if (rs.next()) {
 			benchmark = Double.parseDouble(rs.getString("benchmark"));
-			benchmark = 400000;
+			
 			System.out.println("benchmark:" + benchmark);
 			double operationHoursPerWeek = getOperationHours(rs);
 			System.out

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import db.RetrievedObject;
@@ -63,7 +64,7 @@ public class RetrieveRegionList extends HttpServlet {
 			}
 			ro.close();
 
-			JSONObject json = new JSONObject();
+			JSONArray json = new JSONArray();
 			response.setContentType("application/JSON");
 			PrintWriter out = response.getWriter();
 
@@ -71,7 +72,7 @@ public class RetrieveRegionList extends HttpServlet {
 			while (iter.hasNext()) {
 				String temp = iter.next();
 				System.out.println(temp);
-				json.put("region", temp);
+				json.add(temp);
 
 			}
 

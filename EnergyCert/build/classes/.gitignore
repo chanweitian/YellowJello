@@ -1,2 +1,10 @@
+<<<<<<< HEAD
 /db/
 /form/
+=======
+/account/
+/admin/
+/client/
+/db/
+/visual/
+>>>>>>> FETCH_HEAD

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import db.RetrievedObject;
@@ -64,14 +65,14 @@ public class RetrieveCountryList extends HttpServlet {
 			}
 			ro.close();
 
-			JSONObject json = new JSONObject();
+			JSONArray json = new JSONArray();
 			response.setContentType("application/JSON");
 			PrintWriter out = response.getWriter();
 
 			Iterator<String> iter = unique.iterator();
 			while (iter.hasNext()) {
 				String temp = iter.next();
-				json.put("country", temp);
+				json.add(temp);
 			}
 
 			String output = json.toString();
