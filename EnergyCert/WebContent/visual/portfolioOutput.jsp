@@ -20,6 +20,10 @@
 <%-- Questionnaire.jsp --%>
 <link href="../css/questionnaire.css" rel="stylesheet">
 
+<%-- Questionnaire validation --%>
+<link rel="stylesheet" href="../css/bootstrapValidator.min.css"/>
+<script type="text/javascript" src="../js/bootstrapValidator.min.js"></script>	
+
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="../js/d3min.js"></script>
 <script type="text/javascript" src="../js/scatter.js"></script>
@@ -79,59 +83,102 @@
 <body>
 	<%@include file="../header.jsp"%>
 	<br />
-	<br />
-	<div style="width: 50%; margin: 0 auto;" class="header">Manage
-		Warehouse Portfolio!</div>
+	<div class="header">Manage Site Portfolio</div>
 
 	<%
 		if(status){
 	%>
-	Please select year of visualisation:
-	<select id="year" onChange="setYear(this.value)">
-		<script>
-			//dynamically generates dropdown options
-			var yearOptions = document.getElementById("year");
-
-			for (var i = 0; i < years.length; ++i) {
-				addOption(yearOptions, years[i], years[i]);
-			}
-		</script>
-	</select>
-	<br> You may choose to filter the data by:
-	<select id="filter" onChange="yearAndFilter(this.value)">
-		<option selected>No filter (show all data)</option>
-		<option>Country</option>
-		<option>Region</option>
-	</select>
-	<br>
-	<form id="country" style="display: none;">
-		Please select the country desired: <select id="country" onChange="">
-		</select> <br> Please select the axis desired: <select id="axis">
-			<option>Carbon Emission</option>
-			<option>Energy Consumption</option>
-		</select> <br> <input type="button" class="btn-small btn-primary"
-			name="button" value="Generate" onClick="generate(this.form)">
-	</form>
-	<form id="region" style="display: none;">
-		Please select the region desired: <select id="region" onChange="">
-		</select> <br> Please select the axis desired: <select id="axis">
-			<option>Carbon Emission</option>
-			<option>Energy Consumption</option>
-		</select> <br> <input type="button" class="btn-small btn-primary"
-			name="button" value="Generate" onClick="generate(this.form)">
-	</form>
-	<form id="showAll">
-		Please select the axis desired: <select id="axis">
-			<option>Carbon Emission</option>
-			<option>Energy Consumption</option>
-		</select> <br> <input type="button" class="btn-small btn-primary"
-			name="button" value="Generate" onClick="generate(this.form)">
-	</form>
-
+	
+	<div class="form-group">
+        <div class="row">
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Year of Visualization</label>
+                <select id="year" onChange="setYear(this.value)" class="form-control">
+				<script>
+					//dynamically generates dropdown options
+					var yearOptions = document.getElementById("year");
+		
+					for (var i = 0; i < years.length; ++i) {
+						addOption(yearOptions, years[i], years[i]);
+					}
+				</script>
+				</select>
+            </div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+        <div class="row">
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Filter the Data by</label>
+                <select id="filter" onChange="yearAndFilter(this.value)" class="form-control">
+					<option selected>No filter (show all data)</option>
+					<option>Country</option>
+					<option>Region</option>
+				</select>
+            </div>
+		<form id="country" style="display: none;">
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Country Desired</label>
+                <select id="country" onChange="" class="form-control">
+				</select>
+            </div>
+            
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Axis Desired:</label>
+                 <select id="axis" class="form-control">
+					<option>Carbon Emission</option>
+					<option>Energy Consumption</option>
+				</select>
+            </div>
+            
+            <div style="position:absolute; left:20px; top:315px;">
+            <input type="button" class="btn btn-primary" name="button" value="Generate" onClick="generate(this.form)">
+            </div>
+        </form>
+        
+        <form id="region" style="display: none;">
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Region Desired</label>
+                <select id="region" onChange="" class="form-control">
+				</select>
+            </div>
+            
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Axis Desired:</label>
+                <select id="axis" class="form-control">
+					<option>Carbon Emission</option>
+					<option>Energy Consumption</option>
+				</select>
+            </div>
+            
+            <div style="position:absolute; left:20px; top:315px;">
+            <input type="button" class="btn btn-primary" name="button" value="Generate" onClick="generate(this.form)">
+            </div>
+        </form>
+        
+        <form id="showAll">
+            
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Axis Desired:</label>
+                <select id="axis" class="form-control">
+					<option>Carbon Emission</option>
+					<option>Energy Consumption</option>
+				</select>
+            </div>
+            <br>
+            <div style="position:absolute; left:20px; top:315px;">
+            <input type="button" class="btn btn-primary" name="button" value="Generate" onClick="generate(this.form)">
+            </div>
+        </form>
+        </div>
+    </div>
+	
+	<br><br>
 	<%
 		}else{
 	%>
-	Sorry there are currently no warehouses with completed questionnaire on
+	Sorry there is currently no warehouse with completed questionnaire on
 	file.
 	<br> If you believe you have received this message in error,
 	please contact your system administrator.
@@ -267,7 +314,7 @@
 			request.onreadystatechange = function() {
 				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);
-					if (axis == 'Carbon Emission') {
+					if (axis == 'carbon') {
 						document.getElementById("share").style.display = "block";
 						drawCarbon(result);
 
@@ -353,7 +400,7 @@
 		}
 		
 		var emailSuccess = function(){
-			alert("You email has been successfully sent");
+			$('#emailModal').modal('show');
 		}
 
 		function clear() {
@@ -393,20 +440,85 @@
 
 		}
 	</script>
-	<form id="share"
-		style="display: none;"
-		action="" method="">
-		If you wish to share this chart, please enter the email address of the
-		intended receipient: <br> <input type=hidden id=year
-			value="<script>year</script>"> <input type=hidden id=axis
-			value="<script>axis</script>"> <input type=hidden
-			id=selectFilter value="<script>selectFilter</script>"> <input
-			type=hidden id=filterValue value="<script>filterValue</script>">
-		<input type="text" id="Email" placeholder="Enter receipient Email">
-		<input type="button" class="btn-small btn-primary" onClick = "sendEmail(this.form)"
-			value="Email">
+	
+	<form id="share" style="display: none;" action="" method="">
+	 <div class="form-group">
+        <div class="row">
+            <div class="col-md-5">
+                <label class="control-label">To share this chart, please enter the email address of the intended receipient:</label>
+                <input type=hidden id=year value="<script>year</script>"> 
+                <input type=hidden id=axis value="<script>axis</script>"> 
+                <input type=hidden id=selectFilter value="<script>selectFilter</script>"> 
+                <input type=hidden id=filterValue value="<script>filterValue</script>">
+				<input type="text" id="Email" class="form-control" placeholder="Enter receipient's email">
+            </div>
+		</div>
+    </div>
+ 	<div class="col-md-0">
+		<input type="button" id="emailBtn" class="btn btn-primary" onClick = "sendEmail(this.form)" value="Email">
+	</div>
 	</form>
+	
 	<br> If you require further details shown on this report please
 	email energycertificate@dhl.com
 </body>
+
+<%-- Modal --%>
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="left:0px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h4 class="modal-title">Email Sent</h4>
+            </div>
+
+            <div class="modal-body">
+                <!-- The form is placed inside the body of modal -->
+				Your email has been successfully sent!
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style type="text/css">
+/* Adjust feedback icon position */
+#share .form-control-feedback {
+    right: 15px;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+    $('#share').bootstrapValidator({
+    	
+    	feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+    	fields: {
+    		email: {
+            	selector: '[id="Email"]',
+                validators: {
+                	notEmpty: {
+                        message: 'This field is required'
+                    },
+                    emailAddress: {
+                        message: 'This is not a valid email address'
+                    }
+                }
+            } 
+        }
+    })
+    .on('error.field.bv', function(e, data) {
+	    console.log('error.field.bv -->', data);
+	    document.getElementById("emailBtn").disabled = true; 
+	})
+	.on('success.field.bv', function(e, field, $field) {
+		console.log(field, $field, '-->success');
+		document.getElementById("emailBtn").disabled = false; 
+    });
+});
+</script>
 </html>
