@@ -135,7 +135,6 @@ public class GenerateChart extends HttpServlet {
 			ro.close();
 
 			String output = json.toString();
-			System.out.println(output);
 			out.println(output);
 			out.close();
 

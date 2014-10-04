@@ -1,6 +1,7 @@
 package visual;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
+
 import db.SQLManager;
 
 /**
@@ -26,17 +29,19 @@ import db.SQLManager;
 public class PortfolioEmail extends HttpServlet {
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//super.doPost(req, resp);
 		
 		String year = req.getParameter("year");
 		String filter = req.getParameter("filter");
-		String filterValue = req.getParameter("filtervalue");
+		String filterValue = req.getParameter("filterValue");
 		String axis = req.getParameter("axis");
-		String email = req.getParameter("Email");
-		System.out.println(email);
+		String email = req.getParameter("email");
+		System.out.println(filterValue);
+		System.out.println(axis);
+		System.out.println(year);
 		
 		final String username = "gtl.fypeia@gmail.com";
 		final String password = "pa55w0rd#";
@@ -47,7 +52,7 @@ public class PortfolioEmail extends HttpServlet {
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.port", "587");
  
-		final String link = "http://apps.greentransformationlab.com/EnergyCert/visual/portfolio?year="+year+"&filter="+filter+"&filterValue"+filterValue+"&axis="+axis;
+		final String link = "http://apps.greentransformationlab.com/EnergyCert/visual/PortfolioViaEmail.jsp?year="+year+"&filter="+filter+"&filterValue"+filterValue+"&axis="+axis;
 		
 		Session session = Session.getInstance(props,
 		  new javax.mail.Authenticator() {
@@ -57,7 +62,6 @@ public class PortfolioEmail extends HttpServlet {
 		  });
  
 		try {
-			//String uuid = UUID.randomUUID().toString();
 			
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("gtl.fypeia@gmail.com"));
@@ -65,26 +69,23 @@ public class PortfolioEmail extends HttpServlet {
 				InternetAddress.parse(email));
 			message.setSubject("Sharing Warehouse Portfolio: "+year);
 			message.setText("Hi,"
-				+ "\n\n Click here to view the warehouse portfolio:  http://apps.greentransformationlab.com/EnergyCert/visual/calculate?quest_id="+"HELLO"+"&link=" + "X"
+				+ "\n\n Click here to view the warehouse portfolio:  http://apps.greentransformationlab.com/EnergyCert/visual/PortfolioViaEmail.jsp?year="+year+"&filter="+filter+"&filterValue="+filterValue+"&axis="+axis
 				+ "\n\n Thank you.");
  
 			Transport.send(message);
- 
-			//String site_def_values = "\'" + quest_id + "\',\'" + uuid + "\',\'\',\'\'";
 			
-			//SQLManager.insertRecord("questionnaire_link",site_def_values);
-
-			System.out.println("Done");
+			JSONObject json = new JSONObject();
+			resp.setContentType("application/JSON");
+			PrintWriter out = resp.getWriter();
+			String output = json.toString();
+			out.println(output);
+			out.close();
  
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
 		}
-
-		//resp.sendRedirect("calculate?quest_id="+quest_id);
 		
 	}
-
-	
 	
 }
 

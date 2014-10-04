@@ -44,7 +44,7 @@
 	var master = [];
 	var year = "";
 	var selectFilter = "none";
-	var filterValue = "";
+	var filterValue = "none";
 	var axis = "carbon";
 <%//Pushing the data into years
 	for(int i = 0; i <years.size(); i++){%>
@@ -233,7 +233,14 @@
 
 		//retrieve master data with no filter and generate the charts
 		var generate = function(form) {
-			axis = form.axis.value
+			switch (form.axis.value){
+			case 'Carbon Emission':
+				axis = 'carbon'
+				break;
+			case 'Energy Consumption':
+				axis = 'energy'
+				break;
+			};
 			var request = '';
 			switch (selectFilter) {
 			case 'Region':
@@ -249,7 +256,7 @@
 								+ selectFilter + "&value=" + filterValue;
 				break;
 			case 'none':
-				filterValue = 'null';
+				filterValue = 'none';
 				request = new XMLHttpRequest(), typeValue = "get",
 						urlValue = "generate?year=" + year + "&filter="
 								+ selectFilter + "&value=" + filterValue;
@@ -330,6 +337,24 @@
 				addOption(regionOptions, regionList[i], regionList[i]);
 			}
 		}
+		
+		var sendEmail = function(form) {
+			var email = form.Email.value;
+			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "portfolioEmail?year="
+					+ year + "&filter="+ selectFilter + "&filterValue="+ filterValue +"&axis="+ axis + "&email=" + email
+			request.onreadystatechange = function() {
+				if (request.readyState == 4 && request.status == 200) {
+					var result = JSON.parse(request.responseText);
+					emailSuccess();
+				}
+			}
+			request.open('get', urlValue, true);
+			request.send();
+		}
+		
+		var emailSuccess = function(){
+			alert("You email has been successfully sent");
+		}
 
 		function clear() {
 			var a = document.getElementById("country").style.display;
@@ -370,7 +395,7 @@
 	</script>
 	<form id="share"
 		style="display: none;"
-		action="portfolioEmail" method="post">
+		action="" method="">
 		If you wish to share this chart, please enter the email address of the
 		intended receipient: <br> <input type=hidden id=year
 			value="<script>year</script>"> <input type=hidden id=axis
@@ -378,7 +403,7 @@
 			id=selectFilter value="<script>selectFilter</script>"> <input
 			type=hidden id=filterValue value="<script>filterValue</script>">
 		<input type="text" id="Email" placeholder="Enter receipient Email">
-		<input type="submit" class="btn-small btn-primary" name="submit"
+		<input type="button" class="btn-small btn-primary" onClick = "sendEmail(this.form)"
 			value="Email">
 	</form>
 	<br> If you require further details shown on this report please
