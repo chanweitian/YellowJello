@@ -650,11 +650,6 @@ $(document).ready(function() {
             numbers_opt: {
             	selector: '[id="numbers_opt"]',
                 validators: {
-                	greaterThan: {
-                        value: 0,
-                        inclusive: false,
-                        message: 'Please enter a digit greater than 0'
-                    },
                     numeric: {
                         message: 'This must be a number'
                     }
@@ -853,6 +848,120 @@ $(document).ready(function() {
                     }
                 }
             },
+            percentage_narrow: {
+            	selector: '[id="percentage_narrow"]',
+                validators: {
+                    integer: {
+                        message: 'Enter an integer'
+                    },
+                    greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive integer'
+                    },
+                    notEmpty: {
+                        message: 'This field is required'
+                    },
+                    callback: {
+                        message: 'The password is not valid',
+                        callback: function(value, validator, $field) {
+                        	var narrow = parseInt(document.getElementById("percentage_narrow").value);
+                        	var wide = parseInt(document.getElementById("percentage_wide").value);
+                        	var open = parseInt(document.getElementById("percentage_open").value);
+                        	var total = narrow + wide + open;
+                        	
+                            if (value === '') {
+                                return true;
+                            }
+
+                            // Check total
+                            if (total != 100) {
+                                return {
+                                    valid: false,
+                                    message: 'Total % for Narrow Aisle Racking, Wide Aisle Racking and Open Area must add up to 100'
+                                };
+                            }
+                            return true;
+                        }
+                    }
+                }
+            },
+            percentage_wide: {
+            	selector: '[id="percentage_wide"]',
+                validators: {
+                    integer: {
+                        message: 'Enter an integer'
+                    },
+                    greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive integer'
+                    },
+                    notEmpty: {
+                        message: 'This field is required'
+                    },
+                    callback: {
+                        message: 'The password is not valid',
+                        callback: function(value, validator, $field) {
+                        	var narrow = parseInt(document.getElementById("percentage_narrow").value);
+                        	var wide = parseInt(document.getElementById("percentage_wide").value);
+                        	var open = parseInt(document.getElementById("percentage_open").value);
+                        	var total = narrow + wide + open;
+                        	
+                            if (value === '') {
+                                return true;
+                            }
+
+                            // Check total
+                            if (total != 100) {
+                                return {
+                                    valid: false,
+                                    message: 'Total % for Narrow Aisle Racking, Wide Aisle Racking and Open Area must add up to 100'
+                                };
+                            }
+                            return true;
+                        }
+                    }
+                }
+            },
+            percentage_open: {
+            	selector: '[id="percentage_open"]',
+                validators: {
+                    integer: {
+                        message: 'Enter an integer'
+                    },
+                    greaterThan: {
+                        value: 0,
+                        inclusive: true,
+                        message: 'Enter a positive integer'
+                    },
+                    notEmpty: {
+                        message: 'This field is required'
+                    },
+                    callback: {
+                        message: 'The password is not valid',
+                        callback: function(value, validator, $field) {
+                        	var narrow = parseInt(document.getElementById("percentage_narrow").value);
+                        	var wide = parseInt(document.getElementById("percentage_wide").value);
+                        	var open = parseInt(document.getElementById("percentage_open").value);
+                        	var total = narrow + wide + open;
+                        	
+                            if (value === '') {
+                                return true;
+                            }
+
+                            // Check total
+                            if (total != 100) {
+                                return {
+                                    valid: false,
+                                    message: 'Total % for Narrow Aisle Racking, Wide Aisle Racking and Open Area must add up to 100'
+                                };
+                            }
+                            return true;
+                        }
+                    }
+                }
+            },
             integer_positive_required: {
             	selector: '[id="integer_positive_required"]',
                 validators: {
@@ -912,10 +1021,10 @@ $(document).ready(function() {
                     integer: {
                         message: 'Enter an integer'
                     },
-                    greaterThan: {
-                        value: 0,
-                        inclusive: true,
-                        message: 'Please enter a value greater than or equals to 0'
+                    between: {
+                        min: 1,
+                        max: 'site_info_truck_loading_bays',
+                        message: 'This must be between %s and %s'
                     }
                 }
             }
@@ -964,6 +1073,25 @@ $(document).ready(function() {
             }
        // }
         bootstrapValidator.disableSubmitButtons(false);
+    });
+    
+    $('[name="site_info_truck_loading_bays"]').on('keyup', function() {
+        $('#master_form').bootstrapValidator('revalidateField', 'site_info_bays_dock_seals');
+    });
+    
+    $('[id="percentage_narrow"]').on('keyup', function() {
+        $('#master_form').bootstrapValidator('revalidateField', 'percentage_wide');
+        $('#master_form').bootstrapValidator('revalidateField', 'percentage_open');
+    });
+    
+    $('[id="percentage_wide"]').on('keyup', function() {
+        $('#master_form').bootstrapValidator('revalidateField', 'percentage_narrow');
+        $('#master_form').bootstrapValidator('revalidateField', 'percentage_open');
+    });
+    
+    $('[id="percentage_open"]').on('keyup', function() {
+        $('#master_form').bootstrapValidator('revalidateField', 'percentage_wide');
+        $('#master_form').bootstrapValidator('revalidateField', 'percentage_narrow');
     });
     
     

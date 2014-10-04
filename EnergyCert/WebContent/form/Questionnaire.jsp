@@ -90,8 +90,22 @@ if (link != null) { %>
 	    <script type="text/javascript" src="../js/bootstrap3-datetimepicker.js"></script>
 	
 </head>
+<script>
+function validate() {
+	var options = $('#master_form').bootstrapValidator('getOptions');
+	$('#master_form').bootstrapValidator(options);
+	$('#master_form').data('bootstrapValidator').validate();
+}
+</script>
+
+<%
+String fromEdit = request.getParameter("fromEdit");
+if (fromEdit != null || fromLink == true) {
+%>
+<body onload="validate()">
+<% }  else { %>	
 <body>
-	
+<% } %>
 		  
   	<br><br>
   	<div class="main">
@@ -122,8 +136,6 @@ if (link != null) { %>
 	
 		//zone details to pass to process_master.jsp
 		String zone_details = "";
-		
-		String fromEdit = request.getParameter("fromEdit");
 		
 		String fromAddZone = (String) session.getAttribute("fromAddZone");
 		if (fromAddZone != null) {
@@ -218,23 +230,23 @@ if (link != null) { %>
 				for (String sec : sectionArray) {
 					if (sec.equals("a")) { 
 			%>
-						<li><a href="#siteinfo" role="tab" data-toggle="tab"><%=tab_count%>. Site Information <span class="glyphicon"></span></a></li>
+						<li class="bv-tab-error"><a href="#siteinfo" role="tab" data-toggle="tab"><%=tab_count%>. Site Information <span class="glyphicon glyphicon-remove"></span></a></li>
 			<% 	
 						tab_count++;
 					}
 					if (sec.equals("b")) {
 			%>
-						<li><a href="#usage" role="tab" data-toggle="tab"><%=tab_count%>. Usage <span class="glyphicon"></span></a></li>
+						<li class="bv-tab-error"><a href="#usage" role="tab" data-toggle="tab"><%=tab_count%>. Usage <span class="glyphicon glyphicon-remove"></span></a></li>
 			<% 
 						tab_count++;
 					}
 				}
 			} else { %>
-				<li><a href="#siteinfo" role="tab" data-toggle="tab"><%=tab_count%>. Site Information <span class="glyphicon"></span></a></li>
+				<li class="bv-tab-error"><a href="#siteinfo" role="tab" data-toggle="tab"><%=tab_count%>. Site Information <span class="glyphicon glyphicon-remove"></span></a></li>
 			<%
 				tab_count++;
 			%>	
-				<li><a href="#usage" role="tab" data-toggle="tab"><%=tab_count%>. Usage <span class="glyphicon"></span></a></li>
+				<li class="bv-tab-error"><a href="#usage" role="tab" data-toggle="tab"><%=tab_count%>. Usage <span class="glyphicon glyphicon-remove"></span></a></li>
 			<%	
 				tab_count++;
 			}
@@ -251,7 +263,7 @@ if (link != null) { %>
 					String tab_title = tab_count + ". " + building_name + "_" + zone_name;
 					String tab_id = building_name + "_" + zone_name;
 			%>		
-				<li><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%> <span class="glyphicon"></span></a></li>
+				<li class="bv-tab-error"><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%> <span class="glyphicon glyphicon-remove"></span></a></li>
 			<%		
 				  	tab_count++;
 				  }
@@ -269,7 +281,7 @@ if (link != null) { %>
 						for (String sec : sectionArray) {
 							if (sec.equals(i+"")) {
 						%>
-								<li><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%> <span class="glyphicon"></span></a></li>
+								<li class="bv-tab-error"><a href="#<%=tab_id%>" role="tab" data-toggle="tab"><%=tab_title%> <span class="glyphicon glyphicon-remove"></span></a></li>
 						<%		
 							}
 						}

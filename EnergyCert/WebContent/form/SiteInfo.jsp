@@ -479,7 +479,7 @@ ro.close();
 									<div class="form-group">
 									<label class="col-lg-5 control-label" for="site_info_bays_dock_seals">How many of your bays have dock seals? <font color="red">*</font></label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" name="site_info_bays_dock_seals" style="width: 420px;" value="<%=site_info_bays_dock_seals%>" ></input>
+										<input type="text" class="form-control" name="site_info_bays_dock_seals"  id="site_info_bays_dock_seals" style="width: 420px;" value="<%=site_info_bays_dock_seals%>" ></input>
 									</div>
 									</div>
 									

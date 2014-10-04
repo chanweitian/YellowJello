@@ -136,21 +136,21 @@
 							<div class="form-group">
 							<label class="col-lg-5 control-label">Narrow Aisle Racking (%) <font color="red">* </font></label>
 							<div class="col-lg-6">
-								<input type="text" class="form-control" id="percentage" name="zone_zoneprop_narrow<%=identifier%>" value="<%=zone_zoneprop_narrow%>" />
+								<input type="text" class="form-control" id="percentage_narrow" name="zone_zoneprop_narrow<%=identifier%>" value="<%=zone_zoneprop_narrow%>" />
 							</div>
 							</div>
 
 							<div class="form-group">
 							<label class="col-lg-5 control-label">Wide Aisle Racking (%) <font color="red">* </font></label>
 							<div class="col-lg-6">
-								<input type="text" class="form-control" id="percentage" name="zone_zoneprop_wide<%=identifier%>" value="<%=zone_zoneprop_wide%>" />
+								<input type="text" class="form-control" id="percentage_wide" name="zone_zoneprop_wide<%=identifier%>" value="<%=zone_zoneprop_wide%>" />
 							</div>
 							</div>
 
 							<div class="form-group">
 							<label class="col-lg-5 control-label">Open Area (no racking) (%) <font color="red">* </font></label>
 							<div class="col-lg-6">
-								<input type="text" class="form-control" id="percentage" name="zone_zoneprop_open<%=identifier%>" value="<%=zone_zoneprop_open%>" />
+								<input type="text" class="form-control" id="percentage_open" name="zone_zoneprop_open<%=identifier%>" value="<%=zone_zoneprop_open%>" />
 							</div>
 							</div>
 							<hr>
