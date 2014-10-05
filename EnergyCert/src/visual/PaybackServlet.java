@@ -64,7 +64,7 @@ public class PaybackServlet extends HttpServlet {
 	protected void processView(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		RequestDispatcher rd = request.getRequestDispatcher("payback.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("paybackOutput.jsp");
 
 		paybackMap = new HashMap<String, ArrayList<String>>();
 

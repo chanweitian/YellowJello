@@ -1,4 +1,4 @@
-<%@page import="java.util.*,db.*,java.sql.ResultSet,utility.*;" %>
+<%@page import="java.util.*,db.*,utility.*,java.sql.*,java.text.*" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -33,6 +33,21 @@
 		
 		<%-- This is for SiteDef.jsp --%>
 		<script type="text/javascript" src="../js/siteDef.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="../css/payback_stylesheet.css"> 
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript" src="../js/Chart.js"></script>
+		
+		<%
+		HashMap<String, ArrayList<String>> paybackMap = (HashMap<String,ArrayList<String>>) request.getAttribute("paybackMap");
+		Set<String> keySet = new HashSet<String>();
+		String[] arr = {};
+		if(paybackMap!=null) {
+			keySet = paybackMap.keySet();
+			String[] temp = {"192,262,63","82,225,203","255,26,0","110,16,232","2,213,255"};
+			arr = temp;
+		}
+		%>
 	
 <style type="text/css">
 /* Adjust feedback icon position */
@@ -139,6 +154,48 @@
 	}
 	</script>
 
+<% if (paybackMap!=null) { %>	
+<script>
+
+var radarChartData = {
+	labels: ["Payback (Year)", "Rating (% change)", "Lighting Output (% change)"],
+	datasets: [
+	           <%
+	           int count = 0;
+	            for(String key: keySet){
+	            	ArrayList<String> list = paybackMap.get(key);
+	           %>
+	           
+	           	{
+	   			label: "<%= key%>",
+	   			
+	   			fillColor: "rgba(<%= arr[count] %>, 0.2)",
+	   			strokeColor: "rgba(<%= arr[count] %>, 1)",
+	   			pointColor: "rgba(<%= arr[count] %>, 1)",
+	   			pointStrokeColor: "#fff",
+	   			pointHighlightFill: "#fff",
+	   			pointHighlightStroke: "rgba(<%= arr[count] %>, 1)",
+	   			data: [<%=list.get(0)%>,<%=list.get(1)%>,<%=list.get(2)%>]
+	   			},
+	           
+	           <%
+	           count++;
+	           } %>
+	    
+	]
+};
+
+window.onload = function(){
+	window.myRadar = new Chart(document.getElementById("canvas").getContext("2d")).Radar(radarChartData, {
+		responsive: false,
+	});
+}
+
+
+</script>
+
+<% } %>
+
 </head>
 <body onload="validateFields()">
 <%
@@ -201,9 +258,13 @@ if (today.before(cal)) {
 								RetrievedObject ro2 = SQLManager.retrieveRecords("questionnaire", where); 
 								ResultSet rs2 = ro2.getResultSet();
 								while (rs2.next()) {
-								%>
+								%>			
+									<% if (rs2.getString("questionnaire_id").equals(request.getParameter("site_id"))) { %>
+										<option value="<%=rs2.getString("questionnaire_id")%>" selected><%=rs2.getString("site_id")%></option>
+									<% } else { %>
 									<option value="<%=rs2.getString("questionnaire_id")%>"><%=rs2.getString("site_id")%></option>
-								<% } 
+									<% } 
+								}
 								ro2.close();
 							} 
 							ro.close();%>
@@ -213,7 +274,13 @@ if (today.before(cal)) {
 					<div class="col-md-3 selectContainer" id="required">
 						<label class="control-label">Zone ID</label> <select
 							class="form-control" id="zone_id" name="zone_id">
-							<option value="">--Select a Site ID first--</option>
+							<% String zone_id = request.getParameter("zone_id"); 
+							if (zone_id!=null) { 
+								String[] temp = zone_id.split("//"); %>
+								<option value="<%=zone_id %>" selected><%=temp[0] %></option>
+							<% } else { %>
+								<option value="">--Select a Site ID first--</option>
+							<% } %>
 						</select>
 					</div>
 				</div>
@@ -225,12 +292,20 @@ if (today.before(cal)) {
 				<div class="row">
 					<div class="col-md-3">
 		                <label class="control-label">Consumption of Electricity (kWh)</label>
-		                <input type="text" class="form-control" id="actual_consumption_electricity" name="actual_consumption_electricity" />
+		                <% if (request.getParameter("actual_consumption_electricity")!=null) { %>
+		                	<input type="text" class="form-control" id="actual_consumption_electricity" name="actual_consumption_electricity" value="<%=request.getParameter("actual_consumption_electricity") %>" />
+		                <% } else { %>
+		                	<input type="text" class="form-control" id="actual_consumption_electricity" name="actual_consumption_electricity" />
+		                <% } %>
 		            </div>
 
 					<div class="col-md-3">
 		                <label class="control-label">$ / kWh</label>
-		                <input type="text" class="form-control" name="electricity_cost" />
+		                <% if (request.getParameter("electricity_cost")!=null) { %>
+		                	<input type="text" class="form-control" name="electricity_cost" value="<%=request.getParameter("electricity_cost") %>" />
+		                <% } else { %>
+		                	<input type="text" class="form-control" name="electricity_cost" />
+		                <% } %>
 		            </div>
 		            
 				</div>
@@ -242,30 +317,78 @@ if (today.before(cal)) {
 				<div class="row">
 					<div class="col-md-12">
 			        <label class="control-label">Select Types of Lighting for Analysis</label><br>
+			        <% String[] zoneList = request.getParameterValues("types[]");
+			        HashMap<String,String> zoneMap = new HashMap<String,String>();
+			        if (zoneList!=null) {
+				        for (String zone: zoneList) {
+				        	zoneMap.put(zone,"1");
+				        }
+			        }
+			        %>
 			            <div class="btn-group" data-toggle="buttons">
-			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" id="required_value" value="t5" onchange="updateTable()" />T5
+			            	<% if (zoneMap.get("t5")!=null) { %>
+			                	<label class="btn btn-default active" style="width:120px;">
+			                		<input type="checkbox" name="types[]" id="required_value" value="t5" onchange="updateTable()" checked />T5
+			                <% } else { %>
+			                	<label class="btn btn-default" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="t5" onchange="updateTable()" />T5
+			                <% } %>
 			                </label>
-			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" id="required_value" value="t5_sensors" onchange="updateTable()" />T5 with sensors
+			                <% if (zoneMap.get("t5_sensors")!=null) { %>
+			                	<label class="btn btn-default active" style="width:120px;">
+			                		<input type="checkbox" name="types[]" id="required_value" value="t5_sensors" onchange="updateTable()" checked />T5 with sensors
+			                <% } else { %>
+			                	<label class="btn btn-default" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="t5_sensors" onchange="updateTable()" />T5 with sensors
+			                <% } %>
 			                </label>
-			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" id="required_value" value="t8" onchange="updateTable()" />T8
+			                <% if (zoneMap.get("t8")!=null) { %>
+			                	<label class="btn btn-default active" style="width:120px;">
+			                		<input type="checkbox" name="types[]" id="required_value" value="t8" onchange="updateTable()" checked />T8
+			                <% } else { %>
+			                	<label class="btn btn-default" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="t8" onchange="updateTable()" />T8
+			                <% } %>
 			                </label>
-			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" id="required_value" value="t8_sensors" onchange="updateTable()" />T8 with sensors
+			                 <% if (zoneMap.get("t8_sensors")!=null) { %>
+			                	<label class="btn btn-default active" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="t8_sensors" onchange="updateTable()" checked />T8 with sensors
+			                <% } else { %>
+			                	<label class="btn btn-default" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="t8_sensors" onchange="updateTable()" />T8 with sensors
+			                <% } %>
 			                </label>
-			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" id="required_value" value="LED" onchange="updateTable()" />LED
+			                <% if (zoneMap.get("LED")!=null) { %>
+			                	<label class="btn btn-default active" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="LED" onchange="updateTable()" checked />LED
+			                <% } else { %>
+			                	<label class="btn btn-default" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="LED" onchange="updateTable()" />LED
+			                <% } %>
 			                </label>
-			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" id="required_value" value="induction" onchange="updateTable()" />Induction
+			                <% if (zoneMap.get("induction")!=null) { %>
+			                	<label class="btn btn-default active" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="induction" onchange="updateTable()" checked />Induction
+			                <% } else { %>
+			                	<label class="btn btn-default" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="induction" onchange="updateTable()" />Induction
+			                <% } %>
 			                </label>
-			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" id="required_value" value="metal_halide" onchange="updateTable()" />Metal Halide
+			                <% if (zoneMap.get("metal_halide")!=null) { %>
+			                	<label class="btn btn-default active" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="metal_halide" onchange="updateTable()" checked />Metal Halide
+			                <% } else { %>
+			                	<label class="btn btn-default" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="metal_halide" onchange="updateTable()" />Metal Halide
+			                <% } %>
 			                </label>
-			                <label class="btn btn-default" style="width:120px;">
-			                    <input type="checkbox" name="types[]" id="required_value" value="CFL" onchange="updateTable()" />CFL
+			                <% if (zoneMap.get("CFL")!=null) { %>
+			                	<label class="btn btn-default active" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="CFL" onchange="updateTable()" checked />CFL
+			                <% } else { %>
+			                	<label class="btn btn-default" style="width:120px;">
+			                    	<input type="checkbox" name="types[]" id="required_value" value="CFL" onchange="updateTable()" />CFL
+			                <% } %>
 			                </label>
 			            </div>
 			        </div>
@@ -286,20 +409,30 @@ if (today.before(cal)) {
 			            <div class="table_row_bold">Installation Cost per Fixture</div>
 			    	</div>
 			    	
+					
 			    	<%-- 1st Row: Current --%>
+			    	<% String zone = "current"; %>
 			    	<div class ="table_inline_flex">
 			            <div class="table_row_bold">Current</div>
 			            <div class="table_row">
 			            	<div class="form-group">
 								<div class="col-lg-12">
-									<input name="current_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("current_num_fixtures")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_num_fixtures")!=null) { %>
+										<input name="current_num_fixtures" type="text" id="integer" value="<%=request.getParameter(zone + "_num_fixtures") %>" class="form-control" />
+									<% } else { %>
+										<input name="current_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("current_num_fixtures")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="current_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("current_lamp_fixture")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_lamp_fixture")!=null) { %>
+										<input name="current_lamp_fixture" type="text" id="integer" value="<%=request.getParameter(zone + "_lamp_fixture") %>" class="form-control"/>
+									<% } else { %>
+										<input name="current_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("current_lamp_fixture")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
@@ -307,28 +440,44 @@ if (today.before(cal)) {
 						
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="current_power_rating" type="text" id="number" value="<%=formulaHM.get("current_power_rating")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_power_rating")!=null) { %>
+										<input name="current_power_rating" type="text" id="number" value="<%=request.getParameter(zone + "_power_rating") %>" class="form-control"/>
+									<% } else { %>
+										<input name="current_power_rating" type="text" id="number" value="<%=formulaHM.get("current_power_rating")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="current_efficacy" type="text" id="number" value="<%=formulaHM.get("current_efficacy")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_efficacy")!=null) { %>
+										<input name="current_efficacy" type="text" id="number" value="<%=request.getParameter(zone + "_efficacy") %>" class="form-control"/>
+									<% } else { %>
+										<input name="current_efficacy" type="text" id="number" value="<%=formulaHM.get("current_efficacy")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="current_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("current_ballast_factor")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_ballast_factor")!=null) { %>
+										<input name="current_ballast_factor" type="text" id="integer" value="<%=request.getParameter(zone + "_ballast_factor") %>" class="form-control"/>
+									<% } else { %>
+										<input name="current_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("current_ballast_factor")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="current_op_hours" type="text" id="integer" value="<%=formulaHM.get("current_op_hours")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_op_hours")!=null) { %>
+										<input name="current_op_hours" type="text" id="integer" value="<%=request.getParameter(zone + "_op_hours") %>" class="form-control"/>
+									<% } else { %>
+										<input name="current_op_hours" type="text" id="integer" value="<%=formulaHM.get("current_op_hours")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
@@ -340,19 +489,32 @@ if (today.before(cal)) {
 			    	</div>
 			    	
 			    	<%-- 2nd Row: T5 --%>
+			    	<% zone = "t5_sensors"; %>
+			    	<% if (zoneMap.get("t5")!=null) { %>
+			    	<div class ="table_inline_flex" id="t5_row">
+			    	<% } else { %>
 			    	<div class ="table_inline_flex" id="t5_row" style="display: none;">
+			    	<% } %>
 			            <div class="table_row_bold">T5</div>
 			            <div class="table_row">
 			            	<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("t5_num_fixtures")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_num_fixtures")!=null) { %>
+										<input name="t5_num_fixtures" type="text" id="integer" value="<%=request.getParameter(zone + "_num_fixtures") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("t5_num_fixtures")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("t5_lamp_fixture")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_lamp_fixture")!=null) { %>
+										<input name="t5_lamp_fixture" type="text" id="integer" value="<%=request.getParameter(zone + "_lamp_fixture") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("t5_lamp_fixture")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
@@ -360,42 +522,66 @@ if (today.before(cal)) {
 						
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_power_rating" type="text" id="number" value="<%=formulaHM.get("t5_power_rating")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_power_rating")!=null) { %>
+										<input name="t5_power_rating" type="text" id="number" value="<%=request.getParameter(zone + "_power_rating") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_power_rating" type="text" id="number" value="<%=formulaHM.get("t5_power_rating")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_efficacy" type="text" id="number" value="<%=formulaHM.get("t5_efficacy")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_efficacy")!=null) { %>
+										<input name="t5_efficacy" type="text" id="number" value="<%=request.getParameter(zone + "_efficacy") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_efficacy" type="text" id="number" value="<%=formulaHM.get("t5_efficacy")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("t5_ballast_factor")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_ballast_factor")!=null) { %>
+										<input name="t5_ballast_factor" type="text" id="integer" value="<%=request.getParameter(zone + "_ballast_factor") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("t5_ballast_factor")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_op_hours" type="text" id="integer" value="<%=formulaHM.get("t5_op_hours")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_op_hours")!=null) { %>
+										<input name="t5_op_hours" type="text" id="integer" value="<%=request.getParameter(zone + "_op_hours") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_op_hours" type="text" id="integer" value="<%=formulaHM.get("t5_op_hours")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_cost_lamp" type="text" id="number" value="<%=formulaHM.get("t5_cost_lamp")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_cost_lamp")!=null) { %>
+										<input name="t5_cost_lamp" type="text" id="number" value="<%=request.getParameter(zone + "_cost_lamp") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_cost_lamp" type="text" id="number" value="<%=formulaHM.get("t5_cost_lamp")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_installation_cost" type="text" id="number" value="<%=formulaHM.get("t5_installation_cost")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="t5_installation_cost" type="text" id="number" value="<%=request.getParameter(zone + "_installation_cost") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_installation_cost" type="text" id="number" value="<%=formulaHM.get("t5_installation_cost")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>	
@@ -403,19 +589,31 @@ if (today.before(cal)) {
 			    	</div>
 			    	
 			    	<%-- 3rd Row: T5 with sensors --%>
+			    	<% if (zoneMap.get("t5_sensors")!=null) { %>
+			    	<div class ="table_inline_flex" id="t5_sensors_row">
+			    	<% } else { %>
 			    	<div class ="table_inline_flex" id="t5_sensors_row" style="display: none;">
+			    	<% } %>
 			            <div class="table_row_bold">T5 with sensors</div>
-			            <div class="table_row">
+			            						<div class="table_row">
 			            	<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_sensors_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("t5_sensors_num_fixtures")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_num_fixtures")!=null) { %>
+										<input name="t5_sensors_num_fixtures" type="text" id="integer" value="<%=request.getParameter(zone + "_num_fixtures") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_sensors_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("t5_sensors_num_fixtures")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_sensors_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("t5_sensors_lamp_fixture")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_lamp_fixture")!=null) { %>
+										<input name="t5_sensors_lamp_fixture" type="text" id="integer" value="<%=request.getParameter(zone + "_lamp_fixture") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_sensors_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("t5_sensors_lamp_fixture")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
@@ -423,61 +621,98 @@ if (today.before(cal)) {
 						
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_sensors_power_rating" type="text" id="number" value="<%=formulaHM.get("t5_sensors_power_rating")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_power_rating")!=null) { %>
+										<input name="t5_sensors_power_rating" type="text" id="number" value="<%=request.getParameter(zone + "_power_rating") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_sensors_power_rating" type="text" id="number" value="<%=formulaHM.get("t5_sensors_power_rating")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_sensors_efficacy" type="text" id="number" value="<%=formulaHM.get("t5_sensors_efficacy")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_efficacy")!=null) { %>
+										<input name="t5_sensors_efficacy" type="text" id="number" value="<%=request.getParameter(zone + "_efficacy") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_sensors_efficacy" type="text" id="number" value="<%=formulaHM.get("t5_sensors_efficacy")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_sensors_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("t5_sensors_ballast_factor")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_ballast_factor")!=null) { %>
+										<input name="t5_sensors_ballast_factor" type="text" id="integer" value="<%=request.getParameter(zone + "_ballast_factor") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_sensors_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("t5_sensors_ballast_factor")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_sensors_op_hours" type="text" id="integer" value="<%=formulaHM.get("t5_sensors_op_hours")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_op_hours")!=null) { %>
+										<input name="t5_sensors_op_hours" type="text" id="integer" value="<%=request.getParameter(zone + "_op_hours") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_sensors_op_hours" type="text" id="integer" value="<%=formulaHM.get("t5_sensors_op_hours")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_sensors_cost_lamp" type="text" id="number" value="<%=formulaHM.get("t5_sensors_cost_lamp")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_cost_lamp")!=null) { %>
+										<input name="t5_sensors_cost_lamp" type="text" id="number" value="<%=request.getParameter(zone + "_cost_lamp") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_sensors_cost_lamp" type="text" id="number" value="<%=formulaHM.get("t5_sensors_cost_lamp")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t5_sensors_installation_cost" type="text" id="number" value="<%=formulaHM.get("t5_sensors_installation_cost")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="t5_sensors_installation_cost" type="text" id="number" value="<%=request.getParameter(zone + "_installation_cost") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_sensors_installation_cost" type="text" id="number" value="<%=formulaHM.get("t5_sensors_installation_cost")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
-						</div>	 
+						</div>
 			    	</div>
 			    	
 			    	<%-- 4th Row: T8 --%>
+			    	<% zone = "t8"; %>
+			    	<% if (zoneMap.get("t8")!=null) { %>
+			    	<div class ="table_inline_flex" id="t8_row">
+			    	<% } else { %>
 			    	<div class ="table_inline_flex" id="t8_row" style="display: none;">
+			    	<% } %>
 			            <div class="table_row_bold">T8</div>
-			            <div class="table_row">
+			            						<div class="table_row">
 			            	<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("t8_num_fixtures")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_num_fixtures")!=null) { %>
+										<input name="t8_num_fixtures" type="text" id="integer" value="<%=request.getParameter(zone + "_num_fixtures") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("t8_num_fixtures")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("t8_lamp_fixture")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_lamp_fixture")!=null) { %>
+										<input name="t8_lamp_fixture" type="text" id="integer" value="<%=request.getParameter(zone + "_lamp_fixture") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("t8_lamp_fixture")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
@@ -485,61 +720,98 @@ if (today.before(cal)) {
 						
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_power_rating" type="text" id="number" value="<%=formulaHM.get("t8_power_rating")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_power_rating")!=null) { %>
+										<input name="t8_power_rating" type="text" id="number" value="<%=request.getParameter(zone + "_power_rating") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_power_rating" type="text" id="number" value="<%=formulaHM.get("t8_power_rating")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_efficacy" type="text" id="number" value="<%=formulaHM.get("t8_efficacy")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_efficacy")!=null) { %>
+										<input name="t8_efficacy" type="text" id="number" value="<%=request.getParameter(zone + "_efficacy") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_efficacy" type="text" id="number" value="<%=formulaHM.get("t8_efficacy")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("t8_ballast_factor")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_ballast_factor")!=null) { %>
+										<input name="t8_ballast_factor" type="text" id="integer" value="<%=request.getParameter(zone + "_ballast_factor") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("t8_ballast_factor")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_op_hours" type="text" id="integer" value="<%=formulaHM.get("t8_op_hours")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_op_hours")!=null) { %>
+										<input name="t8_op_hours" type="text" id="integer" value="<%=request.getParameter(zone + "_op_hours") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_op_hours" type="text" id="integer" value="<%=formulaHM.get("t8_op_hours")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_cost_lamp" type="text" id="number" value="<%=formulaHM.get("t8_cost_lamp")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_cost_lamp")!=null) { %>
+										<input name="t8_cost_lamp" type="text" id="number" value="<%=request.getParameter(zone + "_cost_lamp") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_cost_lamp" type="text" id="number" value="<%=formulaHM.get("t8_cost_lamp")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_installation_cost" type="text" id="number" value="<%=formulaHM.get("t8_installation_cost")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="t8_installation_cost" type="text" id="number" value="<%=request.getParameter(zone + "_installation_cost") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_installation_cost" type="text" id="number" value="<%=formulaHM.get("t8_installation_cost")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
-						</div>	
+						</div>
 			    	</div>
 			    	
 			    	<%-- 5th Row: T8 with sensors --%>
+			    	<% zone = "t8_sensors"; %>
+			    	<% if (zoneMap.get("t8_sensors")!=null) { %>
+			    	<div class ="table_inline_flex" id="t8_sensors_row">
+			    	<% } else { %>
 			    	<div class ="table_inline_flex" id="t8_sensors_row" style="display: none;">
+			    	<% } %>
 			            <div class="table_row_bold">T8 with sensors</div>
-			            <div class="table_row">
+			            						<div class="table_row">
 			            	<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_sensors_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("t8_sensors_num_fixtures")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_num_fixtures")!=null) { %>
+										<input name="t8_sensors_num_fixtures" type="text" id="integer" value="<%=request.getParameter(zone + "_num_fixtures") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_sensors_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("t8_sensors_num_fixtures")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_sensors_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("t8_sensors_lamp_fixture")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_lamp_fixture")!=null) { %>
+										<input name="t8_sensors_lamp_fixture" type="text" id="integer" value="<%=request.getParameter(zone + "_lamp_fixture") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_sensors_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("t8_sensors_lamp_fixture")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
@@ -547,61 +819,98 @@ if (today.before(cal)) {
 						
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_sensors_power_rating" type="text" id="number" value="<%=formulaHM.get("t8_sensors_power_rating")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_power_rating")!=null) { %>
+										<input name="t8_sensors_power_rating" type="text" id="number" value="<%=request.getParameter(zone + "_power_rating") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_sensors_power_rating" type="text" id="number" value="<%=formulaHM.get("t8_sensors_power_rating")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_sensors_efficacy" type="text" id="number" value="<%=formulaHM.get("t8_sensors_efficacy")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_efficacy")!=null) { %>
+										<input name="t8_sensors_efficacy" type="text" id="number" value="<%=request.getParameter(zone + "_efficacy") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_sensors_efficacy" type="text" id="number" value="<%=formulaHM.get("t8_sensors_efficacy")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_sensors_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("t8_sensors_ballast_factor")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_ballast_factor")!=null) { %>
+										<input name="t8_sensors_ballast_factor" type="text" id="integer" value="<%=request.getParameter(zone + "_ballast_factor") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_sensors_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("t8_sensors_ballast_factor")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_sensors_op_hours" type="text" id="integer" value="<%=formulaHM.get("t8_sensors_op_hours")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_op_hours")!=null) { %>
+										<input name="t8_sensors_op_hours" type="text" id="integer" value="<%=request.getParameter(zone + "_op_hours") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_sensors_op_hours" type="text" id="integer" value="<%=formulaHM.get("t8_sensors_op_hours")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_sensors_cost_lamp" type="text" id="number" value="<%=formulaHM.get("t8_sensors_cost_lamp")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_cost_lamp")!=null) { %>
+										<input name="t8_sensors_cost_lamp" type="text" id="number" value="<%=request.getParameter(zone + "_cost_lamp") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_sensors_cost_lamp" type="text" id="number" value="<%=formulaHM.get("t8_sensors_cost_lamp")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="t8_sensors_installation_cost" type="text" id="number" value="<%=formulaHM.get("t8_sensors_installation_cost")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="t8_sensors_installation_cost" type="text" id="number" value="<%=request.getParameter(zone + "_installation_cost") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_sensors_installation_cost" type="text" id="number" value="<%=formulaHM.get("t8_sensors_installation_cost")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
-						</div>	 
+						</div> 
 			    	</div>
 			    	
 			    	<%-- 6th Row: LED --%>
+			    	<% zone = "LED" ;%>
+			    	<% if (zoneMap.get("LED")!=null) { %>
+			    	<div class ="table_inline_flex" id="LED_row">
+			    	<% } else { %>
 			    	<div class ="table_inline_flex" id="LED_row" style="display: none;">
+			    	<% } %>
 			            <div class="table_row_bold">LED</div>
-			            <div class="table_row">
+			            						<div class="table_row">
 			            	<div class="form-group">
 								<div class="col-lg-12">
-									<input name="LED_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("LED_num_fixtures")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_num_fixtures")!=null) { %>
+										<input name="LED_num_fixtures" type="text" id="integer" value="<%=request.getParameter(zone + "_num_fixtures") %>" class="form-control"/>
+									<% } else { %>
+										<input name="LED_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("LED_num_fixtures")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="LED_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("LED_lamp_fixture")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_lamp_fixture")!=null) { %>
+										<input name="LED_lamp_fixture" type="text" id="integer" value="<%=request.getParameter(zone + "_lamp_fixture") %>" class="form-control"/>
+									<% } else { %>
+										<input name="LED_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("LED_lamp_fixture")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
@@ -609,61 +918,98 @@ if (today.before(cal)) {
 						
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="LED_power_rating" type="text" id="number" value="<%=formulaHM.get("LED_power_rating")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_power_rating")!=null) { %>
+										<input name="LED_power_rating" type="text" id="number" value="<%=request.getParameter(zone + "_power_rating") %>" class="form-control"/>
+									<% } else { %>
+										<input name="LED_power_rating" type="text" id="number" value="<%=formulaHM.get("LED_power_rating")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="LED_efficacy" type="text" id="number" value="<%=formulaHM.get("LED_efficacy")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_efficacy")!=null) { %>
+										<input name="LED_efficacy" type="text" id="number" value="<%=request.getParameter(zone + "_efficacy") %>" class="form-control"/>
+									<% } else { %>
+										<input name="LED_efficacy" type="text" id="number" value="<%=formulaHM.get("LED_efficacy")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="LED_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("LED_ballast_factor")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_ballast_factor")!=null) { %>
+										<input name="LED_ballast_factor" type="text" id="integer" value="<%=request.getParameter(zone + "_ballast_factor") %>" class="form-control"/>
+									<% } else { %>
+										<input name="LED_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("LED_ballast_factor")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="LED_op_hours" type="text" id="integer" value="<%=formulaHM.get("LED_op_hours")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_op_hours")!=null) { %>
+										<input name="LED_op_hours" type="text" id="integer" value="<%=request.getParameter(zone + "_op_hours") %>" class="form-control"/>
+									<% } else { %>
+										<input name="LED_op_hours" type="text" id="integer" value="<%=formulaHM.get("LED_op_hours")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="LED_cost_lamp" type="text" id="number" value="<%=formulaHM.get("LED_cost_lamp")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_cost_lamp")!=null) { %>
+										<input name="LED_cost_lamp" type="text" id="number" value="<%=request.getParameter(zone + "_cost_lamp") %>" class="form-control"/>
+									<% } else { %>
+										<input name="LED_cost_lamp" type="text" id="number" value="<%=formulaHM.get("LED_cost_lamp")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="LED_installation_cost" type="text" id="number" value="<%=formulaHM.get("LED_installation_cost")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="LED_installation_cost" type="text" id="number" value="<%=request.getParameter(zone + "_installation_cost") %>" class="form-control"/>
+									<% } else { %>
+										<input name="LED_installation_cost" type="text" id="number" value="<%=formulaHM.get("LED_installation_cost")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
-						</div>	 
+						</div>
 			    	</div>
 			    	
 			    	<%-- 7th Row: Induction --%>
+			    	<% zone = "induction"; %>
+			    	<% if (zoneMap.get("induction")!=null) { %>
+			    	<div class ="table_inline_flex" id="induction_row">
+			    	<% } else { %>
 			    	<div class ="table_inline_flex" id="induction_row" style="display: none;">
+			    	<% } %>
 			            <div class="table_row_bold">Induction</div>
-			            <div class="table_row">
+			            						<div class="table_row">
 			            	<div class="form-group">
 								<div class="col-lg-12">
-									<input name="induction_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("induction_num_fixtures")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_num_fixtures")!=null) { %>
+										<input name="induction_num_fixtures" type="text" id="integer" value="<%=request.getParameter(zone + "_num_fixtures") %>" class="form-control"/>
+									<% } else { %>
+										<input name="induction_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("induction_num_fixtures")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="induction_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("induction_lamp_fixture")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_lamp_fixture")!=null) { %>
+										<input name="induction_lamp_fixture" type="text" id="integer" value="<%=request.getParameter(zone + "_lamp_fixture") %>" class="form-control"/>
+									<% } else { %>
+										<input name="induction_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("induction_lamp_fixture")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
@@ -671,61 +1017,98 @@ if (today.before(cal)) {
 						
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="induction_power_rating" type="text" id="number" value="<%=formulaHM.get("induction_power_rating")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_power_rating")!=null) { %>
+										<input name="induction_power_rating" type="text" id="number" value="<%=request.getParameter(zone + "_power_rating") %>" class="form-control"/>
+									<% } else { %>
+										<input name="induction_power_rating" type="text" id="number" value="<%=formulaHM.get("induction_power_rating")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="induction_efficacy" type="text" id="number" value="<%=formulaHM.get("induction_efficacy")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_efficacy")!=null) { %>
+										<input name="induction_efficacy" type="text" id="number" value="<%=request.getParameter(zone + "_efficacy") %>" class="form-control"/>
+									<% } else { %>
+										<input name="induction_efficacy" type="text" id="number" value="<%=formulaHM.get("induction_efficacy")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="induction_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("induction_ballast_factor")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_ballast_factor")!=null) { %>
+										<input name="induction_ballast_factor" type="text" id="integer" value="<%=request.getParameter(zone + "_ballast_factor") %>" class="form-control"/>
+									<% } else { %>
+										<input name="induction_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("induction_ballast_factor")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="induction_op_hours" type="text" id="integer" value="<%=formulaHM.get("induction_op_hours")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_op_hours")!=null) { %>
+										<input name="induction_op_hours" type="text" id="integer" value="<%=request.getParameter(zone + "_op_hours") %>" class="form-control"/>
+									<% } else { %>
+										<input name="induction_op_hours" type="text" id="integer" value="<%=formulaHM.get("induction_op_hours")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="induction_cost_lamp" type="text" id="number" value="<%=formulaHM.get("induction_cost_lamp")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_cost_lamp")!=null) { %>
+										<input name="induction_cost_lamp" type="text" id="number" value="<%=request.getParameter(zone + "_cost_lamp") %>" class="form-control"/>
+									<% } else { %>
+										<input name="induction_cost_lamp" type="text" id="number" value="<%=formulaHM.get("induction_cost_lamp")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="induction_installation_cost" type="text" id="number" value="<%=formulaHM.get("induction_installation_cost")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="induction_installation_cost" type="text" id="number" value="<%=request.getParameter(zone + "_installation_cost") %>" class="form-control"/>
+									<% } else { %>
+										<input name="induction_installation_cost" type="text" id="number" value="<%=formulaHM.get("induction_installation_cost")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
-						</div>	 
+						</div>
 			    	</div>
 			    	
 			    	<%-- 8th Row: Metal Halide --%>
+			    	<% zone = "metal_halide"; %>
+			    	<% if (zoneMap.get("metal_halide")!=null) { %>
+			    	<div class ="table_inline_flex" id="metal_halide_row">
+			    	<% } else { %>
 			    	<div class ="table_inline_flex" id="metal_halide_row" style="display: none;">
+			    	<% } %>
 			            <div class="table_row_bold">Metal Halide</div>
-			            <div class="table_row">
+			            						<div class="table_row">
 			            	<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("metal_halide_num_fixtures")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_num_fixtures")!=null) { %>
+										<input name="metal_halide_num_fixtures" type="text" id="integer" value="<%=request.getParameter(zone + "_num_fixtures") %>" class="form-control"/>
+									<% } else { %>
+										<input name="metal_halide_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("metal_halide_num_fixtures")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("metal_halide_lamp_fixture")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_lamp_fixture")!=null) { %>
+										<input name="metal_halide_lamp_fixture" type="text" id="integer" value="<%=request.getParameter(zone + "_lamp_fixture") %>" class="form-control"/>
+									<% } else { %>
+										<input name="metal_halide_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("metal_halide_lamp_fixture")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
@@ -733,61 +1116,98 @@ if (today.before(cal)) {
 						
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_power_rating" type="text" id="number" value="<%=formulaHM.get("metal_halide_power_rating")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_power_rating")!=null) { %>
+										<input name="metal_halide_power_rating" type="text" id="number" value="<%=request.getParameter(zone + "_power_rating") %>" class="form-control"/>
+									<% } else { %>
+										<input name="metal_halide_power_rating" type="text" id="number" value="<%=formulaHM.get("metal_halide_power_rating")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_efficacy" type="text" id="number" value="<%=formulaHM.get("induction_cost_lamp")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_efficacy")!=null) { %>
+										<input name="metal_halide_efficacy" type="text" id="number" value="<%=request.getParameter(zone + "_efficacy") %>" class="form-control"/>
+									<% } else { %>
+										<input name="metal_halide_efficacy" type="text" id="number" value="<%=formulaHM.get("metal_halide_efficacy")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("metal_halide_ballast_factor")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_ballast_factor")!=null) { %>
+										<input name="metal_halide_ballast_factor" type="text" id="integer" value="<%=request.getParameter(zone + "_ballast_factor") %>" class="form-control"/>
+									<% } else { %>
+										<input name="metal_halide_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("metal_halide_ballast_factor")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_op_hours" type="text" id="integer" value="<%=formulaHM.get("metal_halide_op_hours")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_op_hours")!=null) { %>
+										<input name="metal_halide_op_hours" type="text" id="integer" value="<%=request.getParameter(zone + "_op_hours") %>" class="form-control"/>
+									<% } else { %>
+										<input name="metal_halide_op_hours" type="text" id="integer" value="<%=formulaHM.get("metal_halide_op_hours")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_cost_lamp" type="text" id="number" value="<%=formulaHM.get("metal_halide_cost_lamp")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_cost_lamp")!=null) { %>
+										<input name="metal_halide_cost_lamp" type="text" id="number" value="<%=request.getParameter(zone + "_cost_lamp") %>" class="form-control"/>
+									<% } else { %>
+										<input name="metal_halide_cost_lamp" type="text" id="number" value="<%=formulaHM.get("metal_halide_cost_lamp")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="metal_halide_installation_cost" type="text" id="number" value="<%=formulaHM.get("metal_halide_installation_cost")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="metal_halide_installation_cost" type="text" id="number" value="<%=request.getParameter(zone + "_installation_cost") %>" class="form-control"/>
+									<% } else { %>
+										<input name="metal_halide_installation_cost" type="text" id="number" value="<%=formulaHM.get("metal_halide_installation_cost")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
-						</div>	 
+						</div>
 			    	</div>
 			    	
 			    	<%-- 9th Row: CFL --%>
+			    	<% zone = "CFL"; %>
+			    	<% if (zoneMap.get("CFL")!=null) { %>
+			    	<div class ="table_inline_flex" id="CFL_row">
+			    	<% } else { %>
 			    	<div class ="table_inline_flex" id="CFL_row" style="display: none;">
+			    	<% } %>
 			            <div class="table_row_bold">CFL</div>
-			            <div class="table_row">
+			            						<div class="table_row">
 			            	<div class="form-group">
 								<div class="col-lg-12">
-									<input name="CFL_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("CFL_num_fixtures")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_num_fixtures")!=null) { %>
+										<input name="CFL_num_fixtures" type="text" id="integer" value="<%=request.getParameter(zone + "_num_fixtures") %>" class="form-control"/>
+									<% } else { %>
+										<input name="CFL_num_fixtures" type="text" id="integer" value="<%=formulaHM.get("CFL_num_fixtures")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="CFL_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("CFL_lamp_fixture")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_lamp_fixture")!=null) { %>
+										<input name="CFL_lamp_fixture" type="text" id="integer" value="<%=request.getParameter(zone + "_lamp_fixture") %>" class="form-control"/>
+									<% } else { %>
+										<input name="CFL_lamp_fixture" type="text" id="integer" value="<%=formulaHM.get("CFL_lamp_fixture")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
@@ -795,45 +1215,69 @@ if (today.before(cal)) {
 						
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="CFL_power_rating" type="text" id="number" value="<%=formulaHM.get("CFL_power_rating")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_power_rating")!=null) { %>
+										<input name="CFL_power_rating" type="text" id="number" value="<%=request.getParameter(zone + "_power_rating") %>" class="form-control"/>
+									<% } else { %>
+										<input name="CFL_power_rating" type="text" id="number" value="<%=formulaHM.get("CFL_power_rating")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="CFL_efficacy" type="text" id="number" value="<%=formulaHM.get("CFL_efficacy")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_efficacy")!=null) { %>
+										<input name="CFL_efficacy" type="text" id="number" value="<%=request.getParameter(zone + "_efficacy") %>" class="form-control"/>
+									<% } else { %>
+										<input name="CFL_efficacy" type="text" id="number" value="<%=formulaHM.get("CFL_efficacy")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="CFL_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("CFL_ballast_factor")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_ballast_factor")!=null) { %>
+										<input name="CFL_ballast_factor" type="text" id="integer" value="<%=request.getParameter(zone + "_ballast_factor") %>" class="form-control"/>
+									<% } else { %>
+										<input name="CFL_ballast_factor" type="text" id="integer" value="<%=formulaHM.get("CFL_ballast_factor")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="CFL_op_hours" type="text" id="integer" value="<%=formulaHM.get("CFL_op_hours")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_op_hours")!=null) { %>
+										<input name="CFL_op_hours" type="text" id="integer" value="<%=request.getParameter(zone + "_op_hours") %>" class="form-control"/>
+									<% } else { %>
+										<input name="CFL_op_hours" type="text" id="integer" value="<%=formulaHM.get("CFL_op_hours")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="CFL_cost_lamp" type="text" id="number" value="<%=formulaHM.get("CFL_cost_lamp")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_cost_lamp")!=null) { %>
+										<input name="CFL_cost_lamp" type="text" id="number" value="<%=request.getParameter(zone + "_cost_lamp") %>" class="form-control"/>
+									<% } else { %>
+										<input name="CFL_cost_lamp" type="text" id="number" value="<%=formulaHM.get("CFL_cost_lamp")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
 						</div>
 						<div class="table_row">
 							<div class="form-group">
 								<div class="col-lg-12">
-									<input name="CFL_installation_cost" type="text" id="number" value="<%=formulaHM.get("CFL_installation_cost")[0] %>" class="form-control"/>
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="CFL_installation_cost" type="text" id="number" value="<%=request.getParameter(zone + "_installation_cost") %>" class="form-control"/>
+									<% } else { %>
+										<input name="CFL_installation_cost" type="text" id="number" value="<%=formulaHM.get("CFL_installation_cost")[0] %>" class="form-control"/>
+									<% } %>
 								</div>	
 							</div>
-						</div>	 
+						</div>
 			    	</div>
 			    	
 			   </div>
@@ -864,5 +1308,79 @@ if (today.before(cal)) {
 	    </div>
 	</div>	
 	
+	
+<% if (paybackMap!=null) { %>
+<div id="main">
+
+<canvas id="canvas" width="800" height="600"></canvas>
+<div class='my-legend'>
+<div class='legend-title'>Legend</div>
+<div class='legend-scale'>
+  <ul class='legend-labels'>
+  	<%
+  	int count = 0;
+	for(String key: keySet){
+	%>
+    <li><span style='background:rgba(<%= arr[count] %>,1);'></span><%=key %></li>
+    <%
+    count++;
+    } 
+    %>
+  </ul>
+</div>
+<!-- <div class='legend-source'>Source: <a href="#link to source">Name of source</a></div> -->
+</div>
+
+<style type='text/css'>
+
+.my-legend {
+	float: right;
+}
+
+
+  .my-legend .legend-title {
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 90%;
+    
+    }
+  .my-legend .legend-scale ul {
+    margin: 0;
+    margin-bottom: 5px;
+    padding: 0;
+    float: left;
+    list-style: none;
+    }
+  .my-legend .legend-scale ul li {
+    font-size: 80%;
+    list-style: none;
+    margin-left: 0;
+    line-height: 18px;
+    margin-bottom: 2px;
+    }
+  .my-legend ul.legend-labels li span {
+    display: block;
+    float: left;
+    height: 16px;
+    width: 30px;
+    margin-right: 5px;
+    margin-left: 0;
+    border: 1px solid #999;
+    }
+  .my-legend .legend-source {
+    font-size: 70%;
+    color: #999;
+    clear: both;
+    }
+  .my-legend a {
+    color: #777;
+    }
+</style>
+
+
+</div>
+
+<% } %>
 </body>
 </html>

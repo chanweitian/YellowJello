@@ -17,8 +17,6 @@
 <link href="../css/questionnaire.css" rel="stylesheet">
 
 
-
-
 <%
 
 	HashMap<String, ArrayList<String>> paybackMap = (HashMap<String,ArrayList<String>>) request.getAttribute("paybackMap");
