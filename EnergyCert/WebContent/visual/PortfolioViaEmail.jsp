@@ -24,7 +24,8 @@
 <%
 	String year = (String) request.getParameter("year");
 	String axis = (String) request.getParameter("axis");
-	String filterValue = (String) request.getParameter("filterValue");
+	String filterValue1 = (String) request.getParameter("filterValue");
+	String filterValue = filterValue1.replaceAll("_", " ");
 	String selectFilter = (String) request.getParameter("filter");
 %>
 
@@ -37,6 +38,7 @@
 	var selectFilter = "<%=selectFilter%>";
 	var filterValue = "<%=filterValue%>";
 	var axis = "<%=axis%>";
+
 	console.log(year);
 	console.log(selectFilter);
 	console.log(filterValue);
@@ -172,12 +174,12 @@
 </script>
 
 	
-<title>GTL Warehouse Portfolio Overview</title>
+<title>GTL Site Portfolio Overview</title>
 
 </head>
 <body onload="generate()">
 	<div style="width: 50%; margin: 0 auto;" class="header">
-		Warehouse Portfolio!</div>
+		View Site Portfolio!</div>
 	<br>	
 	The graph below shows the warehouse portfolio for:<br>
 	

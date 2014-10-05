@@ -36,9 +36,10 @@ public class PortfolioEmail extends HttpServlet {
 		
 		String year = req.getParameter("year");
 		String filter = req.getParameter("filter");
-		String filterValue = req.getParameter("filterValue");
+		String filterValue1 = req.getParameter("filterValue");
 		String axis = req.getParameter("axis");
 		String email = req.getParameter("email");
+		String filterValue = filterValue1.replaceAll(" ", "_");
 		System.out.println(filterValue);
 		System.out.println(axis);
 		System.out.println(year);

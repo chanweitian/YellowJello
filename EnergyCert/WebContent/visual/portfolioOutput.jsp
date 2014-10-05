@@ -446,10 +446,6 @@
         <div class="row">
             <div class="col-md-5">
                 <label class="control-label">To share this chart, please enter the email address of the intended receipient:</label>
-                <input type=hidden id=year value="<script>year</script>"> 
-                <input type=hidden id=axis value="<script>axis</script>"> 
-                <input type=hidden id=selectFilter value="<script>selectFilter</script>"> 
-                <input type=hidden id=filterValue value="<script>filterValue</script>">
 				<input type="text" id="Email" class="form-control" placeholder="Enter receipient's email">
             </div>
 		</div>
