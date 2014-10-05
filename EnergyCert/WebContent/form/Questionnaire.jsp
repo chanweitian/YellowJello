@@ -100,7 +100,8 @@ function validate() {
 
 <%
 String fromEdit = request.getParameter("fromEdit");
-if (fromEdit != null || fromLink == true) {
+String fromAddZone = (String) session.getAttribute("fromAddZone");
+if (fromEdit != null || fromLink == true || fromAddZone != null) {
 %>
 <body onload="validate()">
 <% }  else { %>	
@@ -137,7 +138,6 @@ if (fromEdit != null || fromLink == true) {
 		//zone details to pass to process_master.jsp
 		String zone_details = "";
 		
-		String fromAddZone = (String) session.getAttribute("fromAddZone");
 		if (fromAddZone != null) {
 			session.removeAttribute("fromAddZone");
 		}
