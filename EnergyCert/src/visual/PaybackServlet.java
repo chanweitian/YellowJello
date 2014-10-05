@@ -70,6 +70,10 @@ public class PaybackServlet extends HttpServlet {
 
 		System.out.println("================"+request.getParameter("zone_id"));
 		
+		HttpSession session = request.getSession();
+		session.setAttribute("selected_site_id",request.getParameter("site_id"));
+		session.setAttribute("selected_zone_id",request.getParameter("zone_id"));
+		
 		String[] zoneString = request.getParameter("zone_id").split("//");
 		String zone_id = zoneString[0].trim();
 		String zoneT = zoneString[1].trim();

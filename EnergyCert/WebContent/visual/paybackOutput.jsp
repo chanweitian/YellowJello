@@ -186,10 +186,72 @@ var radarChartData = {
 	]
 };
 
+function setSelectedIndex(s, valsearch)
+{
+// Loop through all the items in drop down list
+for (i = 0; i< s.options.length; i++)
+{ 
+if (s.options[i].value == valsearch)
+{
+// Item is found. Set its property and exit
+s.options[i].selected = true;
+break;
+}
+}
+return;
+}
+
 window.onload = function(){
 	window.myRadar = new Chart(document.getElementById("canvas").getContext("2d")).Radar(radarChartData, {
 		responsive: false,
 	});
+	var options = $('#payback_form').bootstrapValidator('getOptions');
+	$('#payback_form').bootstrapValidator(options);
+	$('#payback_form').data('bootstrapValidator').validate();
+	
+	var xmlhttp;    
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	    {
+		  var res = xmlhttp.responseText;
+		  var values = res.split(";");
+		  var select = document.getElementById("zone_id"), option = null, next_desc = null;
+		  var len = select.options.length;
+		 
+		  for (var i = 0; i < len; i++)
+          {
+              select.remove(0);
+          }
+	        
+		  for(x in values) {
+		        option = document.createElement("option");
+		        next_desc = values[x];
+		        option.value = next_desc.trim();
+		        var temp = next_desc.split("//");
+		        option.innerHTML = temp[0].trim();
+		        select.appendChild(option);
+		    }
+	    }
+	  }
+	xmlhttp.open("GET","getzones.jsp?questionnaire_id="+"<%=session.getAttribute("selected_site_id")%>",true);
+	xmlhttp.send();
+	setTimeout(function() {
+		setSelectedIndex(document.getElementById("zone_id"),"<%=session.getAttribute("selected_zone_id")%>");
+	}, 500);
+	
+	$('html, body').animate({
+        scrollTop: $("#main").offset().top
+    }, 1000);
+	
 }
 
 

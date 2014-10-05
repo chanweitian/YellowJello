@@ -255,6 +255,12 @@ $(document).ready(function() {
             	validators: { 
                     notEmpty: {
                         message: 'Please select at least one type of lighting for analysis'
+                    },
+                    callback: {
+                        message: 'Please do not select more than 4 types',
+                        callback: function(value, validator) {
+                            return ($("input:checkbox:checked").length <= 4);
+                        }
                     }
                 }
             }
