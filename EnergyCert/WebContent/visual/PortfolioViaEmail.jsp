@@ -178,15 +178,26 @@
 
 </head>
 <body onload="generate()">
-	<div style="width: 50%; margin: 0 auto;" class="header">
-		View Site Portfolio!</div>
+	<%@include file="../header.jsp" %>
+	<br>
+	<div class="header">
+		View Site Portfolio</div>
 	<br>	
-	The graph below shows the warehouse portfolio for:<br>
+	<b>The graph below shows the Site Portfolio for:</b><br><br>
 	
-	Year: <%=year %><br>
-	Filter (Country/Region/None): <%=selectFilter%><br>
-	(If applicable) The filter selected is: <%=filterValue%>
-	
+	<table>
+	<tr>
+		<td style="width:250px;"><b>Year: </b></td><td><%=year %></td>
+	</tr>
+	<tr>
+	<td><b>Filter (Country/Region/None): </b></td><td><%=selectFilter%></td>
+	</tr>
+	<% if (selectFilter.equals("Country")) { %>
+		<tr><td><b>Selected Country: </b></td> <td><%=filterValue%></td></tr>
+	<% } else if (selectFilter.equals("Region")) {%>
+		<tr><td><b>Selected Region: </b></td> <td><%=filterValue%></td></tr>
+	<% } %>
+	</table>
 	<div id=chart></div>
 
 	<br> If you require further details shown on this report please

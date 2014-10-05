@@ -481,11 +481,12 @@ mediaQueryList.addListener(function(mql) {
 							</div>
 						</div>
 						<input type="hidden" name="q_id"
-							value='<%=siteInfoMap.get("quest_id")%>'> <input
-							type="submit" name="submit" value="Email!" />
-
-					</form>
+							value='<%=siteInfoMap.get("quest_id")%>'>
 				</div>
+				<div class="modal-footer">
+					<input type="submit" class="btn btn-info" name="submit" value="Email!" />
+			    </div>
+			    </form>
 			</div>
 		</div>
 	</div> 

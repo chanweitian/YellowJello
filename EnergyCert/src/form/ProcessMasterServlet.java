@@ -118,7 +118,12 @@ public class ProcessMasterServlet extends HttpServlet {
 			}
 			session.setAttribute("saved_quest_id",saved_quest_id);
 			System.out.println("Processmaster - saved!");
-			redirectURL = "../Home.jsp";
+			String user = (String) session.getAttribute("userid");
+            if (user!=null) {
+            	redirectURL = "../Home.jsp";
+            } else {
+            	redirectURL = "SavedQuestionnaire.jsp";
+            }
 			response.sendRedirect(redirectURL);
 		}
 	}

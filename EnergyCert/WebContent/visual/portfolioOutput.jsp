@@ -322,6 +322,9 @@
 						document.getElementById("share").style.display = "block";
 						drawEnergy(result);
 					}
+					$('html, body').animate({
+				        scrollTop: $("#chart").offset().top
+				    }, 1000);
 				}
 			}
 			request.open('GET', urlValue, true);

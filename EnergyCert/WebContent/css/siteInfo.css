@@ -17,7 +17,6 @@
   overflow:hidden;
   width: 910px;
 }
-.collapse p {padding:0 10px 1em}
 
 .switch {position:absolute; top:1.5em; right: 1.5em; padding:3px}
 
@@ -74,6 +73,5 @@ a:active, a:focus {
   border-style:solid;
   background:#eee url(../img/arrow-up.gif) no-repeat 98% 50%
 }
-
 
 
