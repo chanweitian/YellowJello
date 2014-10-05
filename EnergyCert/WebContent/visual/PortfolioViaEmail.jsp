@@ -138,18 +138,18 @@
 		case 'Region':
 			request = new XMLHttpRequest(), typeValue = "get",
 					urlValue = "generate?year=" + year + "&filter="
-							+ selectFilter + "&value=" + filterValue + "&company="+companyName;
+							+ selectFilter + "&value=" + filterValue + "&company="+company;
 			break;
 		case 'Country':
 			request = new XMLHttpRequest(), typeValue = "get",
 					urlValue = "generate?year=" + year + "&filter="
-							+ selectFilter + "&value=" + filterValue + "&company="+companyName;
+							+ selectFilter + "&value=" + filterValue + "&company="+company;
 			break;
 		case 'none':
 
 			request = new XMLHttpRequest(), typeValue = "get",
 					urlValue = "generate?year=" + year + "&filter="
-							+ selectFilter + "&value=" + filterValue + "&company="+companyName;
+							+ selectFilter + "&value=" + filterValue + "&company="+company;
 			break;
 		}
 		;
