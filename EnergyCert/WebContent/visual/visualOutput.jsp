@@ -143,6 +143,8 @@
 		SQLManager.updateRecords("questionnaire", "emission_nat_gas_use="+emission_nat_gas_use, "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
 	}
 	
+	//For Testing
+	//rating = 153;
 	
 %>
 
@@ -345,6 +347,22 @@ function getLeftOffset(rating){
 	return leftOffset;
 }
 
+function getLeftPrintOffset(rating){
+	var leftOffset = 140;
+	for(var i=50; i<rating && i<350 ; i+= 50){
+		leftOffset += 15;
+	}
+	return leftOffset;
+}
+
+function getTopPrintOffset(rating){
+	var topOffset = 280;
+	for(var i=50; i<rating && i<350 ; i+= 50){
+		topOffset += 45;
+	}
+	return topOffset;
+}
+
 
 function getHeatMultiplier(){
 	
@@ -397,6 +415,37 @@ function getLightingMultiplier(){
 
 
 </script>
+
+<script>
+
+var mediaQueryList = window.matchMedia('print');
+mediaQueryList.addListener(function(mql) {
+    if (mql.matches) {
+    	var leftOffset = getLeftPrintOffset(<%=rating%>);
+		var topOffset = getTopPrintOffset(<%=rating%>);
+	
+		console.log("Changing offset");
+
+		
+		$("#ratingPointer").css({
+			"left" : leftOffset + "pt",
+			"top" : topOffset + "pt"
+		});
+    } else {
+    	var leftOffset = getLeftOffset(<%=rating%>);
+		var topOffset = getTopOffset(<%=rating%>);
+
+		
+		$("#ratingPointer").css({
+			"left" : leftOffset + "px",
+			"top" : topOffset + "px"
+		});
+    }
+});
+
+</script>
+
+
 <title>GTL Energy Certificate Visual Output</title>
 
 
@@ -627,7 +676,7 @@ site_info_address_city = p.getProperty("key"); %>
 		<br/>
 		
 		<div id="ratingPointer">
-		<img src="../img/arrow.png" height="65pt" style="padding: 5pt"/><span id="currentRating"><%=rating %></span>
+		<img id="ratingPic" src="../img/arrow.png" height="65pt" style="padding: 5pt"/><span id="currentRating"><%=rating %></span>
 		</div>
 	
 		<div class="energybar" id="a_bar"><span class="rating">A</span> 0-50</div>

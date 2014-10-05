@@ -18,7 +18,6 @@
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		
-		
 		<%-- Questionnaire.jsp --%>
 		<link href="css/questionnaire.css" rel="stylesheet">
 		<script type="text/javascript" src="js/questionnaire.js"></script>

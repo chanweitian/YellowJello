@@ -224,5 +224,10 @@ h2 {
 	width:150pt;
 	background-color: #d9001a;
 }
+
+#currentRating{
+	font-size: 30pt;
+	color: #d9001a;
+}
 	
 }
