@@ -19,7 +19,7 @@ public class ConnectionManager {
 	 private static String JDBC_PASSWORD = "root"; 
 	 private static Properties props = new Properties();
 	*/
-
+	
 	// Openshift Settings!!!
 	/*;
 	 * private static String JDBC_DRIVER = "com.mysql.jdbc.Driver"; private
@@ -35,7 +35,7 @@ public class ConnectionManager {
 	private static String JDBC_USER = "root";
 	private static String JDBC_PASSWORD = "root";
 	private static Properties props = new Properties();
-	
+	 
 	static {
 		try {
 			Class.forName(JDBC_DRIVER);

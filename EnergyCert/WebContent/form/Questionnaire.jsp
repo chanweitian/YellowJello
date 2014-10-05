@@ -7,9 +7,9 @@ boolean fromLink = false;
 String sections = "";
 String quest_id = "";
 
-if (link != null) { %>
-	
-	<% String where_link = "questionnaire_link = \'" + link + "\'";
+if (link != null) {
+	session.setAttribute("questionnaire_link", link);
+	String where_link = "questionnaire_link = \'" + link + "\'";
 	RetrievedObject ro_link = SQLManager.retrieveRecords("questionnaire_link", where_link);
 	ResultSet rs_link = ro_link.getResultSet();
 	if (!rs_link.isBeforeFirst() ) { %>

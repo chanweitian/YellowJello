@@ -2,6 +2,8 @@ package form;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -11,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import db.SQLManager;
+import db.*;
 
 /**
  * Servlet implementation class ProcessMasterServlet
@@ -101,10 +103,22 @@ public class ProcessMasterServlet extends HttpServlet {
 			redirectURL = "/EnergyCert/visual/calculate";
 			response.sendRedirect(redirectURL);
 		} else {
-			redirectURL = "SavedQuestionnaire.jsp";
-			// out.println("ok");
-			// session.setAttribute("quest_id",quest_id);
+			String quest_id = (String) session.getAttribute("quest_id");
+			String where = "questionnaire_id = \'" + quest_id + "\'";
+			RetrievedObject ro = SQLManager.retrieveRecords("questionnaire", where);
+			ResultSet rs = ro.getResultSet();
+			String saved_quest_id = "";
+			try {
+				while (rs.next()) {
+					saved_quest_id = quest_id + " - " + rs.getString("site_id");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			session.setAttribute("saved_quest_id",saved_quest_id);
 			System.out.println("Processmaster - saved!");
+			redirectURL = "../Home.jsp";
 			response.sendRedirect(redirectURL);
 		}
 	}

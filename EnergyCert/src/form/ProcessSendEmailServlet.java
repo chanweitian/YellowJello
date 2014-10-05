@@ -2,6 +2,8 @@ package form;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -20,12 +22,14 @@ import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import db.RetrievedObject;
 import db.SQLManager;
 
 /**
@@ -70,92 +74,131 @@ public class ProcessSendEmailServlet extends HttpServlet {
 
 		final String username = "gtl.fypeia@gmail.com";
 		final String password = "pa55w0rd#";
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", "587");
 
-		String receiver_name = request.getParameter("receiver_name");
-		String receiver_email = request.getParameter("receiver_email");
-		String receiver_msg = request.getParameter("message");
-		String[] sections_array = request
-				.getParameterValues("sections_assigned");
-		String sections_string = "";
-		if (sections_array != null) {
-			for (String section : sections_array) {
-				sections_string = sections_string + section + "*";
-			}
-		}
-		if (sections_string.length() != 0) {
-			sections_string = sections_string.substring(0,
-					sections_string.length() - 1);
-		}
+		Session session = Session.getInstance(props,
+				new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(username,
+								password);
+					}
+				});
 
-		String error_message = "";
-		EmailValidator emailVal = new EmailValidator();
-
-		if (receiver_name.equals("")) {
-			error_message = "Receiver's Name is required";
-		} else if (receiver_email.equals("")) {
-			error_message = "Receiver's Email is required";
-		} else if (!emailVal.validate(receiver_email)) {
-			error_message = "Receiver's Email is invalid";
-		} else if (receiver_msg.equals("")) {
-			error_message = "Message to Receiver is required";
-		} else if (sections_array == null || sections_array.length == 0) {
-			error_message = "Select at least one section";
-		}
-
-		if (error_message.length() == 0) {
-			Properties props = new Properties();
-			props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.smtp.host", "smtp.gmail.com");
-			props.put("mail.smtp.port", "587");
-
-			Session session = Session.getInstance(props,
-					new javax.mail.Authenticator() {
-						protected PasswordAuthentication getPasswordAuthentication() {
-							return new PasswordAuthentication(username,
-									password);
-						}
-					});
-
+		String email = request.getParameter("sender_email");
+		String questionnaire_id = request.getParameter("questionnaire_id");
+		if (email != null) {
 			try {
-				String uuid = UUID.randomUUID().toString();
 				Message message = new MimeMessage(session);
 				message.setFrom(new InternetAddress("gtl.fypeia@gmail.com"));
 				message.setRecipients(Message.RecipientType.TO,
-						InternetAddress.parse(receiver_email));
-				message.setSubject("Questionnaire - Assignment of Questions");
-				message.setText("Dear "
-						+ receiver_name
-						+ ","
-						+ "\n\n You have been assigned to fill up some questions in this Energy Certificate Questionnaire."
-						+ "\n\n Message from Sender: "
-						+ "\n"
-						+ receiver_msg
-						+ "\n\n This is the Link: "
-						+ "\n http://apps.greentransformationlab.com/EnergyCert/form/Questionnaire.jsp?link="
-						+ uuid + "\n\n Note: This link expires in 3 days."
+						InternetAddress.parse(email));
+				message.setSubject("Questionnaire - Completion of Questions");
+				message.setText("Questionnaire ID: " + questionnaire_id
+						+ "\n\n The questions assigned in this Questionnaire have been completed. "
 						+ "\n\n Thank you.");
 				Transport.send(message);
-
-				HttpSession session1 = request.getSession();
-				String quest_id = (String) session1.getAttribute("quest_id");
-				SimpleDateFormat sdf = new SimpleDateFormat(
-						"dd-MM-yyyy hh:mm:ss");
-				String date = sdf.format(new Date());
-
-				String site_def_values = "\'" + quest_id + "\',\'" + uuid
-						+ "\',\'" + date + "\',\'" + sections_string + "\'";
-
-				SQLManager.insertRecord("questionnaire_link", site_def_values);
-
-				System.out.println("Done");
-				out.println("The email has been sent!");
-
+			} catch (AddressException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} catch (MessagingException e) {
-				throw new RuntimeException(e);
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			out.println("A notification has been sent via email!");
 		} else {
-			out.println(error_message);
+			String receiver_name = request.getParameter("receiver_name");
+			String receiver_email = request.getParameter("receiver_email");
+			String receiver_msg = request.getParameter("message");
+			String[] sections_array = request
+					.getParameterValues("sections_assigned");
+			String sections_string = "";
+			if (sections_array != null) {
+				for (String section : sections_array) {
+					sections_string = sections_string + section + "*";
+				}
+			}
+			if (sections_string.length() != 0) {
+				sections_string = sections_string.substring(0,
+						sections_string.length() - 1);
+			}
+	
+			String error_message = "";
+			EmailValidator emailVal = new EmailValidator();
+	
+			if (receiver_name.equals("")) {
+				error_message = "Receiver's Name is required";
+			} else if (receiver_email.equals("")) {
+				error_message = "Receiver's Email is required";
+			} else if (!emailVal.validate(receiver_email)) {
+				error_message = "Receiver's Email is invalid";
+			} else if (receiver_msg.equals("")) {
+				error_message = "Message to Receiver is required";
+			} else if (sections_array == null || sections_array.length == 0) {
+				error_message = "Select at least one section";
+			}
+	
+			if (error_message.length() == 0) {
+				try {
+					String uuid = UUID.randomUUID().toString();
+					Message message = new MimeMessage(session);
+					message.setFrom(new InternetAddress("gtl.fypeia@gmail.com"));
+					message.setRecipients(Message.RecipientType.TO,
+							InternetAddress.parse(receiver_email));
+					message.setSubject("Questionnaire - Assignment of Questions");
+					message.setText("Dear "
+							+ receiver_name
+							+ ","
+							+ "\n\n You have been assigned to fill up some questions in this Energy Certificate Questionnaire."
+							+ "\n\n Message from Sender: "
+							+ "\n"
+							+ receiver_msg
+							+ "\n\n This is the Link: "
+							+ "\n http://apps.greentransformationlab.com/EnergyCert/form/Questionnaire.jsp?link="
+							+ uuid + "\n\n Note: This link expires in 3 days."
+							+ "\n\n Thank you.");
+					Transport.send(message);
+	
+					HttpSession session1 = request.getSession();
+					String quest_id = (String) session1.getAttribute("quest_id");
+					
+					String sender_userid = (String) session1.getAttribute("userid");
+					System.out.println(">>>>>>>>" + sender_userid);
+					String where = "Userid = \'" + sender_userid + "\'";
+					RetrievedObject ro = SQLManager.retrieveRecords("account", where);
+					ResultSet rs = ro.getResultSet();
+					String sender_email = "";
+					try {
+						while (rs.next()) {
+							sender_email = rs.getString("Email");
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					
+					SimpleDateFormat sdf = new SimpleDateFormat(
+							"dd-MM-yyyy hh:mm:ss");
+					String date = sdf.format(new Date());
+	
+					String site_def_values = "\'" + quest_id + "\',\'" + uuid
+							+ "\',\'" + date + "\',\'" + sections_string + "\',\'" + sender_email + "\'";
+	
+					SQLManager.insertRecord("questionnaire_link", site_def_values);
+	
+					System.out.println("Done");
+					out.println("The email has been sent!");
+	
+				} catch (MessagingException e) {
+					throw new RuntimeException(e);
+				}
+			} else {
+				out.println(error_message);
+			}
 		}
 	}
 
