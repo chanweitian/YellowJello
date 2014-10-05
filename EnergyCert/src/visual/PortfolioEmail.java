@@ -40,9 +40,8 @@ public class PortfolioEmail extends HttpServlet {
 		String axis = req.getParameter("axis");
 		String email = req.getParameter("email");
 		String filterValue = filterValue1.replaceAll(" ", "_");
-		System.out.println(filterValue);
-		System.out.println(axis);
-		System.out.println(year);
+		String company1 = req.getParameter("company");
+		String company = company1.replaceAll(" ", "_");
 		
 		final String username = "gtl.fypeia@gmail.com";
 		final String password = "pa55w0rd#";
@@ -53,7 +52,7 @@ public class PortfolioEmail extends HttpServlet {
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.port", "587");
  
-		final String link = "http://apps.greentransformationlab.com/EnergyCert/visual/PortfolioViaEmail.jsp?year="+year+"&filter="+filter+"&filterValue"+filterValue+"&axis="+axis;
+		final String link = "http://apps.greentransformationlab.com/EnergyCert/visual/PortfolioViaEmail.jsp?year="+year+"&filter="+filter+"&filterValue"+filterValue+"&axis="+axis+ "&company=" + company;
 		
 		Session session = Session.getInstance(props,
 		  new javax.mail.Authenticator() {
@@ -70,7 +69,7 @@ public class PortfolioEmail extends HttpServlet {
 				InternetAddress.parse(email));
 			message.setSubject("Sharing Warehouse Portfolio: "+year);
 			message.setText("Hi,"
-				+ "\n\n Click here to view the warehouse portfolio:  http://apps.greentransformationlab.com/EnergyCert/visual/PortfolioViaEmail.jsp?year="+year+"&filter="+filter+"&filterValue="+filterValue+"&axis="+axis
+				+ "\n\n Click here to view the warehouse portfolio:  http://apps.greentransformationlab.com/EnergyCert/visual/PortfolioViaEmail.jsp?year="+year+"&filter="+filter+"&filterValue="+filterValue+"&axis="+axis+"&company="+company
 				+ "\n\n Thank you.");
  
 			Transport.send(message);

@@ -3,8 +3,6 @@ package visual;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
-import java.util.HashSet;
-import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -45,10 +43,11 @@ public class GenerateChart extends HttpServlet {
 		// TODO Auto-generated method stub
 		try {
 			HttpSession session = request.getSession();
-			String companyName = (String) session.getAttribute("company");
+			String companyName = (String) request.getParameter("company");
 			String year = (String) request.getParameter("year");
 			String filter = (String) request.getParameter("filter");
 			String value = (String) request.getParameter("value");
+			System.out.println(companyName);
 			RetrievedObject ro = SQLManager.retrieveRecords(
 					"site s, questionnaire q",
 					"s.site_id = q.site_id and s.company=\'" + companyName

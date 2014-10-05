@@ -79,6 +79,7 @@ public class ManageWarehouse extends HttpServlet {
 			}
 
 			request.setAttribute("years", years);
+			request.setAttribute("company", companyName);
 
 		} catch (Exception e) {
 

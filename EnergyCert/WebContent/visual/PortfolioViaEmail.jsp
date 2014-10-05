@@ -27,6 +27,8 @@
 	String filterValue1 = (String) request.getParameter("filterValue");
 	String filterValue = filterValue1.replaceAll("_", " ");
 	String selectFilter = (String) request.getParameter("filter");
+	String company1 = (String) request.getParameter("company");
+	String company = company1.replaceAll("_", " ");
 %>
 
 <script>
@@ -38,11 +40,7 @@
 	var selectFilter = "<%=selectFilter%>";
 	var filterValue = "<%=filterValue%>";
 	var axis = "<%=axis%>";
-
-	console.log(year);
-	console.log(selectFilter);
-	console.log(filterValue);
-	console.log(axis);
+	var company = "<%=company%>"
 	
 	var drawCarbon = function(data) {
 		var data3 = new google.visualization.DataTable();
@@ -140,18 +138,18 @@
 		case 'Region':
 			request = new XMLHttpRequest(), typeValue = "get",
 					urlValue = "generate?year=" + year + "&filter="
-							+ selectFilter + "&value=" + filterValue;
+							+ selectFilter + "&value=" + filterValue + "&company="+companyName;
 			break;
 		case 'Country':
 			request = new XMLHttpRequest(), typeValue = "get",
 					urlValue = "generate?year=" + year + "&filter="
-							+ selectFilter + "&value=" + filterValue;
+							+ selectFilter + "&value=" + filterValue + "&company="+companyName;
 			break;
 		case 'none':
 
 			request = new XMLHttpRequest(), typeValue = "get",
 					urlValue = "generate?year=" + year + "&filter="
-							+ selectFilter + "&value=" + filterValue;
+							+ selectFilter + "&value=" + filterValue + "&company="+companyName;
 			break;
 		}
 		;

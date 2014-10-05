@@ -31,12 +31,14 @@
 <%
 	// retrieve Info
 	//Only if there is information then show.
+	String companyName = (String) request.getAttribute("company");
 	ArrayList<String> years = (ArrayList<String>) request.getAttribute("years");
 	boolean status = true;
 	if (years.size()==0){
 		status = false;
 	}
 	//convert Java ArrayList to js
+	
 %>
 <script>
 	google.load("visualization", "1", {
@@ -50,6 +52,8 @@
 	var selectFilter = "none";
 	var filterValue = "none";
 	var axis = "carbon";
+	var companyName = "<%=companyName%>";
+	console.log(companyName);
 <%//Pushing the data into years
 	for(int i = 0; i <years.size(); i++){%>
 	years.push(
@@ -294,19 +298,19 @@
 				filterValue = form.region.value;
 				request = new XMLHttpRequest(), typeValue = "get",
 						urlValue = "generate?year=" + year + "&filter="
-								+ selectFilter + "&value=" + filterValue;
+								+ selectFilter + "&value=" + filterValue + "&company="+companyName;
 				break;
 			case 'Country':
 				filterValue = form.country.value;
 				request = new XMLHttpRequest(), typeValue = "get",
 						urlValue = "generate?year=" + year + "&filter="
-								+ selectFilter + "&value=" + filterValue;
+								+ selectFilter + "&value=" + filterValue + "&company="+companyName;
 				break;
 			case 'none':
 				filterValue = 'none';
 				request = new XMLHttpRequest(), typeValue = "get",
 						urlValue = "generate?year=" + year + "&filter="
-								+ selectFilter + "&value=" + filterValue;
+								+ selectFilter + "&value=" + filterValue + "&company="+companyName;
 				break;
 			}
 			;
@@ -391,7 +395,7 @@
 		var sendEmail = function(form) {
 			var email = form.Email.value;
 			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "portfolioEmail?year="
-					+ year + "&filter="+ selectFilter + "&filterValue="+ filterValue +"&axis="+ axis + "&email=" + email
+					+ year + "&filter="+ selectFilter + "&filterValue="+ filterValue +"&axis="+ axis + "&email=" + email + "&company=" + companyName;
 			request.onreadystatechange = function() {
 				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);
