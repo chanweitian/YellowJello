@@ -144,8 +144,10 @@
 	}
 	
 	//For Testing
-	//rating = 153;
-	
+	rating = 22;
+	warehouseFloorArea = 567893333;
+	officeFloorArea = 902324822;
+	site_info_address_street = "Amebreou otehutheo oentuhetho";
 %>
 
 

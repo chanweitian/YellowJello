@@ -138,6 +138,17 @@ th {
 
 @media print{
 
+body {
+	font-size: 12px;
+}
+	
+td {
+	white-space: nowrap; 
+	overflow: hidden; 
+	text-overflow:ellipsis;
+}	
+
+	
 .navigation{
 	display: none;
 } 
