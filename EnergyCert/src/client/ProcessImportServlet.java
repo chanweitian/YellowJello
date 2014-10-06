@@ -90,6 +90,7 @@ public class ProcessImportServlet extends HttpServlet {
 		List sheetData = new ArrayList();
 
 		InputStream fis = null;
+
 		boolean success = false;
 
 		try {
@@ -135,10 +136,10 @@ public class ProcessImportServlet extends HttpServlet {
 					fis.close();
 				}
 			}
-
 			importMsg = showExelData(sheetData, request);
-			success = true;
-
+			if (importMsg.contains("Account created")) {
+				success = true;
+			}
 		} catch (InvalidOperationException ioe) {
 			importMsg = "Please input a valid file";
 		}
@@ -149,7 +150,7 @@ public class ProcessImportServlet extends HttpServlet {
 			response.sendRedirect("viewacct.jsp");
 		}
 	}
-
+	
 	private static String showExelData(List sheetData,
 			HttpServletRequest request) {
 		HttpSession session2 = request.getSession();
@@ -159,96 +160,181 @@ public class ProcessImportServlet extends HttpServlet {
 			tempCompany = tempCompany.substring(0, 6);
 		}
 		String importMsg = "";
-
+		String errorMsg = "";
 		//
 		// Iterates the data and print it out to the console.
 		//
-		for (int i = 0; i < sheetData.size(); i++) {
-			List list = (List) sheetData.get(i);
+		if (sheetData.size() < 2) {
+			errorMsg += "Please insert data into file<br />";
+		} else {
+			for (int i = 0; i < sheetData.size(); i++) {
+				List list = (List) sheetData.get(i);
 
-			if (i > 0) {
-				String type = null;
-				String description = null;
-				String email = null;
-				String userid = null;
+				if (i > 0) {
+					String type = null;
+					String description = null;
+					String email = null;
+					String userid = null;
 
-				for (int j = 0; j < list.size(); j++) {
-					XSSFCell cell = (XSSFCell) list.get(j);
-					System.out.print(cell.getRichStringCellValue().getString());
-					switch (j) {
-					case 0:
-						userid = cell.getRichStringCellValue().getString();
-						break;
-					case 1:
-						type = cell.getRichStringCellValue().getString();
-						break;
-					case 2:
-						description = cell.getRichStringCellValue().getString();
-						break;
-					case 3:
-						email = cell.getRichStringCellValue().getString();
-						break;
-					}
-					if (j < list.size() - 1) {
-						System.out.print(", ");
-					}
-				}
+					if (list.size() != 4) {
+						errorMsg += "Row " + (i + 1)
+								+ " has missing value(s)<br />";
+					} else {
+						for (int j = 0; j < list.size(); j++) {
+							XSSFCell cell = (XSSFCell) list.get(j);
+							switch (j) {
+							case 0:
+								userid = cell.getRichStringCellValue().getString();
+								RetrievedObject ro = SQLManager.retrieveRecords("account", "userid=\'" + userid
+										+ "\'");
+								ResultSet rs = ro.getResultSet();
+								boolean unique = true;
+								try {
+									while (rs.next()) {
+										unique = false;
+									}
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 
-				String password = ""
-						+ Long.toHexString(Double.doubleToLongBits(Math
-								.random()));
-				password = password.substring(0, 13);
-				String values = "\'" + userid + "\',\'" + password + "\',\'"
-						+ email + "\',\'" + type + "\',\'" + company + "\',\'"
-						+ description + "\'";
-				SQLManager.insertRecord("account", values);
-				importMsg += "Account created. Userid: " + userid + "<br />";
-
-				final String username = "gtl.fypeia@gmail.com";
-				final String pwd = "pa55w0rd#";
-
-				Properties props = new Properties();
-				props.put("mail.smtp.auth", "true");
-				props.put("mail.smtp.starttls.enable", "true");
-				props.put("mail.smtp.host", "smtp.gmail.com");
-				props.put("mail.smtp.port", "587");
-
-				Session session = Session.getInstance(props,
-						new javax.mail.Authenticator() {
-							protected PasswordAuthentication getPasswordAuthentication() {
-								return new PasswordAuthentication(username, pwd);
+								ro.close();
+								if (!unique) {
+									errorMsg += "Row "
+											+ (i + 1)
+											+ " userid taken <br />";
+								}
+								break;
+							case 1:
+								type = cell.getRichStringCellValue().getString();
+								if (!type.equals("Site")&&!type.equals("Country")&&!type.equals("Region")) {
+									errorMsg += "Row "
+											+ (i + 1)
+											+ " type has to be Site/Country/Region <br />";
+								}
+								break;
+							case 2:
+								description = cell.getRichStringCellValue().getString();
+								break;
+							case 3:
+								email = cell.getRichStringCellValue().getString();
+								ro = SQLManager.retrieveRecords("account",
+										"email=\'" + email + "\'");
+								rs = ro.getResultSet();
+								boolean uniqueEmail = true;
+								try {
+									while (rs.next()) {
+										uniqueEmail = false;
+										break;
+									}
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								ro.close();
+								if (!uniqueEmail) {
+									errorMsg += "Row "
+											+ (i + 1)
+											+ " email already in use <br />";
+								}
+								break;
 							}
-						});
-
-				try {
-
-					Message message = new MimeMessage(session);
-					message.setFrom(new InternetAddress("gtl.fypeia@gmail.com"));
-					message.setRecipients(Message.RecipientType.TO,
-							InternetAddress.parse(email));
-					message.setSubject("Login Credentials for EnergyCert");
-					message.setText("Dear User,"
-							+ "\n\n Your account has been created."
-							+ "\n \n The following are your login credentials:"
-							+ "\n Userid: "
-							+ userid
-							+ "\n Password: "
-							+ password
-							+ "\n \n This is the link for the application: "
-							+ "http://apps.greentransformationlab.com/EnergyCert/");
-
-					Transport.send(message);
-					System.out.println();
-					System.out.println("Done");
-
-				} catch (MessagingException e) {
+						}
+					}
 				}
 			}
-
 		}
-		return importMsg;
-	}
 
+		if (errorMsg.equals("")) {
+			for (int i = 0; i < sheetData.size(); i++) {
+				List list = (List) sheetData.get(i);
+
+				if (i > 0) {
+					String type = null;
+					String description = null;
+					String email = null;
+					String userid = null;
+
+					for (int j = 0; j < list.size(); j++) {
+						XSSFCell cell = (XSSFCell) list.get(j);
+						System.out.print(cell.getRichStringCellValue().getString());
+						switch (j) {
+						case 0:
+							userid = cell.getRichStringCellValue().getString();
+							break;
+						case 1:
+							type = cell.getRichStringCellValue().getString();
+							break;
+						case 2:
+							description = cell.getRichStringCellValue().getString();
+							break;
+						case 3:
+							email = cell.getRichStringCellValue().getString();
+							break;
+						}
+						if (j < list.size() - 1) {
+							System.out.print(", ");
+						}
+					}
+
+					String password = ""
+							+ Long.toHexString(Double.doubleToLongBits(Math
+									.random()));
+					password = password.substring(0, 13);
+					String values = "\'" + userid + "\',\'" + password + "\',\'"
+							+ email + "\',\'" + type + "\',\'" + company + "\',\'"
+							+ description + "\'";
+					SQLManager.insertRecord("account", values);
+					importMsg += "Account created. Userid: " + userid + "<br />";
+
+					final String username = "gtl.fypeia@gmail.com";
+					final String pwd = "pa55w0rd#";
+
+					Properties props = new Properties();
+					props.put("mail.smtp.auth", "true");
+					props.put("mail.smtp.starttls.enable", "true");
+					props.put("mail.smtp.host", "smtp.gmail.com");
+					props.put("mail.smtp.port", "587");
+
+					Session session = Session.getInstance(props,
+							new javax.mail.Authenticator() {
+								protected PasswordAuthentication getPasswordAuthentication() {
+									return new PasswordAuthentication(username, pwd);
+								}
+							});
+
+					try {
+
+						Message message = new MimeMessage(session);
+						message.setFrom(new InternetAddress("gtl.fypeia@gmail.com"));
+						message.setRecipients(Message.RecipientType.TO,
+								InternetAddress.parse(email));
+						message.setSubject("Login Credentials for EnergyCert");
+						message.setText("Dear User,"
+								+ "\n\n Your account has been created."
+								+ "\n \n The following are your login credentials:"
+								+ "\n Userid: "
+								+ userid
+								+ "\n Password: "
+								+ password
+								+ "\n \n This is the link to the application: "
+								+ "http://apps.greentransformationlab.com/EnergyCert/");
+
+						Transport.send(message);
+						System.out.println();
+						System.out.println("Done");
+
+					} catch (MessagingException e) {
+					}
+				}
+
+			}
+			return importMsg;
+		} else {
+			return errorMsg;
+		}
+	}
+	
 	private String getFileName(final Part part) {
 		final String partHeader = part.getHeader("content-disposition");
 		for (String content : part.getHeader("content-disposition").split(";")) {

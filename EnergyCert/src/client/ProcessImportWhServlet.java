@@ -132,7 +132,6 @@ public class ProcessImportWhServlet extends HttpServlet {
 		} catch (InvalidOperationException ioe) {
 			importWhMsg = "Please input a valid file";
 		}
-		System.out.println(importWhMsg);
 		session.setAttribute("importWhMsg", importWhMsg);
 		if (!success) {
 			response.sendRedirect("importwh.jsp");
@@ -154,7 +153,7 @@ public class ProcessImportWhServlet extends HttpServlet {
 		//
 		// Iterates the data and print it out to the console.
 		//
-		if (sheetData.size() == 1) {
+		if (sheetData.size() < 2) {
 			errorMsg += "Please insert data into file<br />";
 		} else {
 			for (int i = 0; i < sheetData.size(); i++) {
@@ -197,8 +196,12 @@ public class ProcessImportWhServlet extends HttpServlet {
 										.getString();
 								break;
 							case 5:
-								postal = cell.getRichStringCellValue()
-										.getString();
+								try {
+									postal = cell.getRichStringCellValue()
+											.getString();
+								} catch (Exception e) {
+									postal = "" + cell.getNumericCellValue();
+								}
 								break;
 							case 6:
 								try {
@@ -248,14 +251,16 @@ public class ProcessImportWhServlet extends HttpServlet {
 							city = cell.getRichStringCellValue().getString();
 							break;
 						case 5:
-							postal = cell.getRichStringCellValue().getString();
+							try {
+								postal = cell.getRichStringCellValue()
+										.getString();
+							} catch (Exception e) {
+								postal = "" + (int) cell.getNumericCellValue();
+							}
 							break;
 						case 6:
 							size = (int) cell.getNumericCellValue();
 							break;
-						}
-						if (j < list.size() - 1) {
-							System.out.print(", ");
 						}
 					}
 

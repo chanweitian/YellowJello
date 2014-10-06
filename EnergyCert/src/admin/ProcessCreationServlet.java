@@ -150,7 +150,7 @@ public class ProcessCreationServlet extends HttpServlet {
 								+ userid
 								+ "\n Password: "
 								+ password
-								+ "\n \n This is the link for the application: "
+								+ "\n \n This is the link to the application: "
 								+ "http://apps.greentransformationlab.com/EnergyCert/");
 
 						Transport.send(message);
