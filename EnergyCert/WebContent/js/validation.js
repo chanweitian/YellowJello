@@ -270,13 +270,6 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-	$('#datetimePicker1').datetimepicker({
-		pickTime: false
-	});
-	
-	$('#datetimePicker2').datetimepicker({
-		pickTime: false
-	});
 	
     $('#master_form').bootstrapValidator({
     	excluded: [':disabled'],

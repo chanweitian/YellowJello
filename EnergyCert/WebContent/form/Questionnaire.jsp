@@ -104,6 +104,15 @@ function validate() {
 }
 </script>
 
+<script>
+$('#datetimePicker1').datetimepicker({
+	pickTime: false
+});
+
+$('#datetimePicker2').datetimepicker({
+	pickTime: false
+});
+</script>
 <%
 String fromEdit = request.getParameter("fromEdit");
 String fromAddZone = (String) session.getAttribute("fromAddZone");
