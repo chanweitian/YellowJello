@@ -53,3 +53,8 @@ font-family: Rockwell;
     top: 0;
     right: 2px;
 }
+
+#master_form .inputGroupContainer .form-control-feedback {
+    top: 0;
+    right: -15px;
+}

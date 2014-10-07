@@ -70,6 +70,7 @@ if (link != null) {
 		<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="../js/bootstrapValidator.min.js"></script>	
 		<script type="text/javascript" src="../js/validation.js"></script>	
+		<script type="text/javascript" src="../js/moment.min.js"></script>	
 		
 		<%-- This is for SiteInfo.jsp --%>
 		<link href="../css/siteInfo.css" rel="stylesheet">
@@ -85,9 +86,15 @@ if (link != null) {
 		
 		<!-- Support datetime picker plugin: http://eonasdan.github.io/bootstrap-datetimepicker/ -->
 	    <link rel="stylesheet" href="../css/bootstrap3-datetimepicker.css"/>
-	    <script type="text/javascript" src="../js/moments.min.js"></script>
+	    <script type="text/javascript" src="../js/moment.min.js"></script>
 	    <script type="text/javascript" src="../js/bootstrap3-datetimepicker.js"></script>
 	
+	<style>
+	#master_form .inputGroupContainer .form-control-feedback {
+	    top: 0;
+	    right: -20px;
+	}
+	</style>
 </head>
 <script>
 function validate() {

@@ -226,15 +226,25 @@ ro.close();
 								
 								<div class="form-group">
 								<label class="col-lg-5 control-label" for="site_info_lease_expire">If leasehold, when does the current lease expire?</label>
-								<div class="col-lg-6">
-									<input type="text" class="form-control" id="valid_date" placeholder="DD/MM/YYYY" name="site_info_lease_expire" style="width: 420px;" value="<%=site_info_lease_expire%>"></input>
+								<div class="col-lg-6 inputGroupContainer">
+									<div class="input-group date" id="datetimePicker1">
+										<input type="text" class="form-control" id="date1" placeholder="DD/MM/YYYY" data-date-format="DD/MM/YYYY" name="site_info_lease_expire" style="width: 380px;" value="<%=site_info_lease_expire%>"></input>
+										<span class="input-group-addon">
+						                    <span class="glyphicon glyphicon-calendar"></span>
+						                </span>
+									</div>
 								</div>
-								</div>
+							    </div>
 								
 								<div class="form-group">
 								<label class="col-lg-5 control-label" for="site_info_contract_expire">If applicable, when does the current customer contract expire?</label>
-								<div class="col-lg-6">
-									<input type="text" class="form-control" id="valid_date" placeholder="DD/MM/YYYY" name="site_info_contract_expire" style="width: 420px;" value="<%=site_info_contract_expire%>"></input>
+								<div class="col-lg-6 inputGroupContainer">
+									<div class="input-group date" id="datetimePicker2">
+									<input type="text" class="form-control" id="date2" placeholder="DD/MM/YYYY" data-date-format="DD/MM/YYYY" name="site_info_contract_expire" style="width: 380px;" value="<%=site_info_contract_expire%>"></input>
+									<span class="input-group-addon">
+						                    <span class="glyphicon glyphicon-calendar"></span>
+						                </span>
+									</div>
 								</div>
 								</div>
 								

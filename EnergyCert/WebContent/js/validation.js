@@ -270,6 +270,14 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+	$('#datetimePicker1').datetimepicker({
+		pickTime: false
+	});
+	
+	$('#datetimePicker2').datetimepicker({
+		pickTime: false
+	});
+	
     $('#master_form').bootstrapValidator({
     	excluded: [':disabled'],
     	feedbackIcons: {
@@ -984,12 +992,41 @@ $(document).ready(function() {
                     }
                 }
             },
-            valid_date: {
-            	selector: '[id="valid_date"]',
+            date1: {
+            	selector: '[id="date1"]',
                 validators: {
                     date: {
                         format: 'DD/MM/YYYY',
-                        message: 'This is not a valid date'
+                        message: 'The value is not a valid date'
+                    },
+                    callback: {
+                        message: 'Enter a date later than current date',
+                        callback: function(value, validator) {
+                        	if (value=="") {
+                        		return true;
+                        	}	
+                        	 var m = new moment(value, 'DD/MM/YYYY', true);
+                             return m.isAfter(moment());
+                        }
+                    }
+                }
+            },
+            date2: {
+            	selector: '[id="date2"]',
+                validators: {
+                    date: {
+                        format: 'DD/MM/YYYY',
+                        message: 'The value is not a valid date'
+                    },
+                    callback: {
+                        message: 'Enter a date later than current date',
+                        callback: function(value, validator) {
+                        	if (value=="") {
+                        		return true;
+                        	}	
+                        	 var m = new moment(value, 'DD/MM/YYYY', true);
+                             return m.isAfter(moment());
+                        }
                     }
                 }
             },
@@ -1028,7 +1065,7 @@ $(document).ready(function() {
                         message: 'Enter an integer'
                     },
                     between: {
-                        min: 1,
+                        min: 0,
                         max: 'site_info_truck_loading_bays',
                         message: 'This must be between %s and %s'
                     }
@@ -1099,6 +1136,18 @@ $(document).ready(function() {
         $('#master_form').bootstrapValidator('revalidateField', 'percentage_wide');
         $('#master_form').bootstrapValidator('revalidateField', 'percentage_narrow');
     });
+    
+    $('#datetimePicker1')
+    .on('dp.change dp.show', function(e) {
+        // Validate the date when user change it
+        $('#master_form').bootstrapValidator('revalidateField', 'date1');
+    });
+
+	$('#datetimePicker2')
+	.on('dp.change dp.show', function(e) {
+	    // Validate the date when user change it
+	    $('#master_form').bootstrapValidator('revalidateField', 'date2');
+	});
     
     
     
