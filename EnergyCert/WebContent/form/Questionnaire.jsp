@@ -94,6 +94,11 @@ if (link != null) {
 	    top: 0;
 	    right: -20px;
 	}
+	
+	.form-horizontal .has-feedback .form-control-feedback {
+		top: 0;
+		right: -20px;
+	}
 	</style>
 </head>
 <script>
@@ -102,6 +107,18 @@ function validate() {
 	$('#master_form').bootstrapValidator(options);
 	$('#master_form').data('bootstrapValidator').validate();
 }
+</script>
+
+<script>
+$(document).ready(function() {
+	$('#datetimePicker1').datetimepicker({
+		pickTime: false
+	});
+	
+	$('#datetimePicker2').datetimepicker({
+		pickTime: false
+	});
+});
 </script>
 
 <%
@@ -449,14 +466,14 @@ if (fromEdit != null || fromLink == true || fromAddZone != null) {
 				</div>
 				<br><br>
 			</div>
-			<div class="navigation" style="position:fixed; right:100px; top:70px;">
+			<div class="navigation" style="position:fixed; right:60px; top:70px;">
 			    <button type="submit" class="btn btn-info" value="save" onclick="saveFunction()"><span class="glyphicon glyphicon-floppy-save"></span> Save and Exit</button>
 			</div>
 		</form>
 	</div>
 	
 	<% if (!fromLink) {%>
-		<div class="navigation" style="position:fixed; right:100px; top:115px;">
+		<div class="navigation" style="position:fixed; right:60px; top:115px;">
 			<button class="btn btn-info" data-toggle="modal" data-target="#assignModal"><span class="glyphicon glyphicon-envelope"></span> Assign Questions</button>
 		    <%-- <a data-toggle="modal" data-target="#assignModal">Assign Questions</a> --%>
 		</div>

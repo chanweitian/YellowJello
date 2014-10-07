@@ -677,15 +677,21 @@ ro.close();
 									
 									<div class="form-group">
 									<label class="col-lg-5 control-label" for="site_info_ext_area_illuminated">What is the total external area illuminated? <font color="red">*</font></label>
-									<div class="col-lg-6">
-										<input type="text" class="form-control" id="numbers" name="site_info_ext_area_illuminated" style="width: 420px;" value="<%=site_info_ext_area_illuminated%>"></input>&nbsp;&nbsp;m<sup>2</sup>
+									<div class="col-lg-6 inputGroupContainer">
+										<div class="input-group">
+										<input type="text" class="form-control" id="numbers" name="site_info_ext_area_illuminated" style="width: 380px;" value="<%=site_info_ext_area_illuminated%>"></input>
+										<span class="input-group-addon">m<sup>2</sup></span>
+           								</div>
 									</div>
 									</div>
 									
 									<div class="form-group">
 									<label class="col-lg-5 control-label" for="site_info_hours_area_lit">How many hours on average is this area lit per week? <font color="red">*</font></label>
-									<div class="col-lg-6">
-										<input type="text" class="form-control" id="numbers" name="site_info_hours_area_lit" style="width: 420px;" value="<%=site_info_hours_area_lit%>"></input>&nbsp;&nbsp;hours
+									<div class="col-lg-6 inputGroupContainer">
+										<div class="input-group">
+										<input type="text" class="form-control" id="numbers" name="site_info_hours_area_lit" style="width: 362px;" value="<%=site_info_hours_area_lit%>"></input>
+										<span class="input-group-addon">hours</span>
+           								</div>
 									</div>
 									</div>
 									
@@ -830,8 +836,11 @@ ro.close();
 						            
 						            <div class="form-group">
 									<label class="col-lg-5 control-label" for="site_info_length_uninsulated_pipes">What is the estimated length of uninsulated pipes in the boiler room? <font color="red">*</font></label>
-									<div class="col-lg-6">
-										<input type="text" class="form-control" id="numbers" name="site_info_length_uninsulated_pipes" style="width: 420px;" value="<%=site_info_length_uninsulated_pipes%>"></input>&nbsp;&nbsp;m
+									<div class="col-lg-6 inputGroupContainer">
+										<div class="input-group">
+										<input type="text" class="form-control" id="numbers" name="site_info_length_uninsulated_pipes" style="width: 380px;" value="<%=site_info_length_uninsulated_pipes%>"></input>
+										<span class="input-group-addon">m</span>
+           								</div>
 									</div>
 									</div>
 						

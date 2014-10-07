@@ -89,57 +89,83 @@
 								<br>
 								<br>
 								<label class="col-lg-5 control-label">Monday <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="hours_per_day_mon" name="zone_operationalhrs_mon<%=identifier%>" value="<%=zone_operationalhrs_mon%>" />
+									<span class="input-group-addon">hours</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Tuesday <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="hours_per_day_tue" name="zone_operationalhrs_tues<%=identifier%>" value="<%=zone_operationalhrs_tues%>"/>
+									<span class="input-group-addon">hours</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Wednesday <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="hours_per_day_wed" name="zone_operationalhrs_wed<%=identifier%>" value="<%=zone_operationalhrs_wed%>"/>
+									<span class="input-group-addon">hours</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Thursday <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="hours_per_day_thu" name="zone_operationalhrs_thurs<%=identifier%>" value="<%=zone_operationalhrs_thurs%>" />
+									<span class="input-group-addon">hours</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Friday <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="hours_per_day_fri" name="zone_operationalhrs_fri<%=identifier%>" value="<%=zone_operationalhrs_fri%>" />
+									<span class="input-group-addon">hours</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Saturday <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="hours_per_day_sat" name="zone_operationalhrs_sat<%=identifier%>" value="<%=zone_operationalhrs_sat%>" />
+									<span class="input-group-addon">hours</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Sunday <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="hours_per_day_sun" name="zone_operationalhrs_sun<%=identifier%>" value="<%=zone_operationalhrs_sun%>" />
+									<span class="input-group-addon">hours</span>
+									</div>
 								</div>
 								</div>
+								
 								<hr>
+								
 								<div class="form-group">
 								<label class="col-lg-5 control-label">What is the total floor area of this zone? <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="numbers" name="zone_floorarea<%=identifier%>" value="<%=zone_floorarea%>" />
+									<span class="input-group-addon">m<sup>2</sup></span>
+									</div>
 								</div>
 								</div>
 								<hr>
@@ -148,36 +174,48 @@
 								<br>
 								
 								<div class="form-group">
-								<label class="col-lg-5 control-label">Narrow Aisle Racking (%) <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<label class="col-lg-5 control-label">Narrow Aisle Racking <font color="red">*</font></label>
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="percentage_narrow" name="zone_zoneprop_narrow<%=identifier%>" value="<%=zone_zoneprop_narrow%>" />
+									<span class="input-group-addon">%</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
-								<label class="col-lg-5 control-label">Wide Aisle Racking (%) <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<label class="col-lg-5 control-label">Wide Aisle Racking <font color="red">*</font></label>
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="percentage_wide" name="zone_zoneprop_wide<%=identifier%>" value="<%=zone_zoneprop_wide%>" />
+									<span class="input-group-addon">%</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
-								<label class="col-lg-5 control-label">Open Area (no racking) (%) <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<label class="col-lg-5 control-label">Open Area (no racking) <font color="red">*</font></label>
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="percentage_open" name="zone_zoneprop_open<%=identifier%>" value="<%=zone_zoneprop_open%>" />
+									<span class="input-group-addon">%</span>
+									</div>
 								</div>
 								</div>
 								<hr>
 								<div class="form-group">
 								<label class="col-lg-5 control-label">What is the height from the ground to the top of the external wall? <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="numbers" name="zone_height<%=identifier%>" value="<%=zone_height%>" />
+									<span class="input-group-addon">m</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
 									<label class="col-lg-5 control-label">Does this zone have a sorting machine or conveyor system? <font color="red">*</font></label>
-									<div class="col-lg-6">
+									<div class="col-lg-4">
 									<select class="form-control" id="zone_grf_sorting_machine" name="zone_sorting_conveyor<%=identifier%>">
 										<% if (zone_sorting_conveyor.equals("")) { %>
 											<option value="" selected>-- Select Yes/No --</option>
@@ -201,21 +239,24 @@
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">If yes, how many meters of motor driven conveyors are installed?</label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<input type="text" class="form-control" id="numbers_opt" name="zone_ismotordrivenconveyor<%=identifier%>" value="<%=zone_ismotordrivenconveyor%>" />
 								</div>
 								</div>
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">How many hours per week do these conveyors run?</label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="numbers_opt" name="zone_conveyor_hours<%=identifier%>" value="<%=zone_conveyor_hours%>" />
+									<span class="input-group-addon">hours</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Are conveyors turned off when no goods are in the system?</label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<div class="radio">
 										<% if (zone_conveyor_isturnedoff.equals("Yes")) { %>
 											<label><input type="radio" id="is_conveyors_off" value="Yes" name="zone_conveyor_isturnedoff<%=identifier%>" checked />Yes</label>
@@ -235,7 +276,7 @@
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Does this zone have warehouse roof skylights? </label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<div class="radio">
 										<% if (zone_hasskylights.equals("Yes")) { %>
 											<label><input type="radio" id="has_roof_skylights" value="Yes" name="zone_hasskylights<%=identifier%>" checked />Yes</label>
@@ -255,7 +296,7 @@
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Do the skylights provide sufficient daylight to light this warehouse zone? </label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<div class="radio">
 										<% if (zone_isskylightsufficient.equals("Yes")) { %>
 											<label><input type="radio" id="sufficient_skylight" value="Yes" name="zone_isskylightsufficient<%=identifier%>" checked />Yes</label>
@@ -275,7 +316,7 @@
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Are the skylights regulary cleaned?</label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<div class="radio">
 										<% if (zone_isskylightcleaned.equals("Yes")) { %>
 											<label><input type="radio" id="skylights_cleaned" value="Yes" name="zone_isskylightcleaned<%=identifier%>" checked />Yes</label>
@@ -295,7 +336,7 @@
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">What is the main type of lighting installed? <font color="red">*</font></label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<select class="form-control" id="zone_grf_lighting" name="zone_lighting<%=identifier%>">
 									<% if (zone_lighting.equals("")) { %>
 										<option value="" selected>-- Select one --</option>
@@ -328,7 +369,7 @@
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">If fluoresent what are the main type of tubes are installed? </label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<select class="form-control" id="fluoresent_tube_installed" name="zone_fluorescent_tube<%=identifier%>">
 									<% if (zone_fluorescent_tube.equals("")) { %>
 										<option value="" selected>-- Select one --</option>
@@ -361,7 +402,7 @@
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">If T8 tubes are used, what type of ballast is installed? </label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<select class="form-control" id="ballast" name="zone_t8_ballasttype<%=identifier%>">
 									<% if (zone_t8_ballasttype.equals("")) { %>
 										<option value="" selected>-- Select one --</option>
@@ -384,21 +425,24 @@
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">What is the power rating of each fitting in this zone's main warehouse lighting system?</label>
-								<div class="col-lg-6">
+								<div class="col-lg-4 inputGroupContainer">
+									<div class="input-group">
 									<input type="text" class="form-control" id="numbers_opt" name="zone_powerrating<%=identifier%>" value="<%=zone_powerrating%>" />
+									<span class="input-group-addon">Watts</span>
+									</div>
 								</div>
 								</div>
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Approximately how many lighting fittings make up this zone's main lighting system? </label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<input type="text" class="form-control" id="numbers_opt" name="zone_numoflightings<%=identifier%>" value="<%=zone_numoflightings%>" />
 								</div>
 								</div>
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">What type of control is used on this zone's main warehouse lighting system?</label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<select class="form-control" id="wh_light_control" name="zone_lightcontroltype<%=identifier%>">
 									<% if (zone_lightcontroltype.equals("")) { %>
 										<option value="" selected>-- Select one --</option>
@@ -426,7 +470,7 @@
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">If manual, are the lights turned off if there is natural daylight or during non-working time?</label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<div class="radio">
 										<% if (zone_ismanuallyturnedoff.equals("Yes")) { %>
 											<label><input type="radio" id="manual_lights_off" value="Yes" name="zone_ismanuallyturnedoff<%=identifier%>" checked />Yes</label>
@@ -446,7 +490,7 @@
 
 								<div class="form-group">
 								<label class="col-lg-5 control-label">Is part or all of this zone heated with radiant heaters?</label>
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<div class="radio">
 										<% if (zone_hasradiantheaters.equals("Yes")) { %>
 											<label><input type="radio" id="radiant_heaters" value="Yes" name="zone_hasradiantheaters<%=identifier%>" checked />Yes</label>
