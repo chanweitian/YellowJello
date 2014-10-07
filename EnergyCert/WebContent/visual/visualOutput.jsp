@@ -144,10 +144,11 @@
 	}
 	
 	//For Testing
+	/*
 	rating = 22;
 	warehouseFloorArea = 567893333;
 	officeFloorArea = 902324822;
-	site_info_address_street = "Amebreou otehutheo oentuhetho";
+	site_info_address_street = "Amebreou otehutheo oentuhetho"; */
 %>
 
 
@@ -672,15 +673,15 @@ site_info_address_city = p.getProperty("key"); %>
 	<div id="Eff_Rating">
 		<h2>Energy Efficiency Rating (<%= year1 %>)</h2>
 		More energy efficient
-		 <!--ActualConsumption: <%=actualConsumption %>-->
-		  <!--Benchmark: <%=benchmark %><br/>-->
+		 <!-- ActualConsumption: <%=actualConsumption %> -->
+		 <!-- Benchmark: <%=benchmark %><br/> -->
 		 <!-- Heat: <%=heatConsumption %><br/> -->
 		 <!-- Cool: <%=coolConsumption %><br/> --> 
 		 <!-- Lighting: <%=lightingConsumption %><br/> --> 
 		 <!-- EXT: <%=extLightingConsumption %><br/> -->
 		 <!-- hotWaterConsumption: <%=hotWaterConsumption %><br/> -->
 		 <!-- operationsConsumption: <%=operationsConsumption %><br/> -->
-		 
+		 <!-- MHE: <%=mheConsumption %><br/> -->
 		 
 		<br/>
 		

@@ -19,7 +19,6 @@ import javax.servlet.http.HttpSession;
 import utility.FormulaManager;
 import utility.PeriodManager;
 import utility.WeatherManager;
-
 import db.RetrievedObject;
 import db.SQLManager;
 
@@ -112,6 +111,11 @@ public class CalculateServlet extends HttpServlet {
 	private String location = "";
 	private int zoneCount = 0;
 
+	private String[] ampereHoursArray;
+	private String[] voltage;
+	private String[] total_charges;
+	
+	
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -483,6 +487,11 @@ public class CalculateServlet extends HttpServlet {
 			business_unit = rs.getString("site_info_business_unit");
 			facility_contact = rs.getString("site_info_contact_name");
 
+					
+			ampereHoursArray = rs.getString("ampere_hours").split("\\*");
+			voltage = rs.getString("voltage").split("\\*");
+			total_charges = rs.getString("total_charges").split("\\*");
+			
 		}
 
 		ro.close();
@@ -578,9 +587,19 @@ public class CalculateServlet extends HttpServlet {
 
 			try {
 				tmpNumOfFloor = rs.getString("zone_numoffloors");
+				
+				System.out.println("Floors:"+tmpNumOfFloor);
+				
 				numOfFloor = Double.parseDouble(tmpNumOfFloor);
+				
 			} catch (Exception e) {
 
+			}
+			
+			try {
+				height = Double.parseDouble(rs.getString("zone_height"));
+			} catch (Exception e){
+				
 			}
 
 			if (zoneT.equals("office") || zoneT.equals("wh_value_add")) {
@@ -613,16 +632,29 @@ public class CalculateServlet extends HttpServlet {
 			double length = Math.sqrt(area / 1.5) * L_W_RATIO;
 			double width = area / length;
 
+			
+			
 			double h_roof = length * width * ROOF_U;
 			double h_wall = 2 * (length * height + width * height) * WALL_U
 					* (1 - WINDOW_RATIO);
 			double h_floor = length * width * FLOOR_U;
-			double h_window = 2 * (length * height + width * height) * WALL_U
+			double h_window = 2 * (length * height + width * height) * WINDOWS_U
 					* WINDOW_RATIO;
 			double inflitration = 0.33 * WAREHOUSE_AIR_CHANGES_PER_HOUR
 					* length * width * height;
 			double total = h_roof + h_wall + h_floor + h_window + inflitration;
 
+			
+			System.out.println("length: "+length);
+			System.out.println("width: "+width);
+			System.out.println("height: "+height);
+			System.out.println("h_roof: "+h_roof);
+			System.out.println("h_wall: "+h_wall);
+			System.out.println("h_window: "+h_window);
+			System.out.println("inflitration: "+inflitration);
+			System.out.println("total: "+total);
+			
+			
 			String loc = siteInfoMap.get("site_info_address_city");
 			String country = siteInfoMap.get("site_info_address_country");
 
@@ -649,7 +681,7 @@ public class CalculateServlet extends HttpServlet {
 					double electricConsumption = total * diff * Days_In_Month
 							* hoursPerDay / 1000;
 					zoneCoolConsumption += electricConsumption;
-
+					
 					if (zoneT.equals("offices")) {
 						officeCooled = "Yes";
 					} else {
@@ -674,18 +706,17 @@ public class CalculateServlet extends HttpServlet {
 			}
 
 			coolConsumption += zoneCoolConsumption;
-
 			heatConsumption += zoneHeatConsumption;
 
 			double zoneLightingConsumption = getLightingConsumption(zoneT,
-					area, hoursPerDay, daysPerWeek);
-			double zoneExtLightingConsumption = getExtLightingConsumption(area,
+					area, hoursPerDay, daysPerWeek, rs, height);
+			double zoneExtLightingConsumption = getExtLightingConsumption(extArea,
 					hoursLitPerWeek);
 
 			double zoneHotWaterConsumption = getHotWaterConsumption(zoneT,
 					area, hoursPerDay, daysPerWeek);
 
-			double zoneMheConsumption = getMHE();
+			double zoneMheConsumption = getMHE(rs);
 
 			double zoneOperationsConsumption = getOperationsConsumption(
 					hoursPerDay, daysPerWeek, numOfPeople);
@@ -775,18 +806,48 @@ public class CalculateServlet extends HttpServlet {
 	}
 
 	private double getLightingConsumption(String zoneType, double area,
-			double hoursPerDay, double daysPerWeek) {
+			double hoursPerDay, double daysPerWeek, ResultSet rs, double height) throws NumberFormatException, SQLException {
 
-		double firstParameter = getZoneParameter(zoneType, 1);
+		double sum = 0;
+		
+		if(zoneType.equals("wh_ground_to_roof")){
+			
+			double openPowerConsumption = height * 0.142727273 + 2.577272727;
+			double widePowerConsumption = height * 0.212121212 + 3.874545455;
+			double narrowPowerConsumption = height * 0.275757576 + 4.890909091;
+			
+			double openPercent = Double.parseDouble(rs.getString("zone_zoneprop_open"))/ 100;
+			double widePercent = Double.parseDouble(rs.getString("zone_zoneprop_wide")) / 100;
+			double narrowPercent = Double.parseDouble(rs.getString("zone_zoneprop_narrow")) / 100;
+			
+			System.out.println("openPercent:"+openPercent);
+			System.out.println("widePercent:"+widePercent);
+			System.out.println("narrowPercent:"+narrowPercent);
+			
+			double sumProduct = openPowerConsumption * openPercent + widePowerConsumption * widePercent + narrowPowerConsumption * narrowPercent;
+			
+			sum = sumProduct * area * 52 * hoursPerDay * daysPerWeek / 1000;
+			
+		} else {
+			
+			double firstParameter = getZoneParameter(zoneType, 1);
 
-		double thirdParameter = getZoneParameter(zoneType, 3);
+			double thirdParameter = getZoneParameter(zoneType, 3);
 
-		double sum = firstParameter * area * hoursPerDay * daysPerWeek * 52
-				/ 1000 * thirdParameter;
+			sum = firstParameter * area * hoursPerDay * daysPerWeek * 52
+					/ 1000 * thirdParameter;
+			
+			
 
+		}
+	
 		return sum;
-
 	}
+	
+	
+	
+	
+	
 
 	private double getZoneParameter(String zoneType, int paramNum) {
 
@@ -797,7 +858,14 @@ public class CalculateServlet extends HttpServlet {
 
 	private double getExtLightingConsumption(double area, double hoursLitPerWeek) {
 
+		System.out.println("EXT_LIGHT: "+EXT_LIGHT);
+		System.out.println("hoursLitPerWeek: "+hoursLitPerWeek);
+		System.out.println("area: "+area);
+		
+		
 		return EXT_LIGHT * area * hoursLitPerWeek * 52 / 1000;
+		
+		
 
 	}
 
@@ -807,8 +875,10 @@ public class CalculateServlet extends HttpServlet {
 		double annualAmountOfWater = getAnnualAmountOfWater(zoneType, area,
 				hoursPerDay, daysPerWeek);
 
-		return annualAmountOfWater * TEMP_RISE * BOILER_SYS_EFFICIENCY
-				* SPECIFIC_HEAT_OF_WATER;
+		System.out.println("annualAmountOfWater:"+annualAmountOfWater);
+		
+		
+		return annualAmountOfWater * TEMP_RISE * SPECIFIC_HEAT_OF_WATER /  BOILER_SYS_EFFICIENCY / 3.6;
 
 	}
 
@@ -817,27 +887,32 @@ public class CalculateServlet extends HttpServlet {
 
 		double waterReq = getWaterReq(zoneType);
 
-		return area * waterReq * hoursPerDay * daysPerWeek;
+		System.out.println("waterReq:"+waterReq);
+		System.out.println("area:"+area);
+		System.out.println("hoursPerDay:"+hoursPerDay);
+		System.out.println("daysPerWeek:"+daysPerWeek);
+		
+		return area * waterReq * hoursPerDay * daysPerWeek * 52;
 	}
 
 	private double getWaterReq(String zoneType) {
 
 		switch (zoneType) {
-		case "Office":
+		case "offices":
 			return WATER_REQ_OFFICE;
-		case "Warehouse Ground to Roof":
+		case "wh_ground_to_roof":
 			return WATER_REQ_WAREHOUSE_GROUND_TO_ROOF;
 
-		case "Warehouse Mezzanine":
+		case "wh_mezzanine":
 			return WATER_REQ_WAREHOUSE_MEZZANINE;
 
-		case "Warehouse Value Add":
+		case "wh_value_add":
 			return WATER_REQ_WAREHOUSE_VALUE_ADD;
 		}
 		return 0.0;
 	}
-
-	private double getMHE() {
+	
+	private double getMHE(ResultSet rs) throws SQLException {
 		/*
 		 * double MHEType1Sum = mheMap.get("Type 1")[0] *
 		 * mheMap.get("Type 1")[1] * mheMap.get("Type 1")[2]; double MHEType2Sum
@@ -847,7 +922,17 @@ public class CalculateServlet extends HttpServlet {
 		 */
 		// return (MHEType1Sum + MHEType2Sum + MHEType3Sum) * CONVERSION_FACTOR
 		// * 52 / 1000;
-		return 0.0;
+		
+		
+		double sum = 0;
+		
+		for(int i=0; i< voltage.length; i++){
+			sum += (Double.parseDouble(ampereHoursArray[i]) * Double.parseDouble(voltage[i]) * Double.parseDouble(total_charges[i]));
+		}
+		
+		return sum * CONVERSION_FACTOR * 52 / 1000;
+		
+		
 	}
 
 	private double getOperationsConsumption(double hoursPerDay,
