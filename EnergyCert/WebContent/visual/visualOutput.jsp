@@ -133,6 +133,9 @@
 		}
 		ro0.close();
 	} else {
+		
+		System.out.println("Rating form JSP:"+rating);
+		
 		rating = (int)(100 * actualConsumption / benchmark); 
 		SQLManager.updateRecords("questionnaire", "energy_rating="+rating, "questionnaire_id=\'" + siteInfoMap.get("quest_id") + "\'");
 		
@@ -287,7 +290,6 @@ function initChart() {
 		
 		$("#whatifButton").click(function() {
 			//new rating
-			
 			var newRating = calculateNewRating();
 
 			var leftOffset = getLeftOffset(newRating);
@@ -304,9 +306,8 @@ function initChart() {
 
 	});
 
-	function calculateNewRating() {
-		var actualConsumption =
-<%= actualConsumption %>;
+function calculateNewRating() {
+	var actualConsumption =<%= actualConsumption %>;
 	var benchmark = <%= benchmark%>;
 	
 	var heatMul = getHeatMultiplier();
@@ -317,14 +318,31 @@ function initChart() {
 	
 	var newRating = 100 * newConsumption / benchmark;
 	
-	return Math.round(newRating); 
+	console.log("heatMul:"+heatMul);
+	console.log("coolMul:"+coolMul);
+	console.log("lightMul:"+lightMul);
 	
+	console.log("ActualConsumption:"+actualConsumption);
+	console.log("newConsumption:"+newConsumption);
+	console.log("benchmark:"+benchmark);
+	console.log("Calculating new Rating:"+newRating);
 	
+	return Math.floor(newRating); 
 }
 
 function initRating(){
-	var rating = <%=rating%>;
-		
+	
+	var actualConsumption =<%= actualConsumption %>;
+	var benchmark = <%= benchmark%>;
+	
+	var rating =  100 * actualConsumption / benchmark;
+	
+	rating = Math.floor(rating);
+	
+	console.log("benchmark:"+benchmark);
+	console.log("actualConsumption:"+actualConsumption);
+	console.log("rating:"+rating);
+	
 	
 	var leftOffset = getLeftOffset(rating);
 	var topOffset = getTopOffset(rating);
