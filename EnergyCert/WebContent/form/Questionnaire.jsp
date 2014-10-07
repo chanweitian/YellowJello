@@ -110,6 +110,7 @@ function validate() {
 </script>
 
 <script>
+<<<<<<< HEAD
 $(document).ready(function() {
 	$('#datetimePicker1').datetimepicker({
 		pickTime: false
@@ -121,6 +122,16 @@ $(document).ready(function() {
 });
 </script>
 
+=======
+$('#datetimePicker1').datetimepicker({
+	pickTime: false
+});
+
+$('#datetimePicker2').datetimepicker({
+	pickTime: false
+});
+</script>
+>>>>>>> FETCH_HEAD
 <%
 String fromEdit = request.getParameter("fromEdit");
 String fromAddZone = (String) session.getAttribute("fromAddZone");

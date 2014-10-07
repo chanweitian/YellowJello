@@ -270,6 +270,10 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+<<<<<<< HEAD
+=======
+	
+>>>>>>> FETCH_HEAD
     $('#master_form').bootstrapValidator({
     	excluded: [':disabled'],
     	feedbackIcons: {

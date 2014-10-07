@@ -63,6 +63,8 @@ public class RetrieveWarehouseData extends HttpServlet {
 					    site.put("siteName", siteName);
 					    site.put("year", year);
 					    site.put("energyRating", energyRating);
+					    //LOGIC to get GRADE
+					    site.put("grade", "A");
 					    sites.add(site);
 					}
 				} 

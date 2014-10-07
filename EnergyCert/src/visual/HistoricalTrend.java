@@ -60,7 +60,8 @@ public class HistoricalTrend extends HttpServlet {
 					(warehouseNames).add(iter.next());
 				}
 					  
-				request.setAttribute("warehouses", warehouseNames);					  
+				request.setAttribute("warehouses", warehouseNames);				
+				request.setAttribute("company", companyName);
 
 				
 		} catch (Exception e) {
