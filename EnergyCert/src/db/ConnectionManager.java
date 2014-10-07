@@ -21,20 +21,22 @@ public class ConnectionManager {
 	*/
 	
 	// Openshift Settings!!!
-	/*;
-	 * private static String JDBC_DRIVER = "com.mysql.jdbc.Driver"; private
-	 * static String JDBC_URL = "jdbc:mysql://127.10.30.130:3306/gtl"; private
-	 * static String JDBC_USER = "adminGjbnEWc"; private static String
-	 * JDBC_PASSWORD = "4Wbtlw3MmbuR"; private static Properties props = new
-	 * Properties();
+	/*
+	 private static String JDBC_DRIVER = "com.mysql.jdbc.Driver"; 
+	 private static String JDBC_URL = "jdbc:mysql://127.10.30.130:3306/gtl";
+	 private static String JDBC_USER = "adminGjbnEWc"; private static String
+	 JDBC_PASSWORD = "4Wbtlw3MmbuR"; 
+	 private static Properties props = new Properties();
 	 */
 
 	// Digital Ocean Settings
+	
 	private static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	private static String JDBC_URL = "jdbc:mysql://greentransformationlab.com:3306/gtl";
 	private static String JDBC_USER = "root";
 	private static String JDBC_PASSWORD = "root";
 	private static Properties props = new Properties();
+	
 	 
 	static {
 		try {

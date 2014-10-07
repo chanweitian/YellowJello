@@ -110,7 +110,6 @@ function validate() {
 </script>
 
 <script>
-<<<<<<< HEAD
 $(document).ready(function() {
 	$('#datetimePicker1').datetimepicker({
 		pickTime: false

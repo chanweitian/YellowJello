@@ -600,7 +600,7 @@ if(session.getAttribute("company") != null){
 <div id="main">
 <div id="General_Info">
 <div id="logo_container">
-<div id="company_logo" style="float: left"><img src="../img/"+ co +".jpg" height="23" width="105" /></div>
+<div id="company_logo" style="float: left"><img src="<%="../img/" + co + ".jpg"%>" height="23" width="105" /></div>
 <div id="dhl_logo" ><img src="../img/DHL_Logo.png" height="23" width="105" /></div>
 </div>
 

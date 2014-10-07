@@ -54,8 +54,8 @@
 		for (i = 0; i < data.sites.length; i++) {
 			var siteName = data.sites[i].siteName;
 			var energyRating = data.sites[i].energyRating;
-			var elecEmi = data.sites[i].elecEmi;
-			var gasEmi = data.sites[i].gasEmi;
+			var elecEmi = Number(data.sites[i].elecEmi);
+			var gasEmi = Number(data.sites[i].gasEmi);
 			var elec = Number(data.sites[i].elec);
 			var gas = Number(data.sites[i].gas);
 			var totalConsp = gas + elec;
@@ -98,8 +98,8 @@
 		for (i = 0; i < data.sites.length; i++) {
 			var siteName = data.sites[i].siteName;
 			var energyRating = data.sites[i].energyRating;
-			var elecEmi = data.sites[i].elecEmi;
-			var gasEmi = data.sites[i].gasEmi;
+			var elecEmi = Number(data.sites[i].elecEmi);
+			var gasEmi = Number(data.sites[i].gasEmi);
 			var elec = Number(data.sites[i].elec);
 			var gas = Number(data.sites[i].gas);
 			var totalConsp = gas + elec;
