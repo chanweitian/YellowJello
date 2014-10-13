@@ -63,8 +63,23 @@ public class RetrieveWarehouseData extends HttpServlet {
 					    site.put("siteName", siteName);
 					    site.put("year", year);
 					    site.put("energyRating", energyRating);
-					    //LOGIC to get GRADE
-					    site.put("grade", "A");
+					    int eRating = Integer.parseInt(energyRating);
+					    if (eRating>-1 && eRating<51){
+					    	site.put("grade", "A");
+					    }else if (eRating>50 && eRating<101){
+					    	site.put("grade", "B");
+					    }else if(eRating>100 && eRating<151){
+					    	site.put("grade", "C");
+					    }else if(eRating>150 && eRating<201){
+					    	site.put("grade", "D");
+					    }else if(eRating>200 && eRating<251){
+					    	site.put("grade", "E");
+					    }else if(eRating>250 && eRating<301){
+					    	site.put("grade", "F");
+					    }else if(eRating>300){
+					    	site.put("grade", "G");
+					    }
+					    
 					    sites.add(site);
 					}
 				} 

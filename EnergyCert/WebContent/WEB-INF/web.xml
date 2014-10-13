@@ -292,4 +292,20 @@
     <servlet-name>PortfolioEmail</servlet-name>
     <url-pattern>/visual/portfolioEmail</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>HistoricalTrend</servlet-name>
+    <servlet-class>visual.HistoricalTrend</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HistoricalTrend</servlet-name>
+    <url-pattern>/visual/historicalTrend</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <servlet-name>RetrieveWarehouseData</servlet-name>
+    <servlet-class>visual.RetrieveWarehouseData</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RetrieveWarehouseData</servlet-name>
+    <url-pattern>/visual/warehouseData</url-pattern>
+  </servlet-mapping>
 </web-app>

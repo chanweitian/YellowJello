@@ -53,7 +53,6 @@
 	var filterValue = "none";
 	var axis = "carbon";
 	var companyName = "<%=companyName%>";
-	console.log(companyName);
 <%//Pushing the data into years
 	for(int i = 0; i <years.size(); i++){%>
 	years.push(

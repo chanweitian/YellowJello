@@ -15,33 +15,35 @@
 	src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="../js/bootstrap.js"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 <%-- Questionnaire.jsp --%>
+<link href="../css/questionnaire.css" rel="stylesheet">
 
-<script type="text/javascript" src="../js/d3min.js"></script>
-<script type="text/javascript" src="../js/scatter.js"></script>
+<%-- Questionnaire validation --%>
+<link rel="stylesheet" href="../css/bootstrapValidator.min.css"/>
+<script type="text/javascript" src="../js/bootstrapValidator.min.js"></script>	
 
 <%
 	// retrieve Info
 	//Only if there is information then show.
 	String company = (String) request.getAttribute("company");
-	ArrayList<String> warehouses = (ArrayList<String>) request.getAttribute("warehouses");
+	ArrayList<String> warehouses1 = (ArrayList<String>) request.getAttribute("warehouses");
 	boolean status = true;
-	if (warehouses.size()==0){
+	if (warehouses1.size()==0){
 		status = false;
 	}
 	//convert Java ArrayList to js
 %>
 <script>
-	var warehouses = [];
+	google.load('visualization', '1.0', {'packages':['table']});
+	var warehouses =[];
 	var warehouse = "";
-	var company = "<%=company%>"
+	var company = "<%=company%>";
+	var chartSRC = "";
+	var tableSRC = "";
 <%//Pushing the data into years
-	for(int i = 0; i <warehouses.size(); i++){%>
-	warehouses.push(
-<%=warehouses.get(i)%>
-	);
+	for(int i = 0; i <warehouses1.size(); i++){%>
+	warehouses.push("<%=warehouses1.get(i)%>");
 <%}%>
 	// methods for dynamically adding options to text box
 	var addOption = function(selectbox, text, value) {
@@ -84,7 +86,7 @@
 					addOption(warehouseOptions, warehouses[i], warehouses[i]);
 				}
 			</script>
-		</select> <br> <input type="button" name="button" value="Generate"
+		</select> <br> <input type="button" name="button" class="btn btn-primary" value="Generate"
 			onClick="warehouseSelection(this.form)">
 	</form>
 	<br>
@@ -101,12 +103,17 @@
 		}
 	%>
 
-	<div id=chart></div>
-	<div id=table></div>
+	<div id=chart></div><br>
+	<div id=table></div><br>
 
 	<script type="text/javascript">
+    	google.load('visualization', '1.0', {'packages':['corechart']});
+
 		//goes to the servlet to get relevant questionnaire for the year selected
-		var draw = function(data) {
+		var draw = function(result) {
+			var siteName = result.sites[0].siteName;
+
+
 			var data3 = new google.visualization.DataTable();
 			data3.addColumn('number', 'Year');
 			data3.addColumn('number', siteName);
@@ -114,37 +121,52 @@
 			var data = new google.visualization.DataTable();
 		    data.addColumn('number', 'Year');
 		    data.addColumn('number', 'Energy Efficiency Rating');
-		    data.addColumn('string', 'Grade');
-				
-			var siteName = data.site[0].siteName;
-
-			for (i = 0; i < data.sites.length; i++) {
-				var energyRating = data.sites[i].energyRating;
-				var year = data.site[i].year;
-				var grade = data.site[i].grade;
-				data3.addRow(parseInt(energyRating), parseInt(year));
-				data.addRow(parseInt(energyRating), parseInt(year), grade);
+		    data.addColumn('string', 'Grade');	
+		    
+		    var j = 1;
+		    var k = 2;
+			for (i = 0; i < result.sites.length; i++) {
+				var energyRating = result.sites[0].energyRating;
+				var year = result.sites[i].year;
+				var grade = result.sites[i].grade;
+				data3.addRows(1);
+				data3.setCell(i, 0, parseInt(year));
+				data3.setCell(i, j, parseInt(energyRating));
+				data.addRows(1);
+				data.setCell(i, 0, parseInt(year));
+				data.setCell(i, j, parseInt(energyRating));
+				data.setCell(i, k, grade);
+				j++;
+				k++;
 			}
 
 			var options = {
 				title : 'Historical Site Trend : ' + siteName,
 				hAxis : {
-					title : 'Energy Rating'
-				},
-				vAxis : {
 					title : 'Year'
 				},
+				vAxis : {
+					title : 'Energy Efficiency Rating'
+				},
 				legend : '',
-				'width' : 1024,
-				'height' : 720
+				'width' : 800,
+				'height' : 480
 			};
-
+			
 			var chart = new google.visualization.ScatterChart(document
 					.getElementById('chart'));
 			chart.draw(data3, options);
 			
 	        var table = new google.visualization.Table(document.getElementById('table'));
 	        table.draw(data, {showRowNumber: true});
+			
+		          table.innerHTML = '<img src="' + chart.getImageURI() + '">';
+		          tableSRC = (table.innerHTML);
+		      
+		          chart.innerHTML = '<img src="' + chart.getImageURI() + '">';
+		         chartSRC = (chart.innerHTML);
+
+
 		}
 
 		var retrieveWarehouseData = function(callback) {
@@ -153,6 +175,7 @@
 			request.onreadystatechange = function() {
 				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);
+					document.getElementById("share").style.display = "block";
 					callback(result);
 				}
 			}
@@ -168,8 +191,8 @@
 		
 		var sendEmail = function(form) {
 			var email = form.Email.value;
-			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "emailWarehouseData?warehouse="
-					+ warehouse + "&company="+ company;
+			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "emailWarehouseData?site="
+					+ warehouse + "&chartSRC="+ chartSRC + "&email= " + email;
 			request.onreadystatechange = function() {
 				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);
@@ -201,7 +224,7 @@
 				onClick="sendEmail(this.form)" value="Email">
 		</div>
 	</form>
-
+	<br>
 	If you require further details shown on this report please email
 	energycertificate@dhl.com
 

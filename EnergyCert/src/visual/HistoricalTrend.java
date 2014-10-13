@@ -50,8 +50,8 @@ public class HistoricalTrend extends HttpServlet {
 				HashSet<String> warehouses = new HashSet<String>();	
 				
 				while(rs.next()){	
-					String year = rs.getString("year");
-					warehouses.add(year);
+					String site = rs.getString("site_info_name");
+					warehouses.add(site);
 				}
 				ro.close();
 				

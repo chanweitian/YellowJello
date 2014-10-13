@@ -33,7 +33,7 @@
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site Analysis <span class="caret"></span></a>
 	          <ul class="dropdown-menu" role="menu">
 	            <li><a href="/EnergyCert/visual/paybackOutput.jsp">Payback Analysis</a></li>
-	            <li><a href="#">View Historical Trends</a></li>
+	            <li><a href="/EnergyCert/visual/historicalTrend">View Historical Trends</a></li>
 	          </ul>
 	        </li> 
             <!-- analysis dropdown -->
