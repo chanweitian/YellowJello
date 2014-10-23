@@ -221,16 +221,8 @@ $(document).ready(function() {
             number: {
             	selector: '[id="number"]',
             	validators: {
-                	greaterThan: {
-                        value: 0,
-                        inclusive: true,
-                        message: 'Enter a positive number'
-                    },
-                    numeric: {
-                        message: 'This must be a number'
-                    },
                     notEmpty: {
-                        message: 'This field is required'
+                        message: 'Required'
                     }
                 }
             },
@@ -238,19 +230,19 @@ $(document).ready(function() {
             	selector: '[id="integer"]',
             	validators: {
             		integer: {
-                        message: 'Enter an integer'
+                        message: 'Positive number only'
                     },
                 	greaterThan: {
                         value: 0,
                         inclusive: true,
-                        message: 'Enter a positive number'
+                        message: 'Positive number only'
                     },
                     notEmpty: {
-                        message: 'This field is required'
+                        message: 'Required'
                     }
                 }
-            },
-            required_value: {
+            }
+            /*required_value: {
             	selector: '[id="required_value"]',
             	validators: { 
                     notEmpty: {
@@ -263,10 +255,25 @@ $(document).ready(function() {
                         }
                     }
                 }
-            }
+            },*/
             
         }
     })
+    
+    .on('error.validator.bv', function(e, data) {
+        // $(e.target)    --> The field element
+        // data.bv        --> The BootstrapValidator instance
+        // data.field     --> The field name
+        // data.element   --> The field element
+        // data.validator --> The current validator name
+
+        data.element
+            .data('bv.messages')
+            // Hide all the messages
+            .find('.help-block[data-bv-for="' + data.field + '"]').hide()
+            // Show only message associated with current validator
+            .filter('[data-bv-validator="' + data.validator + '"]').show();
+    });
 });
 
 $(document).ready(function() {

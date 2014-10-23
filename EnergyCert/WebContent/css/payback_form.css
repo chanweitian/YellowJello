@@ -1,0 +1,19 @@
+/* Adjust feedback icon position */
+#payback_form .form-control-feedback {
+    top: 25px;
+    right: 15px;
+}
+#payback_form .selectContainer .form-control-feedback {
+    top: 25px;
+    right: 25px;
+}
+
+#payback_form .btn-group .form-control-feedback {
+    top: 0;
+    right: -30px;
+}
+
+.table_inline_flex {display: inline-flex;width:100%;}
+.table_row {width:11.5%;text-align: center;padding-top: 5px;padding-bottom: 5px;}
+.table_row_icon {width:5%;text-align: center;padding-top: 5px;padding-bottom: 5px;}
+.table_row_bold {width:11.5%;text-align: center;font-weight:bold;padding-top: 5px;padding-bottom: 5px;}

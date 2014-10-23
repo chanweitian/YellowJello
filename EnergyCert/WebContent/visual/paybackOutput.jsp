@@ -39,6 +39,10 @@
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script type="text/javascript" src="../js/Chart.js"></script>
 		
+		<%-- This is for Payback --%>
+		<link rel="stylesheet" type="text/css" href="../css/payback_form.css"> 
+		<script type="text/javascript" src="../js/payback_form.js"></script>	
+		
 		<%
 		HashMap<String, ArrayList<String>> paybackMap = (HashMap<String,ArrayList<String>>) request.getAttribute("paybackMap");
 		Set<String> keySet = new HashSet<String>();
@@ -49,111 +53,6 @@
 			arr = temp;
 		}
 		%>
-	
-<style type="text/css">
-/* Adjust feedback icon position */
-#payback_form .form-control-feedback {
-    top: 25px;
-    right: 15px;
-}
-#payback_form .selectContainer .form-control-feedback {
-    top: 25px;
-    right: 25px;
-}
-
-#payback_form .btn-group .form-control-feedback {
-    top: 0;
-    right: -30px;
-}
-</style>
-
-<script>
-	function showValues(str)
-	{
-	var xmlhttp;    
-	if (str=="")
-	  {
-		var select = document.getElementById("zone_id"), option = null;
-		var len = select.options.length;
-		for (var i = 0; i < len; i++)
-        {
-            select.remove(0);
-        }
-		option = document.createElement("option");
-		option.value = ""
-		option.innerHTML = "--Select a Site ID first--";
-	    select.appendChild(option);
-	    setTimeout(function() {
-			$('#payback_form').bootstrapValidator('revalidateField', 'zone_id');
-		}, 500);
-	  return;
-	  }
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	xmlhttp.onreadystatechange=function()
-	  {
-	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-	    {
-		  var res = xmlhttp.responseText;
-		  var values = res.split(";");
-		  var select = document.getElementById("zone_id"), option = null, next_desc = null;
-		  var len = select.options.length;
-		 
-		  for (var i = 0; i < len; i++)
-          {
-              select.remove(0);
-          }
-	        
-		  for(x in values) {
-		        option = document.createElement("option");
-		        next_desc = values[x];
-		        option.value = next_desc.trim();
-		        var temp = next_desc.split("//");
-		        option.innerHTML = temp[0].trim();
-		        select.appendChild(option);
-		    }
-	    }
-	  }
-	xmlhttp.open("GET","getzones.jsp?questionnaire_id="+str,true);
-	xmlhttp.send();
-	setTimeout(function() {
-		$('#payback_form').bootstrapValidator('revalidateField', 'zone_id');
-	}, 500);
-	}
-	
-	function validateFields() {
-		$('#payback_form').bootstrapValidator('revalidateField', 'integer');
-		$('#payback_form').bootstrapValidator('revalidateField', 'number');
-		var len = document.getElementById("site_id").options.length;
-	
-		if (len == 1) {
-			$('#paybackModal').modal('show');
-		}
-	}
-	
-	function updateTable() {
-		var checkboxes = document.getElementsByName('types[]');
-		var checkboxesChecked = [];
-		 // loop over them all
-		for (var i=0; i<checkboxes.length; i++) {
-		    // And stick the checked ones onto an array...
-		    var temp = checkboxes[i].value + '_row';
-			if (checkboxes[i].checked) {
-		    	document.getElementById(temp).style.display = "block";
-		    	document.getElementById(temp).style.display = "inline-flex";
-		    } else {
-		    	document.getElementById(temp).style.display = "none";
-		    }
-		 }
-		validateFields();
-	}
-	</script>
 
 <% if (paybackMap!=null) { %>	
 <script>
@@ -286,7 +185,7 @@ if (today.before(cal)) {
 }
 %>	 
 		  
-  	<br><br>
+  	<br>
   	<div class="main">
 		<div class="header">
 		    Payback Analysis
@@ -311,7 +210,7 @@ if (today.before(cal)) {
 			%>
 			<div class="form-group" style="width:90%;padding-left:1em;">
 				<div class="row">
-					<div class="col-md-3 selectContainer" id="required">
+					<div class="col-md-3 selectContainer">
 						<label class="control-label">Site ID</label> <select
 							class="form-control" name="site_id" id="site_id" onchange="showValues(this.value)" >
 							<option value="">--Select one--</option>
@@ -334,7 +233,7 @@ if (today.before(cal)) {
 						</select>
 					</div>
 
-					<div class="col-md-3 selectContainer" id="required">
+					<div class="col-md-3 selectContainer">
 						<label class="control-label">Zone ID</label> <select
 							class="form-control" id="zone_id" name="zone_id">
 							<% String zone_id = request.getParameter("zone_id"); 
@@ -376,6 +275,7 @@ if (today.before(cal)) {
 			
 			<hr>
 			
+			<div class ="table_inline_flex">
 			<div class="form-group" style="width:90%;padding-left:1em;">
 				<div class="row">
 					<div class="col-md-12">
@@ -389,87 +289,98 @@ if (today.before(cal)) {
 			        }
 			        %>
 			            <div class="btn-group" data-toggle="buttons">
-			            	<% if (zoneMap.get("t5")!=null) { %>
-			                	<label class="btn btn-default active" style="width:120px;">
-			                		<input type="checkbox" name="types[]" id="required_value" value="t5" onchange="updateTable()" checked />T5
-			                <% } else { %>
-			                	<label class="btn btn-default" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="t5" onchange="updateTable()" />T5
-			                <% } %>
-			                </label>
-			                <% if (zoneMap.get("t5_sensors")!=null) { %>
-			                	<label class="btn btn-default active" style="width:120px;">
-			                		<input type="checkbox" name="types[]" id="required_value" value="t5_sensors" onchange="updateTable()" checked />T5 with sensors
-			                <% } else { %>
-			                	<label class="btn btn-default" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="t5_sensors" onchange="updateTable()" />T5 with sensors
-			                <% } %>
-			                </label>
-			                <% if (zoneMap.get("t8")!=null) { %>
-			                	<label class="btn btn-default active" style="width:120px;">
-			                		<input type="checkbox" name="types[]" id="required_value" value="t8" onchange="updateTable()" checked />T8
-			                <% } else { %>
-			                	<label class="btn btn-default" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="t8" onchange="updateTable()" />T8
-			                <% } %>
-			                </label>
-			                 <% if (zoneMap.get("t8_sensors")!=null) { %>
-			                	<label class="btn btn-default active" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="t8_sensors" onchange="updateTable()" checked />T8 with sensors
-			                <% } else { %>
-			                	<label class="btn btn-default" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="t8_sensors" onchange="updateTable()" />T8 with sensors
-			                <% } %>
-			                </label>
-			                <% if (zoneMap.get("LED")!=null) { %>
-			                	<label class="btn btn-default active" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="LED" onchange="updateTable()" checked />LED
-			                <% } else { %>
-			                	<label class="btn btn-default" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="LED" onchange="updateTable()" />LED
-			                <% } %>
-			                </label>
-			                <% if (zoneMap.get("induction")!=null) { %>
-			                	<label class="btn btn-default active" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="induction" onchange="updateTable()" checked />Induction
-			                <% } else { %>
-			                	<label class="btn btn-default" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="induction" onchange="updateTable()" />Induction
-			                <% } %>
-			                </label>
-			                <% if (zoneMap.get("metal_halide")!=null) { %>
-			                	<label class="btn btn-default active" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="metal_halide" onchange="updateTable()" checked />Metal Halide
-			                <% } else { %>
-			                	<label class="btn btn-default" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="metal_halide" onchange="updateTable()" />Metal Halide
-			                <% } %>
-			                </label>
-			                <% if (zoneMap.get("CFL")!=null) { %>
-			                	<label class="btn btn-default active" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="CFL" onchange="updateTable()" checked />CFL
-			                <% } else { %>
-			                	<label class="btn btn-default" style="width:120px;">
-			                    	<input type="checkbox" name="types[]" id="required_value" value="CFL" onchange="updateTable()" />CFL
-			                <% } %>
-			                </label>
-			            </div>
-			        </div>
+				            	<% if (zoneMap.get("t5")!=null) { %>
+				                	<label class="btn btn-default active" id="t5_label" style="width:120px;">
+				                		<input type="checkbox" name="types[]" id="t5" value="t5" onchange="updateTable()" checked />T5
+				                <% } else { %>
+				                	<label class="btn btn-default" id="t5_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="t5" value="t5" onchange="updateTable()" />T5
+				                <% } %>
+				                </label>
+				                <% if (zoneMap.get("t5_sensors")!=null) { %>
+				                	<label class="btn btn-default active" id="t5_sensors_label" style="width:120px;">
+				                		<input type="checkbox" name="types[]" id="t5_sensors" value="t5_sensors" onchange="updateTable()" checked />T5 with sensors
+				                <% } else { %>
+				                	<label class="btn btn-default" id="t5_sensors_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="t5_sensors" value="t5_sensors" onchange="updateTable()" />T5 with sensors
+				                <% } %>
+				                </label>
+				                <% if (zoneMap.get("t8")!=null) { %>
+				                	<label class="btn btn-default active" id="t8_label" style="width:120px;">
+				                		<input type="checkbox" name="types[]" id="t8" value="t8" onchange="updateTable()" checked />T8
+				                <% } else { %>
+				                	<label class="btn btn-default" id="t8_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="t8" value="t8" onchange="updateTable()" />T8
+				                <% } %>
+				                </label>
+				                 <% if (zoneMap.get("t8_sensors")!=null) { %>
+				                	<label class="btn btn-default active" id="t8_sensors_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="t8_sensors" value="t8_sensors" onchange="updateTable()" checked />T8 with sensors
+				                <% } else { %>
+				                	<label class="btn btn-default" id="t8_sensors_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="t8_sensors" value="t8_sensors" onchange="updateTable()" />T8 with sensors
+				                <% } %>
+				                </label>
+				                <% if (zoneMap.get("LED")!=null) { %>
+				                	<label class="btn btn-default active" id="LED_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="LED" value="LED" onchange="updateTable()" checked />LED
+				                <% } else { %>
+				                	<label class="btn btn-default" id="LED_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="LED" value="LED" onchange="updateTable()" />LED
+				                <% } %>
+				                </label>
+				                <% if (zoneMap.get("induction")!=null) { %>
+				                	<label class="btn btn-default active" id="induction_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="induction" value="induction" onchange="updateTable()" checked />Induction
+				                <% } else { %>
+				                	<label class="btn btn-default" id="induction_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="induction" value="induction" onchange="updateTable()" />Induction
+				                <% } %>
+				                </label>
+				                <% if (zoneMap.get("metal_halide")!=null) { %>
+				                	<label class="btn btn-default active" id="metal_halide_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="metal_halide" value="metal_halide" onchange="updateTable()" checked />Metal Halide
+				                <% } else { %>
+				                	<label class="btn btn-default" id="metal_halide_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="metal_halide" value="metal_halide" onchange="updateTable()" />Metal Halide
+				                <% } %>
+				                </label>
+				                <% if (zoneMap.get("CFL")!=null) { %>
+				                	<label class="btn btn-default active" id="CFL_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="CFL" value="CFL" onchange="updateTable()" checked />CFL
+				                <% } else { %>
+				                	<label class="btn btn-default" id="CFL_label" style="width:120px;">
+				                    	<input type="checkbox" name="types[]" id="CFL" value="CFL" onchange="updateTable()" />CFL
+				                <% } %>
+				                </label>
+				         </div>			        
+				 	</div>
+				 	
 			     </div>
+			     </div>
+			     <div style="padding-top:1.8em;">
+		            <button id="add_new_button" type="button" class="btn btn-info" onclick="addNewType()"><span class="glyphicon glyphicon-plus-sign"></span>  Add new Type</button>      
+				</div>
 		    </div>
-													
+				
+				<div id="max-alert" style="width: 35%; padding-left: 2em; display: none;" class="alert alert-danger" role="alert">
+					A <b>maximum of 10</b> lighting types is allowed for analysis
+				</div>	
+										
 				<div>
 					<%-- Header --%>
 					<div class ="table_inline_flex">
 			            <div class="table_row_bold"></div>
-			            <div class="table_row_bold">Number of Fixtures</div>
+			            <div class="table_row_bold">Number of <br>Fixtures</div>
 			            <div class="table_row_bold">Lamp per Fixture</div>
 			            <div class="table_row_bold">Power Rating (W)</div>
 			            <div class="table_row_bold">Efficacy (lm/W)</div>
 			            <div class="table_row_bold">Ballast Factor (%)</div>
-			            <div class="table_row_bold">Ops Hours red. (with sensors) (%)</div>
+			            <div class="table_row_bold">Ops Hours red. <br> (with sensors) (%)</div>
 			            <div class="table_row_bold">Cost per Lamp</div>
-			            <div class="table_row_bold">Installation Cost per Fixture</div>
+			            <div class="table_row_bold">Installation Cost <br> per Fixture</div>
+			            <div class="table_row_bold">Useful Life <br> (years)</div>
+			            <div class="table_row_icon"></div>
 			    	</div>
 			    	
 					
@@ -548,6 +459,11 @@ if (today.before(cal)) {
 						</div>
 						<div class="table_row">
 						</div>	
+						<div class="table_row">
+						</div>	
+			            <div class="table_row_icon">
+						</div>
+						
 			            
 			    	</div>
 			    	
@@ -647,6 +563,20 @@ if (today.before(cal)) {
 									<% } %>
 								</div>	
 							</div>
+						</div>
+						<div class="table_row">
+							<div class="form-group">
+								<div class="col-lg-12">
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="t5_useful_life" type="text" id="number" value="<%=request.getParameter(zone + "_useful_life") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_useful_life" type="text" id="number" value="<%=formulaHM.get("t5_useful_life")[0] %>" class="form-control"/>
+									<% } %>
+								</div>	
+							</div>
+						</div>
+						<div class="table_row_icon">
+							<a href="#" data-toggle="tooltip" data-placement="bottom" title="remove for analysis"><img id="t5" onclick="removeThis(this.id)" src="../icons/remove.png" width="50%"></a>
 						</div>	
 			            
 			    	</div>
@@ -747,6 +677,20 @@ if (today.before(cal)) {
 								</div>	
 							</div>
 						</div>
+						<div class="table_row">
+							<div class="form-group">
+								<div class="col-lg-12">
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="t5_sensors_useful_life" type="text" id="number" value="<%=request.getParameter(zone + "_useful_life") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t5_sensors_useful_life" type="text" id="number" value="<%=formulaHM.get("t5_sensors_useful_life")[0] %>" class="form-control"/>
+									<% } %>
+								</div>	
+							</div>
+						</div>
+						<div class="table_row_icon">
+							<a href="#" data-toggle="tooltip" data-placement="bottom" title="remove for analysis"><img id="t5_sensors" onclick="removeThis(this.id)" src="../icons/remove.png" width="50%"></a>
+						</div>
 			    	</div>
 			    	
 			    	<%-- 4th Row: T8 --%>
@@ -845,6 +789,20 @@ if (today.before(cal)) {
 									<% } %>
 								</div>	
 							</div>
+						</div>
+						<div class="table_row">
+							<div class="form-group">
+								<div class="col-lg-12">
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="t8_useful_life" type="text" id="number" value="<%=request.getParameter(zone + "_useful_life") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_useful_life" type="text" id="number" value="<%=formulaHM.get("t8_useful_life")[0] %>" class="form-control"/>
+									<% } %>
+								</div>	
+							</div>
+						</div>
+						<div class="table_row_icon">
+							<a href="#" data-toggle="tooltip" data-placement="bottom" title="remove for analysis"><img id="t8" onclick="removeThis(this.id)" src="../icons/remove.png" width="50%"></a>
 						</div>
 			    	</div>
 			    	
@@ -945,6 +903,20 @@ if (today.before(cal)) {
 								</div>	
 							</div>
 						</div> 
+						<div class="table_row">
+							<div class="form-group">
+								<div class="col-lg-12">
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="t8_sensors_useful_life" type="text" id="number" value="<%=request.getParameter(zone + "_useful_life") %>" class="form-control"/>
+									<% } else { %>
+										<input name="t8_sensors_useful_life" type="text" id="number" value="<%=formulaHM.get("t8_sensors_useful_life")[0] %>" class="form-control"/>
+									<% } %>
+								</div>	
+							</div>
+						</div> 
+						<div class="table_row_icon">
+							<a href="#" data-toggle="tooltip" data-placement="bottom" title="remove for analysis"><img id="t8_sensors" onclick="removeThis(this.id)" src="../icons/remove.png" width="50%"></a>
+						</div>
 			    	</div>
 			    	
 			    	<%-- 6th Row: LED --%>
@@ -1043,6 +1015,20 @@ if (today.before(cal)) {
 									<% } %>
 								</div>	
 							</div>
+						</div>
+						<div class="table_row">
+							<div class="form-group">
+								<div class="col-lg-12">
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="LED_useful_life" type="text" id="number" value="<%=request.getParameter(zone + "_useful_life") %>" class="form-control"/>
+									<% } else { %>
+										<input name="LED_useful_life" type="text" id="number" value="<%=formulaHM.get("LED_useful_life")[0] %>" class="form-control"/>
+									<% } %>
+								</div>	
+							</div>
+						</div>
+						<div class="table_row_icon">
+							<a href="#" data-toggle="tooltip" data-placement="bottom" title="remove for analysis"><img id="LED" onclick="removeThis(this.id)" src="../icons/remove.png" width="50%"></a>
 						</div>
 			    	</div>
 			    	
@@ -1143,6 +1129,20 @@ if (today.before(cal)) {
 								</div>	
 							</div>
 						</div>
+						<div class="table_row">
+							<div class="form-group">
+								<div class="col-lg-12">
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="induction_useful_life" type="text" id="number" value="<%=request.getParameter(zone + "_useful_life") %>" class="form-control"/>
+									<% } else { %>
+										<input name="induction_useful_life" type="text" id="number" value="<%=formulaHM.get("induction_useful_life")[0] %>" class="form-control"/>
+									<% } %>
+								</div>	
+							</div>
+						</div>
+						<div class="table_row_icon">
+							<a href="#" data-toggle="tooltip" data-placement="bottom" title="remove for analysis"><img id="induction" onclick="removeThis(this.id)" src="../icons/remove.png" width="50%"></a>
+						</div>
 			    	</div>
 			    	
 			    	<%-- 8th Row: Metal Halide --%>
@@ -1241,6 +1241,20 @@ if (today.before(cal)) {
 									<% } %>
 								</div>	
 							</div>
+						</div>
+						<div class="table_row">
+							<div class="form-group">
+								<div class="col-lg-12">
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="metal_halide_useful_life" type="text" id="number" value="<%=request.getParameter(zone + "_useful_life") %>" class="form-control"/>
+									<% } else { %>
+										<input name="metal_halide_useful_life" type="text" id="number" value="<%=formulaHM.get("metal_halide_useful_life")[0] %>" class="form-control"/>
+									<% } %>
+								</div>	
+							</div>
+						</div>
+						<div class="table_row_icon">
+							<a href="#" data-toggle="tooltip" data-placement="bottom" title="remove for analysis"><img id="metal_halide" onclick="removeThis(this.id)" src="../icons/remove.png" width="50%"></a>
 						</div>
 			    	</div>
 			    	
@@ -1341,10 +1355,204 @@ if (today.before(cal)) {
 								</div>	
 							</div>
 						</div>
+						<div class="table_row">
+							<div class="form-group">
+								<div class="col-lg-12">
+									<% if (request.getParameter(zone + "_installation_cost")!=null) { %>
+										<input name="CFL_useful_life" type="text" id="number" value="<%=request.getParameter(zone + "_useful_life") %>" class="form-control"/>
+									<% } else { %>
+										<input name="CFL_useful_life" type="text" id="number" value="<%=formulaHM.get("CFL_useful_life")[0] %>" class="form-control"/>
+									<% } %>
+								</div>	
+							</div>
+						</div>
+						<div class="table_row_icon">
+							<a href="#" data-toggle="tooltip" data-placement="bottom" title="remove for analysis"><img id="CFL" onclick="removeThis(this.id)" src="../icons/remove.png" width="50%"></a>
+						</div>	
 			    	</div>
-			    	
 			   </div>
-
+			   
+			   <%-- Append back the added rows after generating radar chart --%>
+			   <% 
+			   if (request.getParameterValues("lighting_type[]")!=null) { 
+			   		String[] lighting_type_arr = request.getParameterValues("lighting_type[]");
+			   		String[] num_fixtures_arr = request.getParameterValues("num_fixtures[]");
+			   		String[] lamp_fixture_arr = request.getParameterValues("lamp_fixture[]");
+			   		String[] power_rating_arr = request.getParameterValues("power_rating[]");
+			   		String[] efficacy_arr = request.getParameterValues("efficacy[]");
+			   		String[] ballast_factor_arr = request.getParameterValues("ballast_factor[]");
+			   		String[] op_hours_arr = request.getParameterValues("op_hours[]");
+			   		String[] cost_lamp_arr = request.getParameterValues("cost_lamp[]");
+			   		String[] installation_cost_arr = request.getParameterValues("installation_cost[]");
+			   		String[] useful_life_arr = request.getParameterValues("useful_life[]");
+			   		
+			   		for (int i = 0; i < lighting_type_arr.length; i++) { %>
+			   		
+			   			<div id='row_A<%=i%>' class ="table_inline_flex">
+						    <div class="table_row">
+				            	<div class="form-group">
+									<div class="col-lg-12">
+										<input name="lighting_type[]" type="text" value="<%=lighting_type_arr[i]%>" id="number" class="form-control"/>
+									</div>	
+								</div>
+							</div>
+		       				<div class="table_row">
+				            	<div class="form-group">
+									<div class="col-lg-12">
+										<input name="num_fixtures[]" type="text" value="<%=num_fixtures_arr[i]%>" id="integer" class="form-control"/>
+									</div>	
+								</div>
+							</div>
+							<div class="table_row">
+								<div class="form-group">
+									<div class="col-lg-12">
+										<input name="lamp_fixture[]" type="text" value="<%=lamp_fixture_arr[i]%>" id="integer" class="form-control"/>
+									</div>	
+								</div>
+							</div>
+							<div class="table_row">	
+							
+								<div class="form-group">
+									<div class="col-lg-12">
+										<input name="power_rating[]" type="text" value="<%=power_rating_arr[i]%>" id="integer" class="form-control"/>
+									</div>	
+								</div>
+							</div>
+							<div class="table_row">
+								<div class="form-group">
+									<div class="col-lg-12">
+										<input name="efficacy[]" type="text" value="<%=efficacy_arr[i]%>" id="integer" class="form-control"/>
+									</div>	
+								</div>
+							</div>
+							<div class="table_row">
+								<div class="form-group">
+									<div class="col-lg-12">
+										<input name="ballast_factor[]" type="text" value="<%=ballast_factor_arr[i]%>" id="integer" class="form-control"/>
+									</div>	
+								</div>
+							</div>
+							<div class="table_row">
+								<div class="form-group">
+									<div class="col-lg-12">
+										<input name="op_hours[]" type="text" value="<%=op_hours_arr[i]%>" id="integer" class="form-control"/>
+									</div>	
+								</div>
+							</div>
+							<div class="table_row">
+								<div class="form-group">
+									<div class="col-lg-12">
+										<input name="cost_lamp[]" type="text" value="<%=cost_lamp_arr[i]%>" id="integer" class="form-control"/>
+									</div>	
+								</div>
+							</div>
+							<div class="table_row">
+								<div class="form-group">
+									<div class="col-lg-12">
+										<input name="installation_cost[]" type="text" value="<%=installation_cost_arr[i]%>" id="integer" class="form-control"/>
+									</div>	
+								</div>
+							</div>
+							
+							<div class="table_row">
+								<div class="form-group">
+									<div class="col-lg-12">
+										<input name="useful_life[]" type="text" value="<%=useful_life_arr[i]%>" id="integer" class="form-control"/>
+									</div>	
+								</div>
+							</div>
+				    		
+				    		<div class="table_row_icon">
+								<a href="#" data-toggle="tooltip" data-placement="bottom" title="remove for analysis"><img onclick="removeRow(this.id)" id="A<%=i%>" src="../icons/remove.png" width="50%"></a>
+							</div>	
+					    </div>
+			   			
+			   <%
+			   		}
+			   }
+			   %>
+			   			   
+			   <%-- Hidden row for cloning --%>
+			   <div id='type_row' class ="table_inline_flex hide">
+				    <div class="table_row">
+		            	<div class="form-group">
+							<div class="col-lg-12">
+								<input name="" type="text" value="" class="form-control"/>
+							</div>	
+						</div>
+					</div>
+       				<div class="table_row">
+		            	<div class="form-group">
+							<div class="col-lg-12">
+								<input name="" type="text" value="" class="form-control"/>
+							</div>	
+						</div>
+					</div>
+					<div class="table_row">
+						<div class="form-group">
+							<div class="col-lg-12">
+								<input name="" type="text" value="" class="form-control"/>
+							</div>	
+						</div>
+					</div>
+					<div class="table_row">	
+					
+						<div class="form-group">
+							<div class="col-lg-12">
+								<input name="" type="text" value="" class="form-control"/>
+							</div>	
+						</div>
+					</div>
+					<div class="table_row">
+						<div class="form-group">
+							<div class="col-lg-12">
+								<input name="" type="text" value="" class="form-control"/>
+							</div>	
+						</div>
+					</div>
+					<div class="table_row">
+						<div class="form-group">
+							<div class="col-lg-12">
+								<input name="" type="text" value="" class="form-control"/>
+							</div>	
+						</div>
+					</div>
+					<div class="table_row">
+						<div class="form-group">
+							<div class="col-lg-12">
+								<input name="" type="text" value="" class="form-control"/>
+							</div>	
+						</div>
+					</div>
+					<div class="table_row">
+						<div class="form-group">
+							<div class="col-lg-12">
+								<input name="" type="text" value="" class="form-control"/>
+							</div>	
+						</div>
+					</div>
+					<div class="table_row">
+						<div class="form-group">
+							<div class="col-lg-12">
+								<input name="" type="text" value="" class="form-control"/>
+							</div>	
+						</div>
+					</div>
+					
+					<div class="table_row">
+						<div class="form-group">
+							<div class="col-lg-12">
+								<input name="" type="text" value="" class="form-control"/>
+							</div>	
+						</div>
+					</div>
+		    		
+		    		<div class="table_row_icon">
+						<a href="#" data-toggle="tooltip" data-placement="bottom" title="remove for analysis"><img onclick="removeRow(this.id)" id="" src="../icons/remove.png" width="50%"></a>
+					</div>	
+			    </div>
+			   
+			<br>
       		<br>
 	        <div class="col-md-offset-10">
 	            <button type="submit" class="btn btn-primary" name="action" value="submit">Calculate Payback</button>
