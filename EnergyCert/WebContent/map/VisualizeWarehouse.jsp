@@ -97,7 +97,7 @@ function initialize() {
                 map: map,
                 position: markerData[i].latLng,
                 visible: markerData[i].visible,
-                icon:"images/" + markerData[i].icon
+                icon:"img/" + markerData[i].icon
             }),
 
             boxText = document.createElement("div"),
