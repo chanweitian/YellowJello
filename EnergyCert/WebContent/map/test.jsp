@@ -1,3 +1,5 @@
+<% String company = (String) session.getAttribute("company"); %>
+
 <script type="text/javascript">
 var xmlhttp;
 
@@ -24,7 +26,8 @@ xmlhttp.onreadystatechange=function()
 	  document.write(siteArray);
     }
   }
-xmlhttp.open("GET","getsites.jsp?company="+"China Company",true);
+xmlhttp.open("GET","getsites.jsp?company=<%=company %>",true);
 xmlhttp.send();
 
 </script>
+
