@@ -97,7 +97,7 @@ function initialize() {
                 map: map,
                 position: markerData[i].latLng,
                 visible: markerData[i].visible,
-                icon:"img/" + markerData[i].icon
+                icon:"../img/" + markerData[i].icon
             }),
 
             boxText = document.createElement("div"),
@@ -159,11 +159,8 @@ function initialize() {
     
 }
 
-function filter(){
-	
-	
-	initialize();
-	
+function filter(){		
+	initialize();	
 }
 </script>
 
