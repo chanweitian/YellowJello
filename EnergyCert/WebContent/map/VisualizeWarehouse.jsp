@@ -6,6 +6,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+
+<!-- Bootstrap-->
+<link href="../css/bootstrap.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../css/va_stylesheet.css">
+<script
+	src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="../js/bootstrap.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<!--  Maps -->
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
 
@@ -94,9 +106,9 @@ function initialize(data) {
 	    	sites[i].visible = true;
 	    	
 	    	if (data[i].energyRating >= 0 && data[i].energyRating < 51){
-	    		sites[i].icon = "Green.png";
+	    		sites[i].icon = "B.png";
 	    	} if (data[i].energyRating > 50 && data[i].energyRating < 101){
-	    		sites[i].icon = "Green.png";
+	    		sites[i].icon = "B.png";
 	    	} if (data[i].energyRating > 100 && data[i].energyRating < 151){
 	    		sites[i].icon = "E.png";
 	    	} if (data[i].energyRating > 150 && data[i].energyRating < 201){
@@ -129,7 +141,7 @@ function initialize(data) {
             marker = new google.maps.Marker({
                 map: map,
                 position: markerData[i].latLng,
-                //visible: markerData[i].visible,
+                visible: markerData[i].visible,
                 icon:"../img/" + markerData[i].icon
             }),
 
@@ -159,7 +171,7 @@ function initialize(data) {
             
             //define the text and style for all infoboxes
             boxText.style.cssText = "border: 1px solid black; margin-top: 8px; background:#333; color:#FFF; font-family:Arial; font-size:12px; padding: 5px; border-radius:6px; -webkit-border-radius:6px; -moz-border-radius:6px;";
-            boxText.innerHTML = "Site Name: " + markerData[i].siteName + "<br>" + "Energy Rating: " + markerData[i].energyRating + "<br>" + "Consumption: "  + markerData[i].country + "<br>" + "Size: " + markerData[i].region + markerData[i].country;
+            boxText.innerHTML = "Site Name: " + markerData[i].siteName + "<br>" + "Energy Rating: " + markerData[i].energyRating + "<br>" + "Region: " + markerData[i].region + "<br>" + "Electricity Usage: "  + markerData[i].elec + "<br>" + "Natural Gas Use: " + markerData[i].gas + "<br>" + "Size: " + markerData[i].size;
             
             //Define the infobox
             newMarkers[i].infobox = new InfoBox(infoboxOptions);
@@ -198,16 +210,11 @@ function initialize(data) {
 <!-- Calling of methods -->
 <title>Warehouse Visualization Tool</title>
 </head>
+
 <body onload="getSites()">
-	<form>
-		<select id='country' onchange="filter()">
-		  <option value="Address1">A1</option>
-		  <option value="Address2">A2</option>
+	<%@include file="../header.jsp"%>
+	<br><br><br>
 	
-		</select>
-	</form>
-	
-	<br>
 	<div id="map_canvas" style="width: 100%;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px; height: 600px; border:1px solid #666; box-shadow: 0px 0px 10px #333;"></div>
 		
 		<script type="text/javascript">
