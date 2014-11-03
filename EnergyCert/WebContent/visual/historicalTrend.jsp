@@ -29,7 +29,7 @@
 	String company = (String) request.getAttribute("company");
 	ArrayList<String> warehouses1 = (ArrayList<String>) request.getAttribute("warehouses");
 	boolean status = true;
-	if (warehouses1.size()==0){
+	if (warehouses1 == null){
 		status = false;
 	}
 	//convert Java ArrayList to js
@@ -41,10 +41,12 @@
 	var company = "<%=company%>";
 	var chartSRC = "";
 	var tableSRC = "";
-<%//Pushing the data into years
+<%//Pushing the data into dropdown
+	if(status == true){
 	for(int i = 0; i <warehouses1.size(); i++){%>
 	warehouses.push("<%=warehouses1.get(i)%>");
-<%}%>
+	
+<%}}%>
 	// methods for dynamically adding options to text box
 	var addOption = function(selectbox, text, value) {
 		var optn = document.createElement("OPTION");
@@ -113,7 +115,6 @@
 		var draw = function(result) {
 			var siteName = result.sites[0].siteName;
 
-
 			var data3 = new google.visualization.DataTable();
 			data3.addColumn('number', 'Year');
 			data3.addColumn('number', siteName);
@@ -123,27 +124,33 @@
 		    data.addColumn('number', 'Energy Efficiency Rating');
 		    data.addColumn('string', 'Grade');	
 		    
-		    var j = 1;
-		    var k = 2;
 			for (i = 0; i < result.sites.length; i++) {
-				var energyRating = result.sites[0].energyRating;
+				var energyRating = result.sites[i].energyRating;
 				var year = result.sites[i].year;
 				var grade = result.sites[i].grade;
 				data3.addRows(1);
 				data3.setCell(i, 0, parseInt(year));
-				data3.setCell(i, j, parseInt(energyRating));
+				data3.setCell(i, 1, parseInt(energyRating));
 				data.addRows(1);
 				data.setCell(i, 0, parseInt(year));
-				data.setCell(i, j, parseInt(energyRating));
-				data.setCell(i, k, grade);
-				j++;
-				k++;
+				data.setCell(i, 1, parseInt(energyRating));
+				data.setCell(i, 2, String(grade));
+
 			}
 
 			var options = {
 				title : 'Historical Site Trend : ' + siteName,
-				hAxis : {
+				hAxis: {
 					title : 'Year'
+					//viewWindow: {
+				     //   var maxYrPosition = result.sites.length;
+				    //    var maxYr = result.sites[maxYrPosition-1].year;
+				     //   var minYr = result.sites[0].year;
+					//	min: 2010,
+				    //   max: 2014
+				    //},
+				    //ticks: [2010, 2012, 2014]
+				    
 				},
 				vAxis : {
 					title : 'Energy Efficiency Rating'

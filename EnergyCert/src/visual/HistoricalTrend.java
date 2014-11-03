@@ -40,28 +40,44 @@ public class HistoricalTrend extends HttpServlet {
 		RequestDispatcher rd = request.getRequestDispatcher("historicalTrend.jsp");
 		//join table on site id
 		HttpSession session = request.getSession();
-		String companyName = (String) session.getAttribute("company");
 		
 		try {
-			RetrievedObject ro = SQLManager.retrieveRecords("site s, questionnaire q", "s.site_id = q.site_id and s.company=\'" + companyName + "\'");
+		
+			String desc = (String) session.getAttribute("userdesc");
+			String comp = (String) session.getAttribute("company");
+			String type = (String) session.getAttribute("usertype");
+			if (type.equals("Site")) {
+				type = "site_info_name";
+			} else if (type.equals("Country")) {
+				type = "site_info_address_country";
+			}
+			
+			
+			String where = "company=\'"+ comp + "\' and " + type + "=\'" + desc + "\'";
+			RetrievedObject ro = SQLManager.retrieveRecords("site", where); 
 			ResultSet rs = ro.getResultSet();
 			
 				ArrayList<String> warehouseNames = new ArrayList<String>();
-				HashSet<String> warehouses = new HashSet<String>();	
-				
+				HashSet<String> tempWarehouses = new HashSet<String>();	
 				while(rs.next()){	
 					String site = rs.getString("site_info_name");
-					warehouses.add(site);
+					tempWarehouses.add(site);
 				}
 				ro.close();
 				
-				Iterator<String> iter = warehouses.iterator();
+				Iterator<String> iter = tempWarehouses.iterator();
 				while (iter.hasNext()) {
-					(warehouseNames).add(iter.next());
+					String site_info_name = iter.next();
+					RetrievedObject ro1 = SQLManager.retrieveRecords("site s, questionnaire q", "s.site_id = q.site_id and s.site_info_name=\'" + site_info_name + "\'");
+					ResultSet rs1 = ro1.getResultSet();
+					if (rs1.next()) {
+						warehouseNames.add(site_info_name);
+					}
+					ro1.close();
 				}
-					  
+				 
 				request.setAttribute("warehouses", warehouseNames);				
-				request.setAttribute("company", companyName);
+				request.setAttribute("company", comp);
 
 				
 		} catch (Exception e) {
