@@ -1,3 +1,8 @@
+<%@ page language="java" contentType="text/html; charset=US-ASCII"
+	pageEncoding="US-ASCII"%>
+<%@ page import="db.*,java.util.*,java.sql.*,visual.*"%>
+<%@include file="../protectusers.jsp"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,16 +11,49 @@
 
 <script type="text/javascript">
 
-var sites = [
-         	{siteName: "Address 1", region: "State 1" , country: "c1", energyRating: 50, postal: "159961", visible:true},
-        	{siteName: "Address 2", region: "State 2" , country: "c2", energyRating: 150, postal: "V6B3P8", visible:true},
-         	{siteName: "Address 3", region: "State 3" , country: "c3", energyRating: 400, postal: "530961", visible:true},
-        	{siteName: "Address 4", region: "State 1" , country: "c1", energyRating: 50, postal: "100075", visible:true},
-        	{siteName: "Address 5", region: "State 2" , country: "c2", energyRating: 150, postal: "510017", visible:true},
-         	{siteName: "Address 6", region: "State 3" , country: "c3", energyRating: 400, postal: "112", visible:true}
-        	];
+<%
+	// retrieve Info
+	//Only if there is information then show.
+	String companyName = (String) request.getAttribute("company");
+	ArrayList<String> years = (ArrayList<String>) request.getAttribute("years");
+	boolean status = true;
+	if (years.size()==0){
+		status = false;
+	}
+	//convert Java ArrayList to js
+	
+%>
+var companyName = "<%=companyName%>";
+        	
+function getSites(){
 
-function initialize() {
+	var year = '2013';
+	filterValue = 'none';
+	request = new XMLHttpRequest(), typeValue = "get",
+			urlValue = "GenerateMap?year=" + year + "&company="+ companyName;
+	
+	request.onreadystatechange = function() {
+		if (request.readyState == 4 && request.status == 200) {
+			var result = JSON.parse(request.responseText);
+
+			//console.log(result.sites[0].siteName);
+			initialize(JSON.parse(request.responseText).sites);
+			
+			//return JSON.parse(request.responseText).sites;
+		}
+	}
+	
+	request.open('GET', urlValue, true);
+	request.send();
+	
+}
+
+function initialize(data) {
+	
+	var sites = data;
+	//var data = getSites();
+	console.log("Sites in initialize double checking" + sites[0].siteName);
+		
 	var geocoder = new google.maps.Geocoder();
     var focus = new google.maps.LatLng(-33.9, 151.2),
         markers,
@@ -26,15 +64,15 @@ function initialize() {
         },
         map = new google.maps.Map(document.getElementById("map_canvas"), myMapOptions);
     
-    function geocodeAddress(siteArray, i, next) {
+    function geocodeAddress(data, i, next) {
     	var coordinates,address;
-    	address = siteArray[i].postal;
+    	var address = data[i].postal;
 		
     	geocoder.geocode( { 'address': address}, function(results, status) {
 	 	    if (status == google.maps.GeocoderStatus.OK) {
 	 	    	var latLong = results[0].geometry.location;
 	 	   		coordinates = latLong.lat() + "," + latLong.lng();
-	 	     	
+	 	   		
 	 	   		sites[i].latLng = latLong;
 	 	   		console.log("geocodeAddresses " + sites[i].siteName + "  " + sites[i].latLng);
 	 	       	
@@ -48,42 +86,37 @@ function initialize() {
 		});
     }
     
-    function siteConverter(siteArray, next) {
+    function siteConverter(data, next) {
     	//Geocoding portion - converting postal code to latlng
-	    for (var i=0; i<siteArray.length; i++){
-	    	<!--alert(siteArray[i].energyRating);-->
+	    for (var i=0; i<data.length; i++){
+	    	<!--alert(data[i].energyRating);-->
 	    	
-	    	if (siteArray[i].energyRating > 0 && siteArray[i].energyRating < 51){
-	    		sites[i].icon = "B.png";
-	    	} if (siteArray[i].energyRating > 50 && siteArray[i].energyRating < 101){
-	    		sites[i].icon = "B.png";
-	    	} if (siteArray[i].energyRating > 100 && siteArray[i].energyRating < 151){
+	    	sites[i].visible = true;
+	    	
+	    	if (data[i].energyRating >= 0 && data[i].energyRating < 51){
+	    		sites[i].icon = "Green.png";
+	    	} if (data[i].energyRating > 50 && data[i].energyRating < 101){
+	    		sites[i].icon = "Green.png";
+	    	} if (data[i].energyRating > 100 && data[i].energyRating < 151){
 	    		sites[i].icon = "E.png";
-	    	} if (siteArray[i].energyRating > 150 && siteArray[i].energyRating < 201){
+	    	} if (data[i].energyRating > 150 && data[i].energyRating < 201){
 	    		sites[i].icon = "E.png";
-	    	} if (siteArray[i].energyRating > 200 && siteArray[i].energyRating < 251){
+	    	} if (data[i].energyRating > 200 && data[i].energyRating < 251){
 	    		sites[i].icon = "E.png";
-	    	} if (siteArray[i].energyRating > 250 && siteArray[i].energyRating < 301){
+	    	} if (data[i].energyRating > 250 && data[i].energyRating < 301){
 	    		sites[i].icon = "G.png";
-	    	} if (siteArray[i].energyRating > 300) {
+	    	} if (data[i].energyRating > 300) {
 	    		sites[i].icon = "G.png";
 	    	}
 
-	    	if(i ==  siteArray.length-1){
-		    	geocodeAddress(siteArray, i, next);
+	    	if(i == data.length-1){
+		    	geocodeAddress(data, i, next);
 	    	} else {
-		    	geocodeAddress(siteArray, i);	    		
+		    	geocodeAddress(data, i);	    		
 	    	}
 	    }
     	
-    }
-    
-    function checkArray(){
-		var str;
-    	for (var i=0; i<sites.length; i++){
-    		alert("checkArray " + sites[i].siteName);
-	    	
-	    }
+    	return data;
     }
     
     function initMarkers(map, markerData) {
@@ -92,11 +125,11 @@ function initialize() {
             image;
             
         for(var i=0; i<markerData.length; i++) {
-        	
+        	console.log("Marker Data " + markerData.length + " " + markerData[i].icon +  markerData[i].energyRating);
             marker = new google.maps.Marker({
                 map: map,
                 position: markerData[i].latLng,
-                visible: markerData[i].visible,
+                //visible: markerData[i].visible,
                 icon:"../img/" + markerData[i].icon
             }),
 
@@ -151,23 +184,21 @@ function initialize() {
    	
     console.log("Waiting for site converter first");
     
-    siteConverter(sites, function(){
+    siteConverter(data, function(){
     	console.log("Site converter done! Plotting markers");
+    	
     	//here the call to initMarkers() is made with the necessary data for each marker.  All markers are then returned as an array into the markers variable
     	markers = initMarkers(map,sites);	
     });    
     
 }
 
-function filter(){		
-	initialize();	
-}
 </script>
 
 <!-- Calling of methods -->
 <title>Warehouse Visualization Tool</title>
 </head>
-<body onload="initialize()">
+<body onload="getSites()">
 	<form>
 		<select id='country' onchange="filter()">
 		  <option value="Address1">A1</option>

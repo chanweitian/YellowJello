@@ -300,12 +300,28 @@
     <servlet-name>HistoricalTrend</servlet-name>
     <url-pattern>/visual/historicalTrend</url-pattern>
   </servlet-mapping>
-    <servlet>
+   <servlet>
     <servlet-name>RetrieveWarehouseData</servlet-name>
     <servlet-class>visual.RetrieveWarehouseData</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>RetrieveWarehouseData</servlet-name>
     <url-pattern>/visual/warehouseData</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>MapData</servlet-name>
+    <servlet-class>map.MapData</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MapData</servlet-name>
+    <url-pattern>/map/Map</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>GenerateMap</servlet-name>
+    <servlet-class>map.GenerateMap</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GenerateMap</servlet-name>
+    <url-pattern>/map/GenerateMap</url-pattern>
   </servlet-mapping>
 </web-app>
