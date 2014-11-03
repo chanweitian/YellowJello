@@ -120,7 +120,7 @@
 		
 		    var $templateEle = $('#type_row'),
 		        $row         = $templateEle.clone().attr('id','row_'+count).insertBefore($templateEle).removeClass('hide'),
-		        $el1         = $row.find('input').eq(0).attr('name', 'lighting_type[]').attr('id','lighting_type').attr('data-bv-field','number'),
+		        $el1         = $row.find('input').eq(0).attr('name', '\\[]').attr('id','lighting_type').attr('data-bv-field','number'),
 		        $el2         = $row.find('input').eq(1).attr('name', 'num_fixtures[]').attr('id','integer').attr('data-bv-field','integer'),
 		    	$el3         = $row.find('input').eq(2).attr('name', 'lamp_fixture[]').attr('id','integer').attr('data-bv-field','integer'),
 		    	$el4         = $row.find('input').eq(3).attr('name', 'power_rating[]').attr('id','number').attr('data-bv-field','integer'),

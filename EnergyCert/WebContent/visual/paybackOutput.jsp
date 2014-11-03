@@ -45,6 +45,7 @@
 		
 		<%
 		HashMap<String, ArrayList<String>> paybackMap = (HashMap<String,ArrayList<String>>) request.getAttribute("paybackMap");
+		
 		Set<String> keySet = new HashSet<String>();
 		String[] arr = {};
 		if(paybackMap!=null) {
@@ -58,7 +59,7 @@
 <script>
 
 var radarChartData = {
-	labels: ["Payback (Year)", "Rating (% change)", "Lighting Output (% change)"],
+	labels: ["IRR (%)", "Rating (% change)", "Lighting Output (% change)"],
 	datasets: [
 	           <%
 	           int count = 0;
@@ -498,7 +499,6 @@ if (today.before(cal)) {
 							</div>
 						</div>
 						<div class="table_row">	
-						
 							<div class="form-group">
 								<div class="col-lg-12">
 									<% if (request.getParameter(zone + "_power_rating")!=null) { %>
@@ -1583,7 +1583,7 @@ if (today.before(cal)) {
 <% if (paybackMap!=null) { %>
 <div id="main">
 
-<canvas id="canvas" width="800" height="600"></canvas>
+<canvas id="canvas" width="600" height="600"></canvas>
 <div class='my-legend'>
 <div class='legend-title'>Legend</div>
 <div class='legend-scale'>
@@ -1600,7 +1600,29 @@ if (today.before(cal)) {
   </ul>
 </div>
 <!-- <div class='legend-source'>Source: <a href="#link to source">Name of source</a></div> -->
+  	<%
+  	HashMap<String, ArrayList<String>> negativeMap = (HashMap<String,ArrayList<String>>) request.getAttribute("negativeMap");
+  	if(negativeMap != null){
+  		
+  		Set<String> negativeKeys = negativeMap.keySet();
+  	%>
+
+<div class='legend-scale'>
+  <ul class='legend-labels'>
+  	<%
+  	count = 0;
+	for(String key: negativeKeys){
+	%>
+    <li>*<%=key %> is  undesirable as its values are significantly lower</li>
+    <%
+    count++;
+    } 
+    %>
+  </ul>
 </div>
+<%} %>
+</div>
+
 
 <style type='text/css'>
 
@@ -1609,12 +1631,11 @@ if (today.before(cal)) {
 }
 
 
-  .my-legend .legend-title {
+  .legend-title {
     text-align: left;
     margin-bottom: 5px;
     font-weight: bold;
     font-size: 90%;
-    
     }
   .my-legend .legend-scale ul {
     margin: 0;

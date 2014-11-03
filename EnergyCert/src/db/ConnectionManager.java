@@ -27,7 +27,7 @@ public class ConnectionManager {
 	 private static String JDBC_USER = "adminGjbnEWc"; private static String
 	 JDBC_PASSWORD = "4Wbtlw3MmbuR"; 
 	 private static Properties props = new Properties();
-	 */
+	*/
 
 	// Digital Ocean Settings
 	

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -22,6 +23,8 @@ import utility.PeriodManager;
 import utility.WeatherManager;
 import db.RetrievedObject;
 import db.SQLManager;
+
+import org.apache.poi.ss.formula.functions.*;
 
 /**
  * Servlet implementation class PaybackServlet
@@ -44,6 +47,7 @@ public class PaybackServlet extends HttpServlet {
 	private RetrievedObject ro;
 	private ResultSet rs;
 	private HashMap<String, ArrayList<String>> paybackMap;
+	private HashMap<String, ArrayList<String>> negativeMap;
 
 	private double benchmark;
 	private double actualConsumption;
@@ -66,7 +70,12 @@ public class PaybackServlet extends HttpServlet {
 
 		RequestDispatcher rd = request.getRequestDispatcher("paybackOutput.jsp");
 
+		
+		
+		
+		
 		paybackMap = new HashMap<String, ArrayList<String>>();
+		negativeMap = new HashMap<String, ArrayList<String>>();
 
 		System.out.println("================"+request.getParameter("zone_id"));
 		
@@ -98,6 +107,7 @@ public class PaybackServlet extends HttpServlet {
 			calculateLightingAssessmentData(request);
 
 			request.setAttribute("paybackMap", paybackMap);
+			request.setAttribute("negativeMap", negativeMap);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,8 +145,8 @@ public class PaybackServlet extends HttpServlet {
 
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("0");
-		list.add("1");
-		list.add("1");
+		list.add("100");
+		list.add("100");
 
 		paybackMap.put(name, list);
 
@@ -144,86 +154,239 @@ public class PaybackServlet extends HttpServlet {
 
 		String[] zoneList = request.getParameterValues("types[]");
 
-		for (String zone : zoneList) {
-
-			name = zone;
-
-			list = new ArrayList<String>();
-
-			numOfFixture = Double.parseDouble(request.getParameter(zone
-					+ "_num_fixtures"));
-			lampPerFixture = Double.parseDouble(request.getParameter(zone
-					+ "_lamp_fixture"));
-			powerRating = Double.parseDouble(request.getParameter(zone
-					+ "_power_rating"));
-			efficacy = Double.parseDouble(request.getParameter(zone
-					+ "_efficacy"));
-			ballastFactor = Double.parseDouble(request.getParameter(zone
-					+ "_ballast_factor"));
-			opsHoursRed = Double.parseDouble(request.getParameter(zone
-					+ "_op_hours")) / 100;
-
-			System.out
-					.println("operationHoursPerYear:" + operationHoursPerYear);
-
-			double annualKwh = numOfFixture * lampPerFixture * powerRating
-					* operationHoursPerYear / 1000 * opsHoursRed;
-			double annualCost = annualKwh * costPerKwh;
-
-			double lightOutput = numOfFixture * lampPerFixture * powerRating
-					* efficacy * ballastFactor;
-
-			double costPerLamp = Double.parseDouble(request.getParameter(zone
-					+ "_cost_lamp"));
-			double installationCostPerFixture = Double.parseDouble(request
-					.getParameter(zone + "_installation_cost"));
-			double investmentCost = numOfFixture * lampPerFixture * costPerLamp
-					+ numOfFixture * installationCostPerFixture;
-			double annualSavings = currentAnnualCost - annualCost;
-
-			double payback = investmentCost / annualSavings;
-
-			double newRating = (actualConsumption - (currentAnnualKwh - annualKwh))
-					/ benchmark * 100;
+		if(zoneList != null){
+			for (String zone : zoneList) {
+	
+				name = zone;
+	
+				list = new ArrayList<String>();
+	
+				numOfFixture = Double.parseDouble(request.getParameter(zone
+						+ "_num_fixtures"));
+				lampPerFixture = Double.parseDouble(request.getParameter(zone
+						+ "_lamp_fixture"));
+				powerRating = Double.parseDouble(request.getParameter(zone
+						+ "_power_rating"));
+				efficacy = Double.parseDouble(request.getParameter(zone
+						+ "_efficacy"));
+				ballastFactor = Double.parseDouble(request.getParameter(zone
+						+ "_ballast_factor"));
+				opsHoursRed = Double.parseDouble(request.getParameter(zone
+						+ "_op_hours")) / 100;
+				
+				
+				int usefulLife = Integer.parseInt(request.getParameter(zone
+						+ "_useful_life"));
+	
+				System.out.println("operationHoursPerYear:" + operationHoursPerYear);
+	
+				double annualKwh = numOfFixture * lampPerFixture * powerRating
+						* operationHoursPerYear / 1000 * opsHoursRed;
+				double annualCost = annualKwh * costPerKwh;
+	
+				double lightOutput = numOfFixture * lampPerFixture * powerRating
+						* efficacy * ballastFactor;
+	
+				double costPerLamp = Double.parseDouble(request.getParameter(zone
+						+ "_cost_lamp"));
+				double installationCostPerFixture = Double.parseDouble(request
+						.getParameter(zone + "_installation_cost"));
+				double investmentCost = numOfFixture * lampPerFixture * costPerLamp
+						+ numOfFixture * installationCostPerFixture;
+				double annualSavings = currentAnnualCost - annualCost;
+	
+				//double payback = investmentCost / annualSavings;
+				
+				
+				
+				double[] values = new double[usefulLife + 1];
+				
+				values[0] = -investmentCost;
+				for(int i=1; i<values.length; i++){
+					values[i] = annualSavings;
+				}
+				
+				
+				
+				double irr = Irr.irr(values) * 100;
+	
+				double newRating = (actualConsumption - (currentAnnualKwh - annualKwh))
+						/ benchmark * 100;
+				
+				
+				double ratingPercentage =  (currentRating - newRating)
+						/ currentRating;
+	
+				double lightOuputPercentage = (lightOutput - currentLightOuput)
+						/ currentLightOuput;
+	
+				//temp
+				//payback = 15;
+				
+				DecimalFormat df = new DecimalFormat("#.##"); 
+				ratingPercentage = (1+ratingPercentage) * 100;
+				lightOuputPercentage = (1+lightOuputPercentage) * 100;
+				
+				list.add(df.format(irr));
+				list.add(df.format(ratingPercentage));
+				list.add(df.format(lightOuputPercentage));
+	
+				System.out.println("Hello World"+irr);
+				System.out.println("==============" + zone);
+	
+				System.out.println("numOfFixture:" + numOfFixture);
+				System.out.println("lampPerFixture:" + lampPerFixture);
+				System.out.println("powerRating:" + powerRating);
+				System.out.println("efficacy:" + efficacy);
+				System.out.println("ballastFactor:" + ballastFactor);
+				System.out.println("opsHoursRed:" + opsHoursRed);
+	
+				System.out.println("annualKwh:" + annualKwh);
+				System.out.println("annualCost:" + annualCost);
+				System.out.println("lightOutput:" + lightOutput);
+				System.out.println("currentLightOutput "+lightOutput);
+				System.out.println("costPerLamp:" + costPerLamp);
+				System.out.println("installationCostPerFixture:"
+						+ installationCostPerFixture);
+				System.out.println("investmentCost:" + investmentCost);
+				System.out.println("annualSavings:" + annualSavings);
+	
+				System.out.println("currentRating:" + currentRating);
+				System.out.println("newRating:" + newRating);
+				System.out.println("Irr:" + irr);
+				System.out.println("ratingPercentage:" + ratingPercentage);
+				System.out.println("lightOuputPercentage:" + lightOuputPercentage);
+	
+				if(irr < 0 || 1+ratingPercentage < 0 || 1+lightOuputPercentage < 0){
+					System.out.println(name +"is going to the negative map");
+					negativeMap.put(name, list);
+				} else {
+					paybackMap.put(name, list);
+				}
+			}
 			
-			
-			double ratingPercentage =  (currentRating - newRating)
-					/ currentRating;
-
-			double lightOuputPercentage = (lightOutput - currentLightOuput)
-					/ currentLightOuput;
-
-			list.add(payback + "");
-			list.add(1+ratingPercentage + "");
-			list.add(1+lightOuputPercentage + "");
-
-			System.out.println("==============" + zone);
-
-			System.out.println("numOfFixture:" + numOfFixture);
-			System.out.println("lampPerFixture:" + lampPerFixture);
-			System.out.println("powerRating:" + powerRating);
-			System.out.println("efficacy:" + efficacy);
-			System.out.println("ballastFactor:" + ballastFactor);
-			System.out.println("opsHoursRed:" + opsHoursRed);
-
-			System.out.println("annualKwh:" + annualKwh);
-			System.out.println("annualCost:" + annualCost);
-			System.out.println("lightOutput:" + lightOutput);
-			System.out.println("currentLightOutput "+lightOutput);
-			System.out.println("costPerLamp:" + costPerLamp);
-			System.out.println("installationCostPerFixture:"
-					+ installationCostPerFixture);
-			System.out.println("investmentCost:" + investmentCost);
-			System.out.println("annualSavings:" + annualSavings);
-
-			System.out.println("currentRating:" + currentRating);
-			System.out.println("newRating:" + newRating);
-			System.out.println("payback:" + payback);
-			System.out.println("ratingPercentage:" + ratingPercentage);
-			System.out.println("lightOuputPercentage:" + lightOuputPercentage);
-
-			paybackMap.put(name, list);
 		}
+		
+		String[] customZoneList = request.getParameterValues("lighting_type[]");
+		String[] numFixtureList = request.getParameterValues("num_fixtures[]");
+		String[] lampFixtureList = request.getParameterValues("lamp_fixture[]");
+		String[] powerRatingList = request.getParameterValues("power_rating[]");
+		String[] efficacyList = request.getParameterValues("efficacy[]");
+		String[] ballastFactorList = request.getParameterValues("ballast_factor[]");
+		String[] opHoursList = request.getParameterValues("op_hours[]");
+		String[] costLampList = request.getParameterValues("cost_lamp[]");
+		String[] installationCostList = request.getParameterValues("installation_cost[]");
+		String[] usefulLifeList = request.getParameterValues("useful_life[]");
+		
+		if(customZoneList != null){
+		
+			for(int i=0; i<customZoneList.length; i++){
+				
+				name = customZoneList[i];
+	
+				
+				
+				list = new ArrayList<String>();
+	
+				numOfFixture = Double.parseDouble(numFixtureList[i]);
+				
+				lampPerFixture = Double.parseDouble(lampFixtureList[i]);
+				powerRating = Double.parseDouble(powerRatingList[i]);
+				efficacy = Double.parseDouble(efficacyList[i]);
+				ballastFactor = Double.parseDouble(ballastFactorList[i]);
+				opsHoursRed = Double.parseDouble(opHoursList[i]) / 100;
+				
+				int usefulLife = Integer.parseInt(usefulLifeList[i]);
+	
+				System.out.println("operationHoursPerYear:" + operationHoursPerYear);
+	
+				double annualKwh = numOfFixture * lampPerFixture * powerRating
+						* operationHoursPerYear / 1000 * opsHoursRed;
+				double annualCost = annualKwh * costPerKwh;
+	
+				double lightOutput = numOfFixture * lampPerFixture * powerRating
+						* efficacy * ballastFactor;
+	
+				double costPerLamp = Double.parseDouble(costLampList[i]);
+				double installationCostPerFixture = Double.parseDouble(installationCostList[i]);
+				double investmentCost = numOfFixture * lampPerFixture * costPerLamp
+						+ numOfFixture * installationCostPerFixture;
+				double annualSavings = currentAnnualCost - annualCost;
+	
+				//double payback = investmentCost / annualSavings;
+				
+				
+				
+				double[] values = new double[usefulLife + 1];
+				
+				values[0] = -investmentCost;
+				for(int j=1; j<values.length; j++){
+					values[j] = annualSavings;
+				}
+				
+				
+				
+				double irr = Irr.irr(values) * 100;
+	
+				double newRating = (actualConsumption - (currentAnnualKwh - annualKwh))
+						/ benchmark * 100;
+				
+				
+				double ratingPercentage =  (currentRating - newRating)
+						/ currentRating;
+	
+				double lightOuputPercentage = (lightOutput - currentLightOuput)
+						/ currentLightOuput;
+	
+				//temp
+				//payback = 15;
+				
+				DecimalFormat df = new DecimalFormat("#.##"); 
+				ratingPercentage = (1+ratingPercentage) * 100;
+				lightOuputPercentage = (1+lightOuputPercentage) * 100;
+				
+				list.add(df.format(irr));
+				list.add(df.format(ratingPercentage));
+				list.add(df.format(lightOuputPercentage));
+	
+				System.out.println("Hello World"+irr);
+				System.out.println("==============" + name);
+	
+				System.out.println("numOfFixture:" + numOfFixture);
+				System.out.println("lampPerFixture:" + lampPerFixture);
+				System.out.println("powerRating:" + powerRating);
+				System.out.println("efficacy:" + efficacy);
+				System.out.println("ballastFactor:" + ballastFactor);
+				System.out.println("opsHoursRed:" + opsHoursRed);
+	
+				System.out.println("annualKwh:" + annualKwh);
+				System.out.println("annualCost:" + annualCost);
+				System.out.println("lightOutput:" + lightOutput);
+				System.out.println("currentLightOutput "+lightOutput);
+				System.out.println("costPerLamp:" + costPerLamp);
+				System.out.println("installationCostPerFixture:"
+						+ installationCostPerFixture);
+				System.out.println("investmentCost:" + investmentCost);
+				System.out.println("annualSavings:" + annualSavings);
+	
+				System.out.println("currentRating:" + currentRating);
+				System.out.println("newRating:" + newRating);
+				System.out.println("Irr:" + irr);
+				System.out.println("ratingPercentage:" + ratingPercentage);
+				System.out.println("lightOuputPercentage:" + lightOuputPercentage);
+	
+				if(irr < 0 || 1+ratingPercentage < 0 || 1+lightOuputPercentage < 0){
+					negativeMap.put(name, list);
+				} else {
+					paybackMap.put(name, list);
+				}
+				
+			}
+		}
+		
+		
+		
+		
 
 		/*
 		 * 
