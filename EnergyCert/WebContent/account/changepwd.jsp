@@ -1,4 +1,23 @@
-<%@include file="../protect.jsp" %>
+<%@page import="db.*,java.sql.*" %>
+<% String link = request.getParameter("link");
+String uid = null;
+if (link!=null) {
+	RetrievedObject ro = SQLManager.retrieveRecords("password_link", "link=\'" + link + "\'");
+	ResultSet rs = ro.getResultSet();
+	try {
+		if (rs.next()) {
+			uid = rs.getString("Userid");
+		} else {
+			response.sendRedirect("/EnergyCert");
+			return;
+		}
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+	ro.close();
+} else { %>
+	<%@include file="../protect.jsp" %>
+<% } %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,7 +88,7 @@
 
 
  
-
+<% if (link==null) { %>
       	<div class="row" id="pwd-container">
 		  <div class="form-group">
 		    <label for="current_password" class="col-sm-5 control-label">Current Password</label>
@@ -77,6 +96,10 @@
 		      <input type="password" class="form-control" id="current_password" name="current_password" required>
 		    </div>
 		  </div>
+<% } else { %>
+	<input type="hidden" name="link" value="<%=link %>" />
+	<input type="hidden" name="uid" value="<%=uid %>" />
+<% } %>
 		  <div class="form-group">
 		    <label for="new_password" class="col-sm-5 control-label">New Password</label>
 		    <div class="col-sm-7">

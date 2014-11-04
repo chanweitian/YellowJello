@@ -1,4 +1,9 @@
-
+<%
+String changeMsg = (String) session.getAttribute("changeMsg");
+session.removeAttribute("changeMsg");
+if (changeMsg!=null) { %>
+	<script>alert("<%=changeMsg%>")</script>
+<% } %>
 <!DOCTYPE html>
 <html lang="en">
   <head>

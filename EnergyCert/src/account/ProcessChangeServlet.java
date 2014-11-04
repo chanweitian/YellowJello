@@ -52,47 +52,68 @@ public class ProcessChangeServlet extends HttpServlet {
 	protected void processView(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String currentPassword = request.getParameter("current_password");
+		String link = request.getParameter("link");
+		String userid = null;
+		HttpSession session = request.getSession();
+		if (link==null) {
+			userid = (String) session.getAttribute("userid");
+		} else {
+			userid = request.getParameter("uid");
+		}
 		String newPassword = request.getParameter("new_password");
 		String confirmPassword = request.getParameter("confirm_password");
-
-		HttpSession session = request.getSession();
-		String userid = (String) session.getAttribute("userid");
 		String changeMsg = null;
 
-		if (currentPassword.trim().length() == 0) {
-			changeMsg = "Please input current password";
-		} else if (newPassword.trim().length() == 0) {
-			changeMsg = "Please input new password";
-		} else if (confirmPassword.trim().length() == 0) {
-			changeMsg = "Please input confirm password";
-		} else {
-
-			RetrievedObject ro = SQLManager.retrieveRecords("account",
-					"Userid=\'" + userid + "\'");
-			ResultSet rs = ro.getResultSet();
-			try {
-				while (rs.next()) {
-					if (!currentPassword.equals(rs.getString("Password"))) {
-						changeMsg = "Invalid password";
-					} else if (!newPassword.equals(confirmPassword)) {
-						changeMsg = "New password does not match with confirm password";
-					} else {
-						SQLManager.updateRecords("account", "Password=\'"
-								+ newPassword + "\'", "Userid=\'" + userid
-								+ "\'");
-						changeMsg = "Password changed successfully";
-					}
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if (link==null) {
+			if (request.getParameter("current_password").trim().length() == 0) {
+				changeMsg = "Please input current password";
 			}
-			ro.close();
+		} 
+		if (changeMsg==null) {
+			if (newPassword.trim().length() == 0) {
+				changeMsg = "Please input new password";
+			} else if (confirmPassword.trim().length() == 0) {
+				changeMsg = "Please input confirm password";
+			} else {
+	
+				RetrievedObject ro = SQLManager.retrieveRecords("account",
+						"Userid=\'" + userid + "\'");
+				ResultSet rs = ro.getResultSet();
+				try {
+					while (rs.next()) {
+						if (link==null) {
+							if (!request.getParameter("current_password").equals(rs.getString("Password"))) {
+								changeMsg = "Invalid current password";
+							}
+						} 
+						if (changeMsg==null) {
+							if (!newPassword.equals(confirmPassword)) {
+								changeMsg = "New password does not match with confirm password";
+							} else {
+								SQLManager.updateRecords("account", "Password=\'"
+										+ newPassword + "\'", "Userid=\'" + userid
+										+ "\'");
+								changeMsg = "Password changed successfully";
+								if (link!=null) {
+									SQLManager.deleteRecords("password_link", "Link=\'" + link + "\'");
+								}
+							}
+						}
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				ro.close();
+			}
 		}
 
 		session.setAttribute("changeMsg", changeMsg);
-		response.sendRedirect("changepwd.jsp");
+		if (link==null) {
+			response.sendRedirect("changepwd.jsp");
+		} else {
+			response.sendRedirect("changepwd.jsp?link=" + link);
+		}
 	}
 
 }

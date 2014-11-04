@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -76,7 +77,10 @@ public class ProcessRetrievalServlet extends HttpServlet {
 			try {
 				if (rs.next()) {
 					hasUserid = true;
-					String pwd = rs.getString("Password");
+					String userid = rs.getString("Userid");
+					String uuid = UUID.randomUUID().toString();
+					String values = "\'" + userid + "\',\'" + uuid + "\'";
+					SQLManager.insertRecord("password_link", values);
 
 					final String username = "gtl.fypeia@gmail.com";
 					final String password = "pa55w0rd#";
@@ -102,9 +106,10 @@ public class ProcessRetrievalServlet extends HttpServlet {
 								"gtl.fypeia@gmail.com"));
 						message.setRecipients(Message.RecipientType.TO,
 								InternetAddress.parse(email));
-						message.setSubject("Password Retrieval");
-						message.setText("Dear User," + "\n\n Your password is "
-								+ pwd);
+						message.setSubject("Password Reset");
+						message.setText("Dear User,"
+								+ "\n \nVisit this link to reset your password: "
+								+ "http://apps.greentransformationlab.com/EnergyCert/account/changepwd.jsp?link=" + uuid);
 
 						Transport.send(message);
 
@@ -113,8 +118,7 @@ public class ProcessRetrievalServlet extends HttpServlet {
 					} catch (MessagingException e) {
 						throw new RuntimeException(e);
 					}
-
-					retrievalMsg = "Your password has been sent to your email";
+					retrievalMsg = "A password reset email has been sent to you";
 				}
 				if (!hasUserid) {
 					retrievalMsg = "Invalid email";

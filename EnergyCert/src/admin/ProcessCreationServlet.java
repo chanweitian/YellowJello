@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -90,8 +91,7 @@ public class ProcessCreationServlet extends HttpServlet {
 			if (!uniqueEmail) {
 				creationMsg = "Duplicate email. Please input unique email.";
 			} else {
-				ro = SQLManager.retrieveRecords("account", "userid=\'" + userid
-						+ "\'");
+				ro = SQLManager.retrieveRecords("account", "userid=\'" + userid + "\'");
 				rs = ro.getResultSet();
 				boolean unique = true;
 				try {
@@ -107,14 +107,14 @@ public class ProcessCreationServlet extends HttpServlet {
 				if (!unique) {
 					creationMsg = "Userid is already taken. Please input another userid.";
 				} else {
-					String password = ""
-							+ Long.toHexString(Double.doubleToLongBits(Math
-									.random()));
-					password = password.substring(0, 13);
-					String values = "\'" + userid + "\',\'" + password
+					String values = "\'" + userid + "\',\'" 
 							+ "\',\'" + email + "\',\'Company Admin\',\'"
 							+ company + "\',\'" + company + "\'";
 					SQLManager.insertRecord("account", values);
+					
+					String uuid = UUID.randomUUID().toString();
+					values = "\'" + userid + "\',\'" + uuid + "\'";
+					SQLManager.insertRecord("password_link", values);
 					creationMsg = "Account has been created. Userid: " + userid;
 					success = true;
 
@@ -145,11 +145,10 @@ public class ProcessCreationServlet extends HttpServlet {
 						message.setSubject("Login Credentials for EnergyCert");
 						message.setText("Dear User,"
 								+ "\n\n Your account has been created."
-								+ "\n \n The following are your login credentials:"
-								+ "\n Userid: "
+								+ "\n \n Your userid is: "
 								+ userid
-								+ "\n Password: "
-								+ password
+								+ "\n \n Visit this link to set your password: "
+								+ "http://apps.greentransformationlab.com/EnergyCert/account/changepwd.jsp?link=" + uuid
 								+ "\n \n This is the link to the application: "
 								+ "http://apps.greentransformationlab.com/EnergyCert/");
 

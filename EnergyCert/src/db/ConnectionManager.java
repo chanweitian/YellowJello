@@ -24,8 +24,8 @@ public class ConnectionManager {
 	/*
 	 private static String JDBC_DRIVER = "com.mysql.jdbc.Driver"; 
 	 private static String JDBC_URL = "jdbc:mysql://127.10.30.130:3306/gtl";
-	 private static String JDBC_USER = "adminGjbnEWc"; private static String
-	 JDBC_PASSWORD = "4Wbtlw3MmbuR"; 
+	 private static String JDBC_USER = "adminGjbnEWc"; 
+	 private static String JDBC_PASSWORD = "4Wbtlw3MmbuR"; 
 	 private static Properties props = new Properties();
 	*/
 

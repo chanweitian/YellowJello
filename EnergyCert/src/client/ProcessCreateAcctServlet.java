@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -119,12 +120,15 @@ public class ProcessCreateAcctServlet extends HttpServlet {
 							+ Long.toHexString(Double.doubleToLongBits(Math
 									.random()));
 					password = password.substring(0, 13);
-					String values = "\'" + userid + "\',\'" + password
+					String values = "\'" + userid + "\',\'" 
 							+ "\',\'" + email + "\',\'" + type + "\',\'"
 							+ company + "\',\'" + description + "\'";
 					SQLManager.insertRecord("account", values);
-					createAcctMsg = "Account has been created. Userid: "
-							+ userid;
+					
+					String uuid = UUID.randomUUID().toString();
+					values = "\'" + userid + "\',\'" + uuid + "\'";
+					SQLManager.insertRecord("password_link", values);
+					createAcctMsg = "Account has been created. Userid: " + userid;
 					success = true;
 
 					final String username = "gtl.fypeia@gmail.com";
@@ -154,11 +158,10 @@ public class ProcessCreateAcctServlet extends HttpServlet {
 						message.setSubject("Login Credentials for EnergyCert");
 						message.setText("Dear User,"
 								+ "\n\n Your account has been created."
-								+ "\n \n The following are your login credentials:"
-								+ "\n Userid: "
+								+ "\n \n Your userid is: "
 								+ userid
-								+ "\n Password: "
-								+ password
+								+ "\n \n Visit this link to set your password: "
+								+ "http://apps.greentransformationlab.com/EnergyCert/account/changepwd.jsp?link=" + uuid
 								+ "\n \n This is the link to the application: "
 								+ "http://apps.greentransformationlab.com/EnergyCert/");
 

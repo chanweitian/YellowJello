@@ -50,6 +50,7 @@ public class ProcessDeleteWhServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String siteid = request.getParameter("siteid");
 		SQLManager.deleteRecords("site", "Site_ID=\'" + siteid + "\'");
+		SQLManager.updateRecords("questionnaire", "Site_ID=\'Deleted\'", "Site_ID=\'" + siteid + "\'");
 
 		HttpSession session = request.getSession();
 		session.setAttribute("deleteWhFlag", "true");
