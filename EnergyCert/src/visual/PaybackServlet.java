@@ -119,6 +119,10 @@ public class PaybackServlet extends HttpServlet {
 	private void calculateLightingAssessmentData(HttpServletRequest request) {
 		// get current
 
+		
+		String[] test = request.getParameterValues("lighting_type[]");
+		System.out.println("Test: "+test);
+		
 		String name = "Current";
 		double numOfFixture = Double.parseDouble(request
 				.getParameter("current_num_fixtures"));
