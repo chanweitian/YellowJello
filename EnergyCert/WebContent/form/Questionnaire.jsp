@@ -121,15 +121,30 @@ $(document).ready(function() {
 });
 </script>
 
+<script>
+function showModal() {
+	$('#pastDataModal').modal('show');
+}
+</script>
 <%
 String fromEdit = request.getParameter("fromEdit");
 String fromAddZone = (String) session.getAttribute("fromAddZone");
+String fromPast = (String) request.getAttribute("fromPastData");
 if (fromEdit != null || fromLink == true || fromAddZone != null) {
 %>
 <body onload="validate()">
-<% }  else { %>	
+<% }  else if (fromPast != null) { %>	
+<body onload="validate();showModal();">
+<% } else { %>
 <body>
 <% } %>
+
+<%
+if (fromPast != null) {
+	System.out.println("here!!!!!!");
+	fromEdit = "true";
+}
+%>
 	<%@include file="../header.jsp" %>
   	<br><br>
   	<div class="main">
@@ -178,13 +193,13 @@ if (fromEdit != null || fromLink == true || fromAddZone != null) {
 		
 		//if fromEdit is not null OR fromLink is not null means need to put values from db for the saved questionnaire
 		} else {
-			if (!fromLink && fromAddZone == null) {
+			if (!fromLink && fromAddZone == null && fromPast == null) {
 				quest_id = request.getParameter("quest_id");
 				session.setAttribute("quest_id",quest_id);	
 			} else {
 				quest_id = (String) session.getAttribute("quest_id");
 			}
-			
+			System.out.println(">>>> quest_id: " + quest_id);
 			String where = "questionnaire_id = \'" + quest_id + "\'";
 			
 			RetrievedObject site_def_ro = SQLManager.retrieveRecords("site_definition", where);
@@ -501,4 +516,27 @@ if (fromEdit != null || fromLink == true || fromAddZone != null) {
 	});
 	
 	</script>
+	
+<%-- Modal --%>
+<div class="modal fade" id="pastDataModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="left:0px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h4 class="modal-title">Autopopulation of data from Past Questionnaire</h4>
+            </div>
+
+            <div class="modal-body">
+                <!-- The form is placed inside the body of modal -->
+				Your Questionnaire has been autopopulated with data from previous year's Questionnaire. <br><br>
+				Sections that have been autopopulated: <br>
+				<ul>
+				  <li>Site Definition</li>
+				  <li>Site Information</li>
+				</ul>
+				You may edit the data to update the Questionnaire accordingly.
+            </div>
+        </div>
+    </div>
+</div>
 </html>

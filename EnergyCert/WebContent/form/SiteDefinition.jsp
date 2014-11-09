@@ -1,5 +1,5 @@
 <%-- Questionnaire.jsp before validation is added --%>
-<%@page import="java.util.*,utility.*" %>
+<%@page import="java.util.*,utility.*,java.sql.ResultSet,db.*" %>
 <%@include file="../protectusers.jsp" %>
 
 <%-- Get previous year --%>
@@ -15,6 +15,19 @@ if (today.before(cal)) {
 	previousYear -= 1;
 }
 String site_id = request.getParameter("site_id");
+
+//check if there is past data for this site
+String where = "site_id = \'" + request.getParameter("site_id") + "\' and year = \'" + (previousYear-1) + "\'";
+RetrievedObject ro = SQLManager.retrieveRecords("questionnaire", where);
+ResultSet rs = ro.getResultSet();
+if (rs.next() ) {  
+	System.out.println("!!!!");
+	request.setAttribute("hasPastData","true");
+	RequestDispatcher rd = request.getRequestDispatcher("processsitedef");
+	rd.forward(request, response);
+}
+
+
 %>
 
 <!DOCTYPE html>

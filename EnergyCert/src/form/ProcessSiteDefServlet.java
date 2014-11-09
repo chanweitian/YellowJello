@@ -2,8 +2,12 @@ package form;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.*;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import db.RetrievedObject;
 import db.SQLManager;
 import utility.PeriodManager;
 
@@ -63,7 +68,7 @@ public class ProcessSiteDefServlet extends HttpServlet {
 	protected void processView(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
+		System.out.println("here");
 		ArrayList<String> errorList = new ArrayList<String>();
 
 		String[] zone_name_array;
@@ -72,43 +77,45 @@ public class ProcessSiteDefServlet extends HttpServlet {
 		String[] zone_min_temp_array;
 		String[] zone_max_temp_array;
 		String[] zone_operation_array;
+		String[] building_array;
 
-		String[] building_array = request.getParameterValues("building_name[]");
-		boolean bNameDup = checkDuplicate(building_array);
-		if (bNameDup) {
-			errorList.add("Building Names must be unique");
-		}
-
-		for (int i = 0; i < building_array.length; i++) {
-			int num = i + 1;
-			zone_name_array = request.getParameterValues("b" + num
-					+ "_zone_name[]");
-			boolean zNameDup = checkDuplicate(zone_name_array);
-			if (zNameDup) {
-				errorList.add("Zone Names with each Building must be unique");
-				break;
+		if (request.getAttribute("hasPastData") == null) {
+			building_array = request.getParameterValues("building_name[]");
+			boolean bNameDup = checkDuplicate(building_array);
+			if (bNameDup) {
+				errorList.add("Building Names must be unique");
 			}
-		}
-
-		for (int i = 0; i < building_array.length; i++) {
-			int num = i + 1;
-			zone_name_array = request.getParameterValues("b" + num
-					+ "_zone_name[]");
-			zone_min_temp_array = request.getParameterValues("b" + num
-					+ "_zone_min_temp[]");
-			zone_max_temp_array = request.getParameterValues("b" + num
-					+ "_zone_max_temp[]");
-
-			for (int j = 0; j < zone_min_temp_array.length; j++) {
-				int minTemp = Integer.parseInt(zone_min_temp_array[j]);
-				int maxTemp = Integer.parseInt(zone_max_temp_array[j]);
-				if (minTemp > maxTemp) {
-					errorList.add(building_array[i] + "_" + zone_name_array[j]
-							+ ": Min Temp must be smaller than Max Temp");
+	
+			for (int i = 0; i < building_array.length; i++) {
+				int num = i + 1;
+				zone_name_array = request.getParameterValues("b" + num
+						+ "_zone_name[]");
+				boolean zNameDup = checkDuplicate(zone_name_array);
+				if (zNameDup) {
+					errorList.add("Zone Names with each Building must be unique");
+					break;
+				}
+			}
+	
+			for (int i = 0; i < building_array.length; i++) {
+				int num = i + 1;
+				zone_name_array = request.getParameterValues("b" + num
+						+ "_zone_name[]");
+				zone_min_temp_array = request.getParameterValues("b" + num
+						+ "_zone_min_temp[]");
+				zone_max_temp_array = request.getParameterValues("b" + num
+						+ "_zone_max_temp[]");
+	
+				for (int j = 0; j < zone_min_temp_array.length; j++) {
+					int minTemp = Integer.parseInt(zone_min_temp_array[j]);
+					int maxTemp = Integer.parseInt(zone_max_temp_array[j]);
+					if (minTemp > maxTemp) {
+						errorList.add(building_array[i] + "_" + zone_name_array[j]
+								+ ": Min Temp must be smaller than Max Temp");
+					}
 				}
 			}
 		}
-
 		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
 
@@ -143,135 +150,270 @@ public class ProcessSiteDefServlet extends HttpServlet {
 			// store in QUESTIONNAIRE table
 			String values_quest = "";
 			values_quest = values_quest + "\'" + quest_id + "\',";
-			values_quest = values_quest + "\'"
-					+ request.getParameter("site_id") + "\',";
+			values_quest = values_quest + "\'" + request.getParameter("site_id") + "\',";
 			values_quest = values_quest + "\'" + previousYear + "\',";
-			for (int i = 0; i < 77; i++) {
-				values_quest = values_quest + "\'\',";
-			}
-			values_quest = values_quest + "0";
-			values_quest = values_quest + ",\'\',\'\'";
-			SQLManager.insertRecord("questionnaire", values_quest);
-
-			session.setAttribute("quest_id", quest_id);
-
-			// site_def_details and site_def_activity to store in
-			// SITE_DEFINITION table
-			String site_def_details = "";
-			String site_def_activity = "";
-			String site_def_building_name = "";
-
-			building_array = request.getParameterValues("building_name[]");
-
-			String zone_details = "";
-			ArrayList<String> zone_list = new ArrayList<String>();
-			String tableName = "";
-			String values = "";
-
-			for (int i = 0; i < building_array.length; i++) {
-				int num = i + 1;
-				zone_type_array = request.getParameterValues("b" + num
-						+ "_zone_activity[]");
-				zone_name_array = request.getParameterValues("b" + num
-						+ "_zone_name[]");
-				zone_heating_cooling_array = request.getParameterValues("b"
-						+ num + "_zone_heating_cooling[]");
-				zone_min_temp_array = request.getParameterValues("b" + num
-						+ "_zone_min_temp[]");
-				zone_max_temp_array = request.getParameterValues("b" + num
-						+ "_zone_max_temp[]");
-				zone_operation_array = request.getParameterValues("b" + num
-						+ "_zone_operation[]");
-
-				site_def_building_name = site_def_building_name
-						+ building_array[i] + "*";
-
-				for (int j = 0; j < zone_type_array.length; j++) {
-					String zone_type = zone_type_array[j];
-					// add to zone_list
-					String zone_element = building_array[i] + ","
-							+ zone_name_array[j] + "," + zone_type_array[j];
-					zone_list.add(zone_element);
-
-					// add to zone_details string
-					zone_details = zone_details + zone_element + "//";
-
-					// add to site_info_details string to store in
-					// SITE_DEFINITION DB
-					site_def_details = site_def_details + quest_id + "-"
-							+ building_array[i] + "_" + zone_name_array[j]
-							+ "*";
-					site_def_activity = site_def_activity + zone_type + "*";
-
-					// add to DB
-					values = "";
-					values = values + "\'" + quest_id + "\',";
-					values = values + "\'" + quest_id + "-" + building_array[i]
-							+ "_" + zone_name_array[j] + "\',";
-
-					values = values + "\'" + (i + 1) + "\',";
-					values = values + "\'" + (j + 1) + "\',";
-
-					values = values + "\'" + building_array[i] + "\',";
-					values = values + "\'" + zone_name_array[j] + "\',";
-					values = values + "\'" + zone_type_array[j] + "\',";
-					values = values + "\'" + zone_heating_cooling_array[j]
-							+ "\',";
-					values = values + "\'" + zone_min_temp_array[j] + "\',";
-					values = values + "\'" + zone_max_temp_array[j] + "\',";
-					values = values + "\'" + zone_operation_array[j] + "\'";
-
-					if (zone_type.equals("wh_mezzanine")) {
-						tableName = "mezzanine_form";
-						values = values
-								+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					} else if (zone_type.equals("wh_ground_to_roof")) {
-						tableName = "ground_to_roof_form";
-						values = values
-								+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					} else if (zone_type.equals("wh_value_add")) {
-						tableName = "warehouse_value_add_form";
-						values = values
-								+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
-					} else if (zone_type.equals("offices")) {
-						tableName = "office_form";
-						values = values
-								+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+			
+			//check if there is past data for this site
+			String where = "site_id = \'" + request.getParameter("site_id") + "\' and year = \'" + (previousYear-1) + "\'";
+			RetrievedObject ro = SQLManager.retrieveRecords("questionnaire", where);
+			ResultSet rs = ro.getResultSet();
+			
+			try {
+				//if yes
+				String past_quest_id = "";
+				if (rs.isBeforeFirst() ) { 
+					while (rs.next()) {
+						past_quest_id = rs.getString("questionnaire_id");
+						
+						//copy values from past data
+						for (int i = 4; i <= 13; i++) {
+							String value = rs.getString(i);
+							values_quest = values_quest + "\'" + value + "\',";
+						}
+						for (int i = 14; i <= 26; i++) {
+							values_quest = values_quest + "\'\',";
+						}
+						values_quest = values_quest + "\'" + rs.getString(27) + "\',";
+						for (int i = 28; i <= 32; i++) {
+							values_quest = values_quest + "\'\',";
+						}
+						for (int i = 33; i <= 48; i++) {
+							String value = rs.getString(i);
+							values_quest = values_quest + "\'" + value + "\',";
+						}
+						for (int i = 49; i <= 80; i++) {
+							values_quest = values_quest + "\'\',";
+						}
+						values_quest = values_quest + "\'" + 0 + "\',\'\',\'\'";
+						
+						System.out.println(values_quest);
 					}
+					rs.close();
+					//insert into questionnaire db
+					SQLManager.insertRecord("questionnaire", values_quest);
+					session.setAttribute("quest_id", quest_id);
+					
+					//get the past data site definition
+					where = "questionnaire_id = \'" + past_quest_id + "\'";
+					RetrievedObject ro_site_def = SQLManager.retrieveRecords("site_definition", where);
+					ResultSet rs_site_def = ro_site_def.getResultSet();
+					String past_site_def = "";
+					String past_site_act = "";
+					String past_building_name = "";
+					while (rs_site_def.next()) {
+						past_site_def = rs_site_def.getString(2);
+						past_site_act = rs_site_def.getString(3);
+						past_building_name = rs_site_def.getString(4);
+					}
+					rs_site_def.close();
+					
+					//replace past data quest id with new quest id
+					String new_site_def = past_site_def.replace(past_quest_id, quest_id);
+					
+					//insert into site definition db
+					String values_site_def = "\'" + quest_id + "\',\'" + new_site_def + "\',\'" + past_site_act + "\',\'" + past_building_name + "\'";
+					SQLManager.insertRecord("site_definition", values_site_def);
+					
+					//insert into the different zone activity db
+					//use delimiter ^ to split by building
+					String[] site_def_info_array = past_site_def.split("\\^");
+					String[] site_act_array = past_site_act.split("\\^");
+					for (int i = 0; i < site_def_info_array.length; i++) {
+						String def = site_def_info_array[i];
+						String act = site_act_array[i];
+						//use delimiter * to split each building into zones
+						String[] def_array = def.split("\\*");
+						String[] act_array = act.split("\\*");
+						for (int j = 0; j < def_array.length; j++) {
+							String d = def_array[j];
+							String a = act_array[j];
+							
+							int count = 0;
+							String tableName = "";
+							if (a.equals("wh_mezzanine")) {
+								tableName = "mezzanine_form";
+								count = 18;
+							} else if (a.equals("wh_ground_to_roof")) {
+								System.out.println("gtr");
+								tableName = "ground_to_roof_form";
+								count = 28;
+							} else if (a.equals("wh_value_add")) {
+								tableName = "warehouse_value_add_form";
+								count = 20;
+							} else if (a.equals("offices")) {
+								tableName = "office_form";
+								count = 21;
+							}
 
-					SQLManager.insertRecord(tableName, values);
-				}
-				// delimit site_def_details and site_def_activity by ^ (to
-				// separate by buildings)
-				site_def_details = site_def_details.substring(0,
-						site_def_details.length() - 1) + "^";
-				site_def_activity = site_def_activity.substring(0,
-						site_def_activity.length() - 1) + "^";
-			}
+							//retrieve zone record from the respective table
+							where = "zone_id = \'" + d + "\'";
+							RetrievedObject ro_zone = SQLManager.retrieveRecords(tableName, where);
+							ResultSet rs_zone = ro_zone.getResultSet();
+							
+							String new_zone_id = quest_id + "-" + d.split("-")[1];
+							
+							String values = "\'" + quest_id + "\',\'" + new_zone_id + "\',";
+							
+							while (rs_zone.next()) {
+								for (int k = 3; k <= 11; k++) {
+									values = values + "\'" + rs_zone.getString(k) + "\',";
+								}
+							}
+							rs_zone.close();
+							
+							//remove the last comma
+							values = values.substring(0, values.length()-1);
+							
+							for (int m = 0; m < count; m++) {
+								values = values + ",\'\'";
+							}
+							System.out.println(">>>> values: " + values); 
+							SQLManager.insertRecord(tableName, values);
+							System.out.println("done!!");
+						}
+					}
+					
+					request.setAttribute("fromPastData", "true");
+					RequestDispatcher rd = request.getRequestDispatcher("Questionnaire.jsp");
+					rd.forward(request, response);
+					
+				//if no
+				} else {
+					for (int i = 0; i < 77; i++) {
+						values_quest = values_quest + "\'\',";
+					}
+					values_quest = values_quest + "0";
+					values_quest = values_quest + ",\'\',\'\'";
+					
+					//insert into db
+					SQLManager.insertRecord("questionnaire", values_quest);
+					session.setAttribute("quest_id", quest_id);
+					
+					// site_def_details and site_def_activity to store in
+					// SITE_DEFINITION table
+					String site_def_details = "";
+					String site_def_activity = "";
+					String site_def_building_name = "";
+		
+					building_array = request.getParameterValues("building_name[]");
+		
+					String zone_details = "";
+					ArrayList<String> zone_list = new ArrayList<String>();
+					String tableName = "";
+					String values = "";
+		
+					for (int i = 0; i < building_array.length; i++) {
+						int num = i + 1;
+						zone_type_array = request.getParameterValues("b" + num
+								+ "_zone_activity[]");
+						zone_name_array = request.getParameterValues("b" + num
+								+ "_zone_name[]");
+						zone_heating_cooling_array = request.getParameterValues("b"
+								+ num + "_zone_heating_cooling[]");
+						zone_min_temp_array = request.getParameterValues("b" + num
+								+ "_zone_min_temp[]");
+						zone_max_temp_array = request.getParameterValues("b" + num
+								+ "_zone_max_temp[]");
+						zone_operation_array = request.getParameterValues("b" + num
+								+ "_zone_operation[]");
+		
+						site_def_building_name = site_def_building_name
+								+ building_array[i] + "*";
+		
+						for (int j = 0; j < zone_type_array.length; j++) {
+							String zone_type = zone_type_array[j];
+							// add to zone_list
+							String zone_element = building_array[i] + ","
+									+ zone_name_array[j] + "," + zone_type_array[j];
+							zone_list.add(zone_element);
+		
+							// add to zone_details string
+							zone_details = zone_details + zone_element + "//";
+		
+							// add to site_info_details string to store in
+							// SITE_DEFINITION DB
+							site_def_details = site_def_details + quest_id + "-"
+									+ building_array[i] + "_" + zone_name_array[j]
+									+ "*";
+							site_def_activity = site_def_activity + zone_type + "*";
+		
+							// add to DB
+							values = "";
+							values = values + "\'" + quest_id + "\',";
+							values = values + "\'" + quest_id + "-" + building_array[i]
+									+ "_" + zone_name_array[j] + "\',";
+		
+							values = values + "\'" + (i + 1) + "\',";
+							values = values + "\'" + (j + 1) + "\',";
+		
+							values = values + "\'" + building_array[i] + "\',";
+							values = values + "\'" + zone_name_array[j] + "\',";
+							values = values + "\'" + zone_type_array[j] + "\',";
+							values = values + "\'" + zone_heating_cooling_array[j]
+									+ "\',";
+							values = values + "\'" + zone_min_temp_array[j] + "\',";
+							values = values + "\'" + zone_max_temp_array[j] + "\',";
+							values = values + "\'" + zone_operation_array[j] + "\'";
+		
+							if (zone_type.equals("wh_mezzanine")) {
+								tableName = "mezzanine_form";
+								values = values
+										+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+							} else if (zone_type.equals("wh_ground_to_roof")) {
+								tableName = "ground_to_roof_form";
+								values = values
+										+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+							} else if (zone_type.equals("wh_value_add")) {
+								tableName = "warehouse_value_add_form";
+								values = values
+										+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+							} else if (zone_type.equals("offices")) {
+								tableName = "office_form";
+								values = values
+										+ ",\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',\'\'";
+							}
+		
+							SQLManager.insertRecord(tableName, values);
+						}
+						// delimit site_def_details and site_def_activity by ^ (to
+						// separate by buildings)
+						site_def_details = site_def_details.substring(0,
+								site_def_details.length() - 1) + "^";
+						site_def_activity = site_def_activity.substring(0,
+								site_def_activity.length() - 1) + "^";
+					}
+		
+					// store site_def_details and site_def_activity in SITE_DEFINITION
+					// table
+					site_def_details = site_def_details.substring(0,
+							site_def_details.length() - 1);
+					site_def_activity = site_def_activity.substring(0,
+							site_def_activity.length() - 1);
+					site_def_building_name = site_def_building_name.substring(0,
+							site_def_building_name.length() - 1);
+					String site_def_values = "\'" + quest_id + "\',\'"
+							+ site_def_details + "\',\'" + site_def_activity + "\',\'"
+							+ site_def_building_name + "\'";
+					SQLManager.insertRecord("site_definition", site_def_values);
+		
+					session.setAttribute("zone_details", zone_details);
+		
+					String zone_string = "";
+					for (String z : zone_list) {
+						zone_string = zone_string + z + "//";
+					}
+					zone_string = zone_string.substring(0, zone_string.length() - 2);
+		
+					session.setAttribute("zone_string", zone_string);
+					out.println("yes");
+				}	
+	
 
-			// store site_def_details and site_def_activity in SITE_DEFINITION
-			// table
-			site_def_details = site_def_details.substring(0,
-					site_def_details.length() - 1);
-			site_def_activity = site_def_activity.substring(0,
-					site_def_activity.length() - 1);
-			site_def_building_name = site_def_building_name.substring(0,
-					site_def_building_name.length() - 1);
-			String site_def_values = "\'" + quest_id + "\',\'"
-					+ site_def_details + "\',\'" + site_def_activity + "\',\'"
-					+ site_def_building_name + "\'";
-			SQLManager.insertRecord("site_definition", site_def_values);
-
-			session.setAttribute("zone_details", zone_details);
-
-			String zone_string = "";
-			for (String z : zone_list) {
-				zone_string = zone_string + z + "//";
-			}
-			zone_string = zone_string.substring(0, zone_string.length() - 2);
-
-			session.setAttribute("zone_string", zone_string);
-			out.println("yes");
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 		}
 
 	}
