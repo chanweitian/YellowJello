@@ -77,21 +77,32 @@
 	<%
 		if(status){
 	%>
-	<form name="form1" action="" method="get">
-		Please select the site desired for visualisation: <select
-			id="warehouse">
-			<script>
-				//dynamically generates dropdown options
-				var warehouseOptions = document.forms["form1"].elements["warehouse"];
-
-				for (var i = 0; i < warehouses.length; ++i) {
-					addOption(warehouseOptions, warehouses[i], warehouses[i]);
-				}
-			</script>
-		</select> <br> <input type="button" name="button" class="btn btn-primary" value="Generate"
+	<form name="form1" action="" method="get"  class="form-horizontal">
+		
+		<div class="form-group">
+        <div class="row">
+		
+			<div class="form-group" style="width: 50%; float: left;">
+	        	<label class="col-lg-5 control-label">Select the site desired for visualisation</label>
+	        	<div class="col-lg-6">
+				<select id="warehouse" class="form-control">
+				<script>
+					//dynamically generates dropdown options
+					var warehouseOptions = document.forms["form1"].elements["warehouse"];
+	
+					for (var i = 0; i < warehouses.length; ++i) {
+						addOption(warehouseOptions, warehouses[i], warehouses[i]);
+					}
+				</script>
+				</select>
+				</div>
+			</div>
+			<input type="button" name="button" class="btn btn-primary" value="Generate"
 			onClick="warehouseSelection(this.form)">
+		</div>
+		</div> 
+		
 	</form>
-	<br>
 
 	<%
 		}else{
@@ -104,10 +115,14 @@
 	<%
 		}
 	%>
-
-	<div id=chart></div><br>
-	<div id=table></div><br>
-
+	<div style="display: inline-flex;">
+	<div id=chart></div>
+	<div>
+	<br><br><br><br>
+		<div id=table></div>
+	</div>
+	</div>
+	<br>
 	<script type="text/javascript">
     	google.load('visualization', '1.0', {'packages':['corechart']});
 

@@ -112,7 +112,7 @@
 	
 	<div class="form-group">
         <div class="row">
-            <div class="col-md-4 selectContainer">
+            <div class="col-lg-5 control-label">
                 <label class="control-label">Filter the Data by</label>
                 <select id="filter" onChange="yearAndFilter(this.value)" class="form-control">
 					<option selected>No filter (show all data)</option>
