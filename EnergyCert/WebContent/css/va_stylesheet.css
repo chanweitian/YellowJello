@@ -126,11 +126,21 @@ th {
 	color: #d9001a;
 }
 
+#whatIfRating{
+	font-size: 45pt;
+	color: #d9001a;
+}
+
 .rating_container{
 	display: inline-flex;
 }
 
 #ratingPointer {
+	position:absolute;
+	z-index: 98;
+}
+
+#whatIfPointer {
 	position:absolute;
 	z-index: 99;
 }

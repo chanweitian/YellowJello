@@ -23,7 +23,7 @@
 
 <!-- Bootstrap-->
 <link href="../css/bootstrap.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="../css/va_stylesheet.css"> 
+ <link rel="stylesheet" type="text/css" href="../css/va_stylesheet.css">
 <%-- JQuery script --%>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -287,6 +287,8 @@ function initChart() {
 
 		initRating();
 
+		$("#whatIfPointer").hide();
+		
 		
 		$("#whatifButton").click(function() {
 			//new rating
@@ -295,8 +297,44 @@ function initChart() {
 			var leftOffset = getLeftOffset(newRating);
 			var topOffset = getTopOffset(newRating);
 
-			$("#currentRating").text(newRating);
-			$("#ratingPointer").animate({
+			$("#whatIfRating").text(newRating);
+			
+			$("#whatIfPointer").show();
+			
+			var currentLeft = $("#ratingPointer").offset().left;
+			
+			if(currentLeft == leftOffset){
+				
+				$("#ratingPointer").hide();
+			}
+			
+			var heatMultiplier = 0;
+			var coolMultiplier = 0;
+			var lightingMultiplier = 0;
+			
+			var txtBox = document.getElementById('heatFac');
+			if(txtBox.value){
+				heatMultiplier = txtBox.value;
+			}
+			
+			txtBox = document.getElementById('coolFac');
+			if(txtBox.value){
+				coolMultiplier = txtBox.value;	
+			}
+			
+			
+			txtBox = document.getElementById('lightFac');
+			if(txtBox.value){
+				lightingMultiplier = txtBox.value;
+			}
+			
+			$('#whatIfPointer').attr('title', "Cooling: "+coolMultiplier+", Heating: "+heatMultiplier+", Lighting: "+lightingMultiplier ).tooltip('fixTitle').tooltip('show');
+			
+			$('#whatIfPointer').tooltip( "option", "content", "LALALLALA");
+			
+			//
+			
+			$("#whatIfPointer").animate({
 				"left" : leftOffset + "px",
 				"top" : topOffset + "px"
 			}, "slow");
@@ -347,8 +385,14 @@ function initRating(){
 	var leftOffset = getLeftOffset(rating);
 	var topOffset = getTopOffset(rating);
 	
+	
+
+	
 	$("#ratingPointer").css({"left":leftOffset+"px", 
 							"top": topOffset+"px"});
+	$("#whatIfPointer").css({"left":leftOffset+"px", 
+		"top": topOffset+"px"});
+	
 }
 
 function getTopOffset(rating){
@@ -705,6 +749,10 @@ site_info_address_city = p.getProperty("key"); %>
 		
 		<div id="ratingPointer">
 		<img id="ratingPic" src="../img/arrow.png" height="65pt" style="padding: 5pt"/><span id="currentRating"><%=rating %></span>
+		</div>
+		
+		<div id="whatIfPointer" data-toggle="tooltip" title="Test" />
+			<img id="ratingPic" src="../img/arrow.png" height="65pt" style="padding: 5pt"/><span id="whatIfRating"><%=rating %></span>
 		</div>
 	
 		<div class="energybar" id="a_bar"><span class="rating">A</span> 0-50</div>
