@@ -56,8 +56,7 @@ function getSites(){
 	}
 	
 	request.open('GET', urlValue, true);
-	request.send();
-	
+	request.send();	
 }
 
 function initialize(data) {
@@ -86,7 +85,7 @@ function initialize(data) {
 	 	   		coordinates = latLong.lat() + "," + latLong.lng();
 	 	   		
 	 	   		sites[i].latLng = latLong;
-	 	   		console.log("geocodeAddresses " + sites[i].siteName + "  " + sites[i].latLng);
+	 	   		console.log("geocodeAddresses " + sites[i].siteName + "  " + sites[i].latLng + " " + i);
 	 	       	
 	 	   		if(typeof(next) != "undefined"){
 	 	   			next();
@@ -120,11 +119,11 @@ function initialize(data) {
 	    	} if (data[i].energyRating > 300) {
 	    		sites[i].icon = "G.png";
 	    	}
-
+	    	
 	    	if(i == data.length-1){
-		    	geocodeAddress(data, i, next);
+	    		geocodeAddress(data, i, next);
 	    	} else {
-		    	geocodeAddress(data, i);	    		
+	    		geocodeAddress(data, i);	   		
 	    	}
 	    }
     	
@@ -205,6 +204,40 @@ function initialize(data) {
     
 }
 
+var years = [];
+var regionList = [];
+var countryList = [];
+var master = [];
+var year = "";
+var selectFilter = "none";
+var filterValue = "none";
+var axis = "carbon";
+var companyName = "<%=companyName%>";
+<%	//Pushing the data into years
+for(int i = 0; i <years.size(); i++){%>
+	years.push(
+	<%=years.get(i)%>
+	);
+	year = <%=years.get(0)%>
+
+<%}%>
+// methods for dynamically adding options to text box
+var addOption = function(selectbox, text, value) {
+	var optn = document.createElement("OPTION");
+	optn.text = text;
+	optn.value = value;
+	selectbox.options.add(optn);
+}
+
+var removeOption = function(selectbox) {
+	var select = selectbox, option = null, next_desc = null;
+	var len = select.options.length;
+
+	for (var i = 0; i < len; i++) {
+		select.remove(0);
+	}
+}
+
 </script>
 
 <!-- Calling of methods -->
@@ -214,6 +247,108 @@ function initialize(data) {
 <body onload="getSites()">
 	<%@include file="../header.jsp"%>
 	<br><br><br>
+	
+	<%
+		if(status){
+	%>
+	
+	<div class="form-group">
+        <div class="row">
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Year of Visualization</label>
+                <select id="year" onChange="setYear(this.value)" class="form-control">
+				<script>
+					//dynamically generates dropdown options
+					var yearOptions = document.getElementById("year");
+		
+					for (var i = 0; i < years.length; ++i) {
+						addOption(yearOptions, years[i], years[i]);
+					}
+				</script>
+				</select>
+            </div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+        <div class="row">
+            <div class="col-lg-5 control-label">
+                <label class="control-label">Filter the Data by</label>
+                <select id="filter" onChange="yearAndFilter(this.value)" class="form-control">
+					<option selected>No filter (show all data)</option>
+					<option>Country</option>
+					<option>Region</option>
+				</select>
+            </div>
+		<form id="country" style="display: none;">
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Country Desired</label>
+                <select id="country" onChange="" class="form-control">
+				</select>
+            </div>
+            
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Axis Desired:</label>
+                 <select id="axis" class="form-control">
+					<option>Carbon Emission</option>
+					<option>Energy Consumption</option>
+				</select>
+            </div>
+            
+            <div style="position:absolute; left:20px; top:315px;">
+            <input type="button" class="btn btn-primary" name="button" value="Generate" onClick="generate(this.form)">
+            </div>
+        </form>
+        
+        <form id="region" style="display: none;">
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Region Desired</label>
+                <select id="region" onChange="" class="form-control">
+				</select>
+            </div>
+            
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Axis Desired:</label>
+                <select id="axis" class="form-control">
+					<option>Carbon Emission</option>
+					<option>Energy Consumption</option>
+				</select>
+            </div>
+            
+            <div style="position:absolute; left:20px; top:315px;">
+            <input type="button" class="btn btn-primary" name="button" value="Generate" onClick="generate(this.form)">
+            </div>
+        </form>
+        
+        <form id="showAll">
+            
+            <div class="col-md-4 selectContainer">
+                <label class="control-label">Select the Axis Desired:</label>
+                <select id="axis" class="form-control">
+					<option>Carbon Emission</option>
+					<option>Energy Consumption</option>
+				</select>
+            </div>
+            <br>
+            <div style="position:absolute; left:20px; top:315px;">
+            <input type="button" class="btn btn-primary" name="button" value="Generate" onClick="generate(this.form)">
+            </div>
+        </form>
+        </div>
+    </div>
+	
+	<br><br>
+	<%
+		}else{
+	%>
+	Sorry there is currently no warehouse with completed questionnaire on
+	file.
+	<br> If you believe you have received this message in error,
+	please contact your system administrator.
+	<br>
+	<%
+		}
+	%>
 	
 	<div id="map_canvas" style="width: 100%;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px; height: 600px; border:1px solid #666; box-shadow: 0px 0px 10px #333;"></div>
 		
