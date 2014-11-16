@@ -41,8 +41,10 @@ public class GenerateMap extends HttpServlet {
 			HttpSession session = request.getSession();
 			String companyName = (String) request.getParameter("company");
 			String year = (String) request.getParameter("year");
+			String filter = (String) request.getParameter("filter");
+			String value = (String) request.getParameter("value");
 			
-			System.out.println(companyName);
+			//System.out.println("Generate Map " + companyName);
 			RetrievedObject ro = SQLManager.retrieveRecords(
 					"site s, questionnaire q",
 					"s.site_id = q.site_id and s.company=\'" + companyName
@@ -54,40 +56,128 @@ public class GenerateMap extends HttpServlet {
 			JSONObject site;
 			response.setContentType("application/JSON");
 			PrintWriter out = response.getWriter();
-
+			System.out.println(filter);
 			while (rs.next()) {
 				String country = rs.getString("site_info_address_country");
 				String qnYear = rs.getString("year");
 				String region = rs.getString("Region");
 				String company = rs.getString("Company");
-
-				if (qnYear.equals(year) && companyName.equals(company)) {
-					String siteName = rs.getString("site_info_name");
-					String sitePostal = rs.getString("site_info_address_postal");
-					String siteAddress = rs.getString("site_info_address_country");
-					String siteRegion = rs.getString("Region");
-					String totalSize = rs.getString("Total_Size");
-					String energyRating = rs.getString("energy_rating");
-					String electricityUse = rs.getString("usage_electricity_use");
-					String natGasUse = rs.getString("usage_nat_gas_use");
-					String electricityEmmission = rs.getString("emission_electrical_use");
-					String gasEmmission = rs.getString("emission_nat_gas_use");
+				String rating = rs.getString("energy_rating");
+				System.out.println("Generate Map " + country + " " + region + ' ' + rs.getString("site_info_address_postal") + " " + rs.getString("site_info_address_country"));
+				if (filter != null && filter.equals("Region")) {
+					if (region.equals(value) && qnYear.equals(year)
+							&& companyName.equals(company)) {
+						String siteName = rs.getString("site_info_name");
+						String sitePostal = rs.getString("site_info_address_postal");
+						String siteAddress = rs.getString("site_info_address_country");
+						String siteRegion = rs.getString("Region");
+						String totalSize = rs.getString("Total_Size");
+						String energyRating = rs.getString("energy_rating");
+						String electricityUse = rs.getString("usage_electricity_use");
+						String natGasUse = rs.getString("usage_nat_gas_use");
+						String electricityEmmission = rs.getString("emission_electrical_use");
+						String gasEmmission = rs.getString("emission_nat_gas_use");
+						
+						site = new JSONObject();
+						site.put("siteName", siteName);
+						site.put("postal", sitePostal);
+						site.put("address", siteAddress);
+						site.put("region", siteRegion);
+						site.put("size", totalSize);
+						site.put("energyRating", energyRating);
+						site.put("elec", electricityUse);
+						site.put("gas", natGasUse);
+						site.put("elecEmi", electricityEmmission);
+						site.put("gasEmi", gasEmmission);
+						sites.add(site);
+					}
+				} else if (filter != null && filter.equals("Country")) {
+					if (country.equals(value) && qnYear.equals(year)
+							&& companyName.equals(company)) {
+						String siteName = rs.getString("site_info_name");
+						String sitePostal = rs.getString("site_info_address_postal");
+						String siteAddress = rs.getString("site_info_address_country");
+						String siteRegion = rs.getString("Region");
+						String totalSize = rs.getString("Total_Size");
+						String energyRating = rs.getString("energy_rating");
+						String electricityUse = rs.getString("usage_electricity_use");
+						String natGasUse = rs.getString("usage_nat_gas_use");
+						String electricityEmmission = rs.getString("emission_electrical_use");
+						String gasEmmission = rs.getString("emission_nat_gas_use");
+						
+						site = new JSONObject();
+						site.put("siteName", siteName);
+						site.put("postal", sitePostal);
+						site.put("address", siteAddress);
+						site.put("region", siteRegion);
+						site.put("size", totalSize);
+						site.put("energyRating", energyRating);
+						site.put("elec", electricityUse);
+						site.put("gas", natGasUse);
+						site.put("elecEmi", electricityEmmission);
+						site.put("gasEmi", gasEmmission);
+						sites.add(site);
+					}
+				} else if (filter != null && filter.equals("Rating")) {
+					String[] ratings =  value.split("-");
+					int lowerBound = Integer.parseInt(ratings[0]);
+					int upperBound = Integer.parseInt(ratings[1]);
+					int ratingInt = Integer.parseInt(rating);
 					
-					site = new JSONObject();
-					site.put("siteName", siteName);
-					site.put("postal", sitePostal);
-					site.put("address", siteAddress);
-					site.put("region", siteRegion);
-					site.put("size", totalSize);
-					site.put("energyRating", energyRating);
-					site.put("elec", electricityUse);
-					site.put("gas", natGasUse);
-					site.put("elecEmi", electricityEmmission);
-					site.put("gasEmi", gasEmmission);
-					sites.add(site);
-					
+					if (ratingInt>=lowerBound && ratingInt<upperBound && qnYear.equals(year)
+							&& companyName.equals(company)) {
+						String siteName = rs.getString("site_info_name");
+						String sitePostal = rs.getString("site_info_address_postal");
+						String siteAddress = rs.getString("site_info_address_country");
+						String siteRegion = rs.getString("Region");
+						String totalSize = rs.getString("Total_Size");
+						String energyRating = rs.getString("energy_rating");
+						String electricityUse = rs.getString("usage_electricity_use");
+						String natGasUse = rs.getString("usage_nat_gas_use");
+						String electricityEmmission = rs.getString("emission_electrical_use");
+						String gasEmmission = rs.getString("emission_nat_gas_use");
+						
+						site = new JSONObject();
+						site.put("siteName", siteName);
+						site.put("postal", sitePostal);
+						site.put("address", siteAddress);
+						site.put("region", siteRegion);
+						site.put("size", totalSize);
+						site.put("energyRating", energyRating);
+						site.put("elec", electricityUse);
+						site.put("gas", natGasUse);
+						site.put("elecEmi", electricityEmmission);
+						site.put("gasEmi", gasEmmission);
+						sites.add(site);
+					}
+				} else {
+					if (qnYear.equals(year) && companyName.equals(company)) {
+						String siteName = rs.getString("site_info_name");
+						String sitePostal = rs.getString("site_info_address_postal");
+						String siteAddress = rs.getString("site_info_address_country");
+						String siteRegion = rs.getString("Region");
+						String totalSize = rs.getString("Total_Size");
+						String energyRating = rs.getString("energy_rating");
+						String electricityUse = rs.getString("usage_electricity_use");
+						String natGasUse = rs.getString("usage_nat_gas_use");
+						String electricityEmmission = rs.getString("emission_electrical_use");
+						String gasEmmission = rs.getString("emission_nat_gas_use");
+						
+						site = new JSONObject();
+						site.put("siteName", siteName);
+						site.put("postal", sitePostal);
+						site.put("address", siteAddress);
+						site.put("region", siteRegion);
+						site.put("size", totalSize);
+						site.put("energyRating", energyRating);
+						site.put("elec", electricityUse);
+						site.put("gas", natGasUse);
+						site.put("elecEmi", electricityEmmission);
+						site.put("gasEmi", gasEmmission);
+						sites.add(site);
 					}
 				}
+			}
 			
 			json.put("sites", sites);
 

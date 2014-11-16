@@ -60,17 +60,23 @@ function getSites(){
 }
 
 function initialize(data) {
-	
 	var sites = data;
-	//var data = getSites();
+	
+	if (typeof sites[0] == 'undefined') {
+		
+		alert("Aw, snap!\n\nThere are no sites fulfilling your selected filter(s). Please adjust your filter(s) for better results.");
+		
+	} else {
+		
 	console.log("Sites in initialize double checking" + sites[0].siteName);
 		
 	var geocoder = new google.maps.Geocoder();
-    var focus = new google.maps.LatLng(-33.9, 151.2),
+    var focus = new google.maps.LatLng(35.0, 103.0),
         markers,
        	myMapOptions = {
             zoom: 3,
             center: focus,
+            minZoom: 2,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         },
         map = new google.maps.Map(document.getElementById("map_canvas"), myMapOptions);
@@ -106,17 +112,17 @@ function initialize(data) {
 	    	
 	    	if (data[i].energyRating >= 0 && data[i].energyRating < 51){
 	    		sites[i].icon = "B.png";
-	    	} if (data[i].energyRating > 50 && data[i].energyRating < 101){
+	    	} if (data[i].energyRating >= 51 && data[i].energyRating < 101){
 	    		sites[i].icon = "B.png";
-	    	} if (data[i].energyRating > 100 && data[i].energyRating < 151){
+	    	} if (data[i].energyRating >= 101 && data[i].energyRating < 151){
 	    		sites[i].icon = "E.png";
-	    	} if (data[i].energyRating > 150 && data[i].energyRating < 201){
+	    	} if (data[i].energyRating >= 151 && data[i].energyRating < 201){
 	    		sites[i].icon = "E.png";
-	    	} if (data[i].energyRating > 200 && data[i].energyRating < 251){
+	    	} if (data[i].energyRating >= 201 && data[i].energyRating < 251){
 	    		sites[i].icon = "E.png";
-	    	} if (data[i].energyRating > 250 && data[i].energyRating < 301){
+	    	} if (data[i].energyRating >= 251 && data[i].energyRating < 301){
 	    		sites[i].icon = "G.png";
-	    	} if (data[i].energyRating > 300) {
+	    	} if (data[i].energyRating >= 301) {
 	    		sites[i].icon = "G.png";
 	    	}
 	    	
@@ -202,6 +208,7 @@ function initialize(data) {
     	markers = initMarkers(map,sites);	
     });    
     
+	}
 }
 
 var years = [];
@@ -238,6 +245,154 @@ var removeOption = function(selectbox) {
 	}
 }
 
+function clear() {
+	var a = document.getElementById("country").style.display;
+	var b = document.getElementById("region").style.display;
+	a.innerHTML = "";
+	b.innerHTML = "";
+}
+
+function setYear(val) {
+	year = val;
+}
+
+function yearAndFilter(val) {
+	
+	switch (val) {
+	case 'Country':
+		selectFilter = "Country";
+		retrieveCountry(val, generateCountryList);
+		document.getElementById("country").style.display = "block";
+		document.getElementById("region").style.display = "none";
+		document.getElementById("rating").style.display = "none";
+		document.getElementById("showAll").style.display = "none";
+		break;
+	case 'Region':
+		selectFilter = "Region";
+		retrieveRegion(val, generateRegionList);
+		document.getElementById("country").style.display = "none";
+		document.getElementById("region").style.display = "block";
+		document.getElementById("rating").style.display = "none";
+		document.getElementById("showAll").style.display = "none";
+		break;
+	case 'Energy Rating':
+		selectFilter = "Rating";
+		retrieveRegion(val, generateRegionList);
+		document.getElementById("country").style.display = "none";
+		document.getElementById("region").style.display = "none";
+		document.getElementById("rating").style.display = "block";
+		document.getElementById("showAll").style.display = "none";
+		break;
+	default:
+		selectFilter = "none";
+		document.getElementById("region").style.display = "none";
+		document.getElementById("country").style.display = "none";
+		document.getElementById("region").style.display = "none";
+		document.getElementById("showAll").style.display = "block";
+		break;
+	}
+}
+
+//goes to the servlet to get relevant countries for a selected year
+var retrieveCountry = function(form, callback) {
+	var request = new XMLHttpRequest(), typeValue = "get", urlValue = "../visual/retrieveCountry?year="
+			+ year;
+	request.onreadystatechange = function() {
+		if (request.readyState == 4 && request.status == 200) {
+			var result = JSON.parse(request.responseText);
+			callback(result);
+		}
+	}
+	request.open('GET', urlValue, true);
+	request.send();
+}
+
+//goes to the servlet to get relevant regions for a selected year
+var retrieveRegion = function(form, callback) {
+	var request = new XMLHttpRequest(), typeValue = "get", urlValue = "../visual/retrieveRegion?year="
+			+ year;
+	request.onreadystatechange = function() {
+		if (request.readyState == 4 && request.status == 200) {
+			var result = JSON.parse(request.responseText);
+			callback(result);
+		}
+	}
+	request.open('GET', urlValue, true);
+	request.send();
+}
+
+//populates the relevant countries in the javascript
+var generateCountryList = function(data) {
+	countryList = [];
+	for ( var i in data) {
+		countryList.push(data[i]);
+	}
+	;
+	var countryOptions = document.forms["country"].elements["country"];
+	removeOption(countryOptions);
+	for (var i = 0; i < countryList.length; ++i) {
+		addOption(countryOptions, countryList[i], countryList[i]);
+	}
+}
+
+//populates the relevant regions in the javascript
+var generateRegionList = function(data) {
+	regionList = [];
+
+	for ( var i in data) {
+		regionList.push(data[i]);
+	}
+	;
+	var regionOptions = document.forms["region"].elements["region"];
+	removeOption(regionOptions);
+	for (var i = 0; i < regionList.length; i++) {
+		addOption(regionOptions, regionList[i], regionList[i]);
+	}
+}
+
+//retrieve master data with no filter and generate the charts
+var generate = function(form) {
+	
+	var request = '';
+	switch (selectFilter) {
+	case 'Region':
+		filterValue = form.region.value;
+		request = new XMLHttpRequest(), typeValue = "get",
+				urlValue = "GenerateMap?year=" + year + "&filter="
+						+ selectFilter + "&value=" + filterValue + "&company="+companyName;
+		break;
+	case 'Country':
+		filterValue = form.country.value;
+		request = new XMLHttpRequest(), typeValue = "get",
+				urlValue = "GenerateMap?year=" + year + "&filter="
+						+ selectFilter + "&value=" + filterValue + "&company="+companyName;
+		break;
+	case 'Rating':
+		filterValue = form.rating.value;
+		request = new XMLHttpRequest(), typeValue = "get",
+				urlValue = "GenerateMap?year=" + year + "&filter="
+						+ selectFilter + "&value=" + filterValue + "&company="+companyName;
+		break;
+	case 'none':
+		filterValue = 'none';
+		request = new XMLHttpRequest(), typeValue = "get",
+				urlValue = "GenerateMap?year=" + year + "&filter="
+						+ selectFilter + "&value=" + filterValue + "&company="+companyName;
+		break;
+	}
+	;
+
+	request.onreadystatechange = function() {
+		if (request.readyState == 4 && request.status == 200) {
+			var result = JSON.parse(request.responseText);
+			
+			initialize(JSON.parse(request.responseText).sites);
+			
+		}
+	}
+	request.open('GET', urlValue, true);
+	request.send();
+}
 </script>
 
 <!-- Calling of methods -->
@@ -252,10 +407,10 @@ var removeOption = function(selectbox) {
 		if(status){
 	%>
 	
-	<div class="form-group">
-        <div class="row">
-            <div class="col-md-4 selectContainer">
-                <label class="control-label">Select the Year of Visualization</label>
+		<div class="form-group">
+        
+            <div class="col-md-2 selectContainer">
+                <label class="control-label">Select the Year</label>
                 <select id="year" onChange="setYear(this.value)" class="form-control">
 				<script>
 					//dynamically generates dropdown options
@@ -267,77 +422,60 @@ var removeOption = function(selectbox) {
 				</script>
 				</select>
             </div>
-		</div>
-	</div>
 	
-	<div class="form-group">
-        <div class="row">
-            <div class="col-lg-5 control-label">
+		</div>
+	
+		<div class="form-group" style="margin-top:-15px;">
+        
+            <div class="col-lg-4 control-label">
                 <label class="control-label">Filter the Data by</label>
                 <select id="filter" onChange="yearAndFilter(this.value)" class="form-control">
-					<option selected>No filter (show all data)</option>
+					<option value="none" selected>No filter (show all data)</option>
 					<option>Country</option>
 					<option>Region</option>
+					<option>Energy Rating</option>
 				</select>
             </div>
+            
 		<form id="country" style="display: none;">
             <div class="col-md-4 selectContainer">
                 <label class="control-label">Select the Country Desired</label>
-                <select id="country" onChange="" class="form-control">
+                <select id="country" class="form-control" onchange="if (typeof(this.selectedIndex) != undefined) {generate(this.form); this.blur();}" onfocus="this.selectedIndex = -1;">
 				</select>
-            </div>
-            
-            <div class="col-md-4 selectContainer">
-                <label class="control-label">Select the Axis Desired:</label>
-                 <select id="axis" class="form-control">
-					<option>Carbon Emission</option>
-					<option>Energy Consumption</option>
-				</select>
-            </div>
-            
-            <div style="position:absolute; left:20px; top:315px;">
-            <input type="button" class="btn btn-primary" name="button" value="Generate" onClick="generate(this.form)">
             </div>
         </form>
         
         <form id="region" style="display: none;">
             <div class="col-md-4 selectContainer">
                 <label class="control-label">Select the Region Desired</label>
-                <select id="region" onChange="" class="form-control">
+                <select id="region" class="form-control" onchange="if (typeof(this.selectedIndex) != undefined) {generate(this.form); this.blur();}" onfocus="this.selectedIndex = -1;">
 				</select>
             </div>
-            
+		</form>
+        
+        <form id="rating" style="display: none;">
             <div class="col-md-4 selectContainer">
-                <label class="control-label">Select the Axis Desired:</label>
-                <select id="axis" class="form-control">
-					<option>Carbon Emission</option>
-					<option>Energy Consumption</option>
+                <label class="control-label">Select the Energy Rating Desired</label>
+                <select id="rating" class="form-control" onchange="if (typeof(this.selectedIndex) != undefined) {generate(this.form); this.blur();}" onfocus="this.selectedIndex = -1;">
+                <option value="0-51" selected>A</option>
+					<option value="51-101">B</option>
+					<option value="101-151">C</option>
+					<option value="151-201">D</option>
+					<option value="201-251">E</option>
+					<option value="251-301">F</option>
+					<option value="301-999999">G</option>
 				</select>
             </div>
             
-            <div style="position:absolute; left:20px; top:315px;">
-            <input type="button" class="btn btn-primary" name="button" value="Generate" onClick="generate(this.form)">
-            </div>
         </form>
         
         <form id="showAll">
-            
-            <div class="col-md-4 selectContainer">
-                <label class="control-label">Select the Axis Desired:</label>
-                <select id="axis" class="form-control">
-					<option>Carbon Emission</option>
-					<option>Energy Consumption</option>
-				</select>
-            </div>
-            <br>
-            <div style="position:absolute; left:20px; top:315px;">
-            <input type="button" class="btn btn-primary" name="button" value="Generate" onClick="generate(this.form)">
-            </div>
+           
         </form>
-        </div>
-    </div>
+        
+    	</div>
 	
-	<br><br>
+	
 	<%
 		}else{
 	%>
@@ -348,10 +486,12 @@ var removeOption = function(selectbox) {
 	<br>
 	<%
 		}
-	%>
 	
-	<div id="map_canvas" style="width: 100%;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px; height: 600px; border:1px solid #666; box-shadow: 0px 0px 10px #333;"></div>
-		
+	%>
+	<br><br>
+	<div id="map_canvas" style="margin-top: 5%;width: 100%;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px; height: 550px; border:1px solid #666; box-shadow: 0px 0px 10px #333;"></div>
+	<div style="display:block; z-index:20; position:absolute; top:260px; right:28px;"><img src="../img/map legend.png" alt="Legend" style="width:148px;height:175px;"></div>
+	
 		<script type="text/javascript">
 			$(function() {
 			    if($.browser.msie) {
