@@ -63,12 +63,16 @@ function initialize(data) {
 	var sites = data;
 	
 	if (typeof sites[0] == 'undefined') {
+		console.log("sites is " + sites[0]);
 		
+		window.alert = null;
+		delete window.alert; // true
+		//alert('test'); // win
 		alert("Aw, snap!\n\nThere are no sites fulfilling your selected filter(s). Please adjust your filter(s) for better results.");
 		
 	} else {
 		
-	console.log("Sites in initialize double checking" + sites[0].siteName);
+	console.log("1. Initialize" + sites[0].siteName);
 		
 	var geocoder = new google.maps.Geocoder();
     var focus = new google.maps.LatLng(35.0, 103.0),
@@ -83,7 +87,9 @@ function initialize(data) {
     
     function geocodeAddress(data, i, next) {
     	var coordinates,address;
-    	var address = data[i].postal;
+    	var address = data[i].address+ "," + data[i].state + "," + data[i].postal;
+    	
+    	console.log("3. geocodeAddress "+ i + " " + data[i].address+ "," + data[i].state + "," + data[i].postal);
 		
     	geocoder.geocode( { 'address': address}, function(results, status) {
 	 	    if (status == google.maps.GeocoderStatus.OK) {
@@ -91,20 +97,69 @@ function initialize(data) {
 	 	   		coordinates = latLong.lat() + "," + latLong.lng();
 	 	   		
 	 	   		sites[i].latLng = latLong;
-	 	   		console.log("geocodeAddresses " + sites[i].siteName + "  " + sites[i].latLng + " " + i);
+	 	   		console.log("4. Geocoded! " + sites[i].siteName + "  " + sites[i].latLng + " " + i);
 	 	       	
 	 	   		if(typeof(next) != "undefined"){
 	 	   			next();
 	 	   		}
-	 	      
+	 	    } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
+	 	    	console.log('Geocode of '+address+' was not successful for the following reason: ' + status);
+	 	    } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS){
+	 	    	alert('Oops sorry! Geocode of '+address+' was not successful because we cannot identify the address given.' );
 	 	    } else {
 	 	       	alert('Geocode of '+address+' was not successful for the following reason: ' + status);
 	 	    }
 		});
     }
     
+    var count = 0;             //  set your counter to 1
+
+    function myLoop (data, next) {           //  create a loop function
+       setTimeout(function () {    //  call a 3s setTimeout when the loop is called
+          //alert('hello');          //  your code here
+          
+          //sites[count].visible = true;
+	    	
+	    	if (data[count].energyRating >= 0 && data[count].energyRating < 51){
+	    		sites[count].icon = "B.png";
+	    	} if (data[count].energyRating >= 51 && data[count].energyRating < 101){
+	    		sites[count].icon = "B.png";
+	    	} if (data[count].energyRating >= 101 && data[count].energyRating < 151){
+	    		sites[count].icon = "E.png";
+	    	} if (data[count].energyRating >= 151 && data[count].energyRating < 201){
+	    		sites[count].icon = "E.png";
+	    	} if (data[count].energyRating >= 201 && data[count].energyRating < 251){
+	    		sites[count].icon = "E.png";
+	    	} if (data[count].energyRating >= 251 && data[count].energyRating < 301){
+	    		sites[count].icon = "G.png";
+	    	} if (data[count].energyRating >= 301) {
+	    		sites[count].icon = "G.png";
+	    	}
+	    	
+	    	if(count == data.length-1){
+	    		geocodeAddress(data, count, next);
+	    	} else {
+	    		geocodeAddress(data, count);
+	    	}
+          	count++;                     //  increment the counter
+          	if (count < data.length) {            //  if the counter < 10, call the loop function
+            	myLoop(data, next);             //  ..  again which will trigger another 
+          	}                        //  ..  setTimeout()
+       }, 1000);
+    
+    	return data;
+    }
+
+    //myLoop(data);
+    
     function siteConverter(data, next) {
     	//Geocoding portion - converting postal code to latlng
+    	myLoop(data, next);
+    	
+    	
+    	
+    	/*
+    	
 	    for (var i=0; i<data.length; i++){
 	    	<!--alert(data[i].energyRating);-->
 	    	
@@ -129,9 +184,13 @@ function initialize(data) {
 	    	if(i == data.length-1){
 	    		geocodeAddress(data, i, next);
 	    	} else {
-	    		geocodeAddress(data, i);	   		
+	    		
+	    		geocodeAddress(data, i);
+	    			
 	    	}
-	    }
+	    	
+	    	
+	    }*/
     	
     	return data;
     }
@@ -142,14 +201,15 @@ function initialize(data) {
             image;
             
         for(var i=0; i<markerData.length; i++) {
-        	console.log("Marker Data " + markerData.length + " " + markerData[i].icon +  markerData[i].energyRating);
+        	
+        	console.log("6. initMarkers " + markerData.length + " " + markerData[i].latLng + " " +  markerData[i].energyRating);
             marker = new google.maps.Marker({
                 map: map,
                 position: markerData[i].latLng,
-                visible: markerData[i].visible,
+                visible: true,
                 icon:"../img/" + markerData[i].icon
             }),
-
+			
             boxText = document.createElement("div"),
             
             //these are the options for all infoboxes
@@ -167,12 +227,12 @@ function initialize(data) {
                 closeBoxMargin: "12px 4px 2px 2px",
                 closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
                 infoBoxClearance: new google.maps.Size(1, 1),
-                isHidden: !markerData[i].visible,
+                isHidden: false,
                 pane: "floatPane",
                 enableEventPropagation: false
             };
             
-            newMarkers.push(marker);
+            	newMarkers.push(marker);
             
             //define the text and style for all infoboxes
             boxText.style.cssText = "border: 1px solid black; margin-top: 8px; background:#333; color:#FFF; font-family:Arial; font-size:12px; padding: 5px; border-radius:6px; -webkit-border-radius:6px; -moz-border-radius:6px;";
@@ -182,7 +242,7 @@ function initialize(data) {
             newMarkers[i].infobox = new InfoBox(infoboxOptions);
             
             //Open box when page is loaded
-            newMarkers[i].infobox.open(map, marker);
+            //newMarkers[i].infobox.open(map, marker);
             
             //Add event listen, so infobox for marker is opened when user clicks on it.  Notice the return inside the anonymous function - this creates
             //a closure, thereby saving the state of the loop variable i for the new marker.  If we did not return the value from the inner function, 
@@ -194,15 +254,17 @@ function initialize(data) {
                     map.panTo(markerData[i].latLng);
                 }
             })(marker, i));
+            
+        	
         }
         
         return newMarkers;
     }
    	
-    console.log("Waiting for site converter first");
+    console.log("2. Waiting for site converter");
     
     siteConverter(data, function(){
-    	console.log("Site converter done! Plotting markers");
+    	console.log("5. Site converter done! Plotting markers");
     	
     	//here the call to initMarkers() is made with the necessary data for each marker.  All markers are then returned as an array into the markers variable
     	markers = initMarkers(map,sites);	
@@ -408,7 +470,7 @@ var generate = function(form) {
 	%>
 	
 		<div class="form-group">
-        
+        	
             <div class="col-md-2 selectContainer">
                 <label class="control-label">Select the Year</label>
                 <select id="year" onChange="setYear(this.value)" class="form-control">
@@ -422,9 +484,9 @@ var generate = function(form) {
 				</script>
 				</select>
             </div>
-	
+            
 		</div>
-	
+		
 		<div class="form-group" style="margin-top:-15px;">
         
             <div class="col-lg-4 control-label">
@@ -472,7 +534,10 @@ var generate = function(form) {
         <form id="showAll">
            
         </form>
-        
+        	
+        	<div style="position: absolute;margin-top: 80px; z-index: 4">
+			<font size="2" color="red"> * Plotting of the markers may take some time. Please be patient while we work our hardest.</font>
+    		</div>
     	</div>
 	
 	

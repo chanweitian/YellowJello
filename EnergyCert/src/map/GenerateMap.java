@@ -66,7 +66,7 @@ public class GenerateMap extends HttpServlet {
 				System.out.println("Generate Map " + country + " " + region + ' ' + rs.getString("site_info_address_postal") + " " + rs.getString("site_info_address_country"));
 				if (filter != null && filter.equals("Region")) {
 					if (region.equals(value) && qnYear.equals(year)
-							&& companyName.equals(company)) {
+							&& companyName.equals(company)  && rating != null) {
 						String siteName = rs.getString("site_info_name");
 						String sitePostal = rs.getString("site_info_address_postal");
 						String siteAddress = rs.getString("site_info_address_country");
@@ -77,6 +77,7 @@ public class GenerateMap extends HttpServlet {
 						String natGasUse = rs.getString("usage_nat_gas_use");
 						String electricityEmmission = rs.getString("emission_electrical_use");
 						String gasEmmission = rs.getString("emission_nat_gas_use");
+						String state = rs.getString("site_info_address_city");
 						
 						site = new JSONObject();
 						site.put("siteName", siteName);
@@ -89,11 +90,12 @@ public class GenerateMap extends HttpServlet {
 						site.put("gas", natGasUse);
 						site.put("elecEmi", electricityEmmission);
 						site.put("gasEmi", gasEmmission);
+						site.put("state", state);
 						sites.add(site);
 					}
 				} else if (filter != null && filter.equals("Country")) {
 					if (country.equals(value) && qnYear.equals(year)
-							&& companyName.equals(company)) {
+							&& companyName.equals(company) && rating != null) {
 						String siteName = rs.getString("site_info_name");
 						String sitePostal = rs.getString("site_info_address_postal");
 						String siteAddress = rs.getString("site_info_address_country");
@@ -104,6 +106,7 @@ public class GenerateMap extends HttpServlet {
 						String natGasUse = rs.getString("usage_nat_gas_use");
 						String electricityEmmission = rs.getString("emission_electrical_use");
 						String gasEmmission = rs.getString("emission_nat_gas_use");
+						String state = rs.getString("site_info_address_city");
 						
 						site = new JSONObject();
 						site.put("siteName", siteName);
@@ -116,9 +119,10 @@ public class GenerateMap extends HttpServlet {
 						site.put("gas", natGasUse);
 						site.put("elecEmi", electricityEmmission);
 						site.put("gasEmi", gasEmmission);
+						site.put("state", state);
 						sites.add(site);
 					}
-				} else if (filter != null && filter.equals("Rating")) {
+				} else if (filter != null && filter.equals("Rating") && rating != null) {
 					String[] ratings =  value.split("-");
 					int lowerBound = Integer.parseInt(ratings[0]);
 					int upperBound = Integer.parseInt(ratings[1]);
@@ -136,6 +140,7 @@ public class GenerateMap extends HttpServlet {
 						String natGasUse = rs.getString("usage_nat_gas_use");
 						String electricityEmmission = rs.getString("emission_electrical_use");
 						String gasEmmission = rs.getString("emission_nat_gas_use");
+						String state = rs.getString("site_info_address_city");
 						
 						site = new JSONObject();
 						site.put("siteName", siteName);
@@ -148,10 +153,11 @@ public class GenerateMap extends HttpServlet {
 						site.put("gas", natGasUse);
 						site.put("elecEmi", electricityEmmission);
 						site.put("gasEmi", gasEmmission);
+						site.put("state", state);
 						sites.add(site);
 					}
 				} else {
-					if (qnYear.equals(year) && companyName.equals(company)) {
+					if (qnYear.equals(year) && companyName.equals(company) && rating != null) {
 						String siteName = rs.getString("site_info_name");
 						String sitePostal = rs.getString("site_info_address_postal");
 						String siteAddress = rs.getString("site_info_address_country");
@@ -162,6 +168,7 @@ public class GenerateMap extends HttpServlet {
 						String natGasUse = rs.getString("usage_nat_gas_use");
 						String electricityEmmission = rs.getString("emission_electrical_use");
 						String gasEmmission = rs.getString("emission_nat_gas_use");
+						String state = rs.getString("site_info_address_city");
 						
 						site = new JSONObject();
 						site.put("siteName", siteName);
@@ -174,6 +181,7 @@ public class GenerateMap extends HttpServlet {
 						site.put("gas", natGasUse);
 						site.put("elecEmi", electricityEmmission);
 						site.put("gasEmi", gasEmmission);
+						site.put("state", state);
 						sites.add(site);
 					}
 				}
