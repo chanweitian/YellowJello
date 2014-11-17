@@ -56,14 +56,15 @@ public class GenerateMap extends HttpServlet {
 			JSONObject site;
 			response.setContentType("application/JSON");
 			PrintWriter out = response.getWriter();
-			System.out.println(filter);
+			//System.out.println(filter);
 			while (rs.next()) {
 				String country = rs.getString("site_info_address_country");
 				String qnYear = rs.getString("year");
 				String region = rs.getString("Region");
 				String company = rs.getString("Company");
 				String rating = rs.getString("energy_rating");
-				System.out.println("Generate Map " + country + " " + region + ' ' + rs.getString("site_info_address_postal") + " " + rs.getString("site_info_address_country"));
+				System.out.println("Generate Map: " + country + " " + region + " city: " + rs.getString("site_info_address_city") + " " + rs.getString("site_info_address_country"));
+				
 				if (filter != null && filter.equals("Region")) {
 					if (region.equals(value) && qnYear.equals(year)
 							&& companyName.equals(company)  && rating != null) {
