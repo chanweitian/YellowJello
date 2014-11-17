@@ -26,27 +26,15 @@
 <%
 	// retrieve Info
 	//Only if there is information then show.
-	String company = (String) request.getAttribute("company");
-	ArrayList<String> warehouses1 = (ArrayList<String>) request.getAttribute("warehouses");
-	boolean status = true;
-	if (warehouses1 == null){
-		status = false;
-	}
-	//convert Java ArrayList to js
+	String site1 = (String) request.getParameter("site");
+	String site = site1.replaceAll("_", " ");
 %>
 <script>
 	google.load('visualization', '1.0', {'packages':['table']});
-	var warehouses =[];
-	var warehouse = "";
-	var company = "<%=company%>";
+	var site = "<%=site%>";
 	var chartSRC = "";
 	var tableSRC = "";
-<%//Pushing the data into dropdown
-	if(status == true){
-	for(int i = 0; i <warehouses1.size(); i++){%>
-	warehouses.push("<%=warehouses1.get(i)%>");
-	
-<%}}%>
+
 	// methods for dynamically adding options to text box
 	var addOption = function(selectbox, text, value) {
 		var optn = document.createElement("OPTION");
@@ -68,52 +56,15 @@
 <title>GTL Historical Site Trend</title>
 
 </head>
-<body>
+<body onload="retrieveWarehouseData(draw)">
 	<%@include file="../header.jsp"%>
 	<br />
 	<br />
 	<div class="header">Historical Site Trend</div>
-
-	<%
-		if(status){
-	%>
-	<form name="form1" action="" method="get"  class="form-horizontal">
-		
-		<div class="form-group">
-        <div class="row">
-		
-			<div class="form-group" style="width: 50%; float: left;">
-	        	<label class="col-lg-5 control-label">Select the site desired for visualisation</label>
-	        	<div class="col-lg-6">
-				<select id="warehouse" class="form-control" onChange ="warehouseSelection(this.form)" >
-				<script>
-					//dynamically generates dropdown options
-					var warehouseOptions = document.forms["form1"].elements["warehouse"];
 	
-					for (var i = 0; i < warehouses.length; ++i) {
-						addOption(warehouseOptions, warehouses[i], warehouses[i]);
-					}
-				</script>
-				</select>
-				</div>
-			</div>
+	<br>	
+	<b>The graph below shows the Historical Trend for site: <%=site%></b><br><br>
 
-		</div>
-		</div> 
-		
-	</form>
-
-	<%
-		}else{
-	%>
-	Sorry there are currently no warehouses with completed questionnaire on
-	file.
-	<br> If you believe you have received this message in error,
-	please contact your system administrator.
-	<br>
-	<%
-		}
-	%>
 	<div style="display: inline-flex;">
 	<div id=chart></div>
 	<div>
@@ -192,121 +143,22 @@
 
 		var retrieveWarehouseData = function(callback) {
 			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "warehouseData?warehouse="
-					+ warehouse;
+					+ site;
 			request.onreadystatechange = function() {
 				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);
-					document.getElementById("share").style.display = "block";
 					callback(result);
 				}
 			}
 			request.open('GET', urlValue, true);
 			request.send();
 		}
-
-		//logic for showing the relevant section after filling in form 1
-		function warehouseSelection(form) {
-			warehouse = form.warehouse.value;
-			retrieveWarehouseData(draw);
-		}
 		
-		var sendEmail = function(form) {
-			var email = form.Email.value;
-			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "emailWarehouseData?site="
-					+ warehouse + "&email= " + email;
-			request.onreadystatechange = function() {
-				if (request.readyState == 4 && request.status == 200) {
-					var result = JSON.parse(request.responseText);
-					emailSuccess();
-				}
-			}
-			request.open('get', urlValue, true);
-			request.send();
-		}
-		
-		var emailSuccess = function(){
-			$('#emailModal').modal('show');
-		}
 	</script>
 
-	<form id="share" style="display: none;" action="" method="">
-		<div class="form-group">
-			<div class="row">
-				<div class="col-md-5">
-					<label class="control-label">To share this chart, please
-						enter the email address of the intended receipient:</label> <input
-						type="text" id="Email" class="form-control"
-						placeholder="Enter receipient's email">
-				</div>
-			</div>
-		</div>
-		<div class="col-md-0">
-			<input type="button" id="emailBtn" class="btn btn-primary"
-				onClick="sendEmail(this.form)" value="Email">
-		</div>
-	</form>
 	<br>
 	If you require further details shown on this report please email
 	energycertificate@dhl.com
 
 </body>
-
-<%-- Modal --%>
-<div class="modal fade" id="emailModal" tabindex="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog" style="left: 0px">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">x</button>
-				<h4 class="modal-title">Email Sent</h4>
-			</div>
-
-			<div class="modal-body">
-				<!-- The form is placed inside the body of modal -->
-				Your email has been successfully sent!
-			</div>
-		</div>
-	</div>
-</div>
-
-
-<style type="text/css">
-/* Adjust feedback icon position */
-#share .form-control-feedback {
-	right: 15px;
-}
-</style>
-
-<script>
-	$(document).ready(function() {
-		$('#share').bootstrapValidator({
-
-			feedbackIcons : {
-				valid : 'glyphicon glyphicon-ok',
-				invalid : 'glyphicon glyphicon-remove',
-				validating : 'glyphicon glyphicon-refresh'
-			},
-			fields : {
-				email : {
-					selector : '[id="Email"]',
-					validators : {
-						notEmpty : {
-							message : 'This field is required'
-						},
-						emailAddress : {
-							message : 'This is not a valid email address'
-						}
-					}
-				}
-			}
-		}).on('error.field.bv', function(e, data) {
-			console.log('error.field.bv -->', data);
-			document.getElementById("emailBtn").disabled = true;
-		}).on('success.field.bv', function(e, field, $field) {
-			console.log(field, $field, '-->success');
-			document.getElementById("emailBtn").disabled = false;
-		});
-	});
-</script>
 </html>

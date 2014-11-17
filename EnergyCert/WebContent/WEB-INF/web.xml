@@ -324,4 +324,12 @@
     <servlet-name>GenerateMap</servlet-name>
     <url-pattern>/map/GenerateMap</url-pattern>
   </servlet-mapping>
+    <servlet>
+    <servlet-name>HistoricalTrendEmail</servlet-name>
+    <servlet-class>visual.HistoricalTrendEmail</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HistoricalTrendEmail</servlet-name>
+    <url-pattern>/visual/emailWarehouseData</url-pattern>
+  </servlet-mapping>
 </web-app>
