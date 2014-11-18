@@ -761,7 +761,7 @@ site_info_address_city = p.getProperty("key"); %>
 		</div>
 		
 		<div id="whatIfPointer" data-toggle="tooltip" title="Test" />
-			<img id="ratingPic" src="../img/arrow.png" height="65pt" style="padding: 5pt"/><span id="whatIfRating"><%=rating %></span>
+			<img id="ratingPic" src="../img/blue_arrow.png" height="65pt" style="padding: 5pt"/><span id="whatIfRating"><%=rating %></span>
 		</div>
 	
 		<div class="energybar" id="a_bar"><span class="rating">A</span> 0-50</div>
