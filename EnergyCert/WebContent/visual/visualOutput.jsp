@@ -302,6 +302,14 @@ function initChart() {
 			$("#whatIfPointer").show();
 			
 			var currentLeft = $("#ratingPointer").offset().left;
+			var currentTop =  $("#ratingPointer").offset().top;
+			
+			console.log("CurrLeft: "+currentLeft);
+			console.log("NweLeft: "+leftOffset);
+			
+			console.log("CurrTop: "+currentTop);
+			console.log("NewTop: "+topOffset);
+			
 			
 			if(currentLeft == leftOffset){
 				
@@ -330,14 +338,15 @@ function initChart() {
 			
 			$('#whatIfPointer').attr('title', "Cooling: "+coolMultiplier+", Heating: "+heatMultiplier+", Lighting: "+lightingMultiplier ).tooltip('fixTitle').tooltip('show');
 			
-			$('#whatIfPointer').tooltip( "option", "content", "LALALLALA");
 			
 			//
 			
 			$("#whatIfPointer").animate({
 				"left" : leftOffset + "px",
 				"top" : topOffset + "px"
-			}, "slow");
+			}, "slow", function(){
+				console.log("Animated to: "+leftOffset+"||"+topOffset);
+			});
 
 		});
 		
