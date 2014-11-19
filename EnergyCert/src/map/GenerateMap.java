@@ -63,7 +63,7 @@ public class GenerateMap extends HttpServlet {
 				String region = rs.getString("Region");
 				String company = rs.getString("Company");
 				String rating = rs.getString("energy_rating");
-				System.out.println("Generate Map: " + country + " " + region + " city: " + rs.getString("site_info_address_city") + " " + rs.getString("site_info_address_country"));
+				System.out.println("Generate Map: uffyu " + country + " " + region + " city: " + rs.getString("site_info_address_city") + " " + rs.getString("site_info_address_country"));
 				
 				if (filter != null && filter.equals("Region")) {
 					if (region.equals(value) && qnYear.equals(year)

@@ -559,7 +559,7 @@ var generate = function(form) {
 	<br><br>
 	<div id="map_canvas" style="margin-top: 5%;width: 100%;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px; height: 550px; border:1px solid #666; box-shadow: 0px 0px 10px #333;"></div>
 	<div style="display:block; z-index:20; position:absolute; top:260px; right:28px;"><img src="../img/map legend.png" alt="Legend" style="width:148px;height:175px;"></div>
-	<div id="loading" style="display:block; z-index:20; position:absolute; top:48%; right:46%;"><img src="../img/loading.gif" alt="loading" style="width:150px;height:120px;"></div>
+	<div id="loading" style="display:block; z-index:20; position:absolute; top:48%; right:46%;"><img src="../img/loading.gif" alt="loading" style="width:170px;height:132px;opacity:0.94;border-radius:50px;"></div>
 		
 		<script type="text/javascript">
 			$(function() {
