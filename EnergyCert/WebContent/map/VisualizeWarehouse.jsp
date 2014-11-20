@@ -73,7 +73,8 @@ function initialize(data) {
 	} else {
 		
 	console.log("1. Initialize" + sites[0].siteName);
-		
+	document.getElementById("loading").style.display = "block";
+	
 	var geocoder = new google.maps.Geocoder();
     var focus = new google.maps.LatLng(35.0, 103.0),
         markers,
@@ -203,7 +204,9 @@ function initialize(data) {
         for(var i=0; i<markerData.length; i++) {
         	
         	console.log("6. initMarkers " + markerData.length + " " + markerData[i].latLng + " " +  markerData[i].energyRating);
-            marker = new google.maps.Marker({
+        	document.getElementById("loading").style.display = "none";
+        	
+        	marker = new google.maps.Marker({
                 map: map,
                 position: markerData[i].latLng,
                 visible: true,
@@ -536,7 +539,7 @@ var generate = function(form) {
         </form>
         	
         	<div style="position: absolute;margin-top: 80px; z-index: 4">
-			<font size="2" color="red"> * Plotting of the markers may take some time. Please be patient while we work our hardest.</font>
+			<font size="2" color="red"> * Plotting of the markers may take some time. Please be patient.</font>
     		</div>
     	</div>
 	
@@ -556,7 +559,8 @@ var generate = function(form) {
 	<br><br>
 	<div id="map_canvas" style="margin-top: 5%;width: 100%;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px; height: 550px; border:1px solid #666; box-shadow: 0px 0px 10px #333;"></div>
 	<div style="display:block; z-index:20; position:absolute; top:260px; right:28px;"><img src="../img/map legend.png" alt="Legend" style="width:148px;height:175px;"></div>
-	
+	<div id="loading" style="display:block; z-index:20; position:absolute; top:48%; right:46%;"><img src="../img/loading.gif" alt="loading" style="width:170px;height:132px;opacity:0.94;border-radius:50px;"></div>
+		
 		<script type="text/javascript">
 			$(function() {
 			    if($.browser.msie) {
