@@ -100,16 +100,19 @@ function initialize(data) {
 	 	   		sites[i].latLng = latLong;
 	 	   		console.log("4. Geocoded! " + sites[i].siteName + "  " + sites[i].latLng + " " + i);
 	 	       	
-	 	   		if(typeof(next) != "undefined"){
-	 	   			next();
-	 	   		}
 	 	    } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
 	 	    	console.log('Geocode of '+address+' was not successful for the following reason: ' + status);
+	 	    	
 	 	    } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS){
 	 	    	alert('Oops sorry! Geocode of '+address+' was not successful because we cannot identify the address given.' );
 	 	    } else {
 	 	       	alert('Geocode of '+address+' was not successful for the following reason: ' + status);
 	 	    }
+	 	    
+	 	   if(typeof(next) != "undefined"){
+	   			next();
+	   		}
+	 	    
 		});
     }
     
