@@ -87,39 +87,45 @@ function initialize(data) {
         map = new google.maps.Map(document.getElementById("map_canvas"), myMapOptions);
     
     function geocodeAddress(data, i, next) {
-    	var coordinates,address;
-    	var address = data[i].address+ "," + data[i].state + "," + data[i].postal;
-    	
-    	console.log("3. geocodeAddress "+ i + " " + data[i].address+ "," + data[i].state + "," + data[i].postal);
-		
-    	geocoder.geocode( { 'address': address}, function(results, status) {
-	 	    if (status == google.maps.GeocoderStatus.OK) {
-	 	    	var latLong = results[0].geometry.location;
-	 	   		coordinates = latLong.lat() + "," + latLong.lng();
-	 	   		
-	 	   		sites[i].latLng = latLong;
-	 	   		console.log("4. Geocoded! " + sites[i].siteName + "  " + sites[i].latLng + " " + i);
-	 	       	
-	 	    } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
-	 	    	console.log('Geocode of '+address+' was not successful for the following reason: ' + status);
-	 	    	
-	 	    } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS){
-	 	    	alert('Oops sorry! Geocode of '+address+' was not successful because we cannot identify the address given.' );
-	 	    } else {
-	 	       	alert('Geocode of '+address+' was not successful for the following reason: ' + status);
-	 	    }
-	 	    
-	 	   if(typeof(next) != "undefined"){
-	   			next();
-	   		}
-	 	    
-		});
+	    	var coordinates,address;
+	    	var address = data[i].address+ "," + data[i].state + "," + data[i].postal;
+	    	
+	    	console.log("3. geocodeAddress "+ i + " " + data[i].address+ "," + data[i].state + "," + data[i].postal);
+			
+	    	geocoder.geocode( { 'address': address}, function(results, status) {
+		 	    if (status == google.maps.GeocoderStatus.OK) {
+		 	    	var latLong = results[0].geometry.location;
+		 	   		coordinates = latLong.lat() + "," + latLong.lng();
+		 	   		
+		 	   		sites[i].latLng = latLong;
+		 	   		console.log("4. Geocoded! " + sites[i].siteid + "  " + sites[i].latLng + " " + i);
+		 	   		
+			 	   	request = new XMLHttpRequest(), typeValue = "get",
+			 		urlValue = "updateLonLat.jsp?lon=" + latLong.lng() + "&lat="+ latLong.lat() + "&siteid=" + sites[i].siteid;
+			 		
+			 		request.open('GET', urlValue, true);
+			 		request.send();	
+		 	       	
+		 	    } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
+		 	    	console.log('Geocode of '+address+' was not successful for the following reason: ' + status);
+		 	    	
+		 	    } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS){
+		 	    	alert('Oops sorry! Geocode of '+address+' was not successful because we cannot identify the address given.' );
+		 	    } else {
+		 	       	alert('Geocode of '+address+' was not successful for the following reason: ' + status);
+		 	    }
+		 	    
+		 	   if(typeof(next) != "undefined"&&i==data.length-1){
+		   			next(data);
+		   		}
+		 	    
+			});
     }
     
     var count = 0;             //  set your counter to 1
 
     function myLoop (data, next) {           //  create a loop function
-       setTimeout(function () {    //  call a 3s setTimeout when the loop is called
+    	//  call a 3s setTimeout when the loop is called
           //alert('hello');          //  your code here
           
           //sites[count].visible = true;
@@ -140,16 +146,38 @@ function initialize(data) {
 	    		sites[count].icon = "G.png";
 	    	}
 	    	
+	    	var geocode = false;
 	    	if(count == data.length-1){
-	    		geocodeAddress(data, count, next);
+	    		if (data[count].lon === null || data[count].lat === null) {
+	    			geocodeAddress(data, count, next);
+	    			geocode = true;
+	    		} else {
+	    			data[count].latLng = new google.maps.LatLng(data[count].lat, data[count].lon);
+	    			if(typeof(next) != "undefined"){
+	    	   			next(data);
+	    	   		}
+	    		}
 	    	} else {
-	    		geocodeAddress(data, count);
+	    		if (data[count].lon === null || data[count].lat === null) {
+	    			geocodeAddress(data, count);
+	    			geocode = true;
+	    		} else {
+	    			data[count].latLng = new google.maps.LatLng(data[count].lat, data[count].lon);
+	    			if(typeof(next) != "undefined"&&count==data.length-2){
+	    	   			next(data);
+	    	   		}
+	    		}
 	    	}
           	count++;                     //  increment the counter
           	if (count < data.length) {            //  if the counter < 10, call the loop function
-            	myLoop(data, next);             //  ..  again which will trigger another 
-          	}                        //  ..  setTimeout()
-       }, 1000);
+            	if (geocode) {
+            		setTimeout(function () {
+            			myLoop(data, next);
+            		}, 1500);
+            	} else {
+            		myLoop(data, next);
+            	}
+          	}
     
     	return data;
     }
@@ -159,8 +187,6 @@ function initialize(data) {
     function siteConverter(data, next) {
     	//Geocoding portion - converting postal code to latlng
     	myLoop(data, next);
-    	
-    	
     	
     	/*
     	
@@ -195,7 +221,6 @@ function initialize(data) {
 	    	
 	    	
 	    }*/
-    	
     	return data;
     }
     
@@ -205,7 +230,6 @@ function initialize(data) {
             image;
             
         for(var i=0; i<markerData.length; i++) {
-        	
         	console.log("6. initMarkers " + markerData.length + " " + markerData[i].latLng + " " +  markerData[i].energyRating);
         	document.getElementById("loading").style.display = "none";
         	
@@ -269,13 +293,12 @@ function initialize(data) {
    	
     console.log("2. Waiting for site converter");
     
-    siteConverter(data, function(){
+    siteConverter(data, function(sites){
     	console.log("5. Site converter done! Plotting markers");
     	
     	//here the call to initMarkers() is made with the necessary data for each marker.  All markers are then returned as an array into the markers variable
     	markers = initMarkers(map,sites);	
     });    
-    
 	}
 }
 

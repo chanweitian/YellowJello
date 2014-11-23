@@ -10,7 +10,8 @@ try {
 				+ "," + rs.getString("Region") + "," + rs.getString("site_info_address_street") + "," 
 				+ rs.getString("site_info_address_city") + "," + rs.getString("site_info_address_postal") + "," 
 				+ rs.getString("year") + "," + rs.getString("energy_rating") + "," + rs.getString("emission_electrical_use")
-				+ "," + rs.getString("emission_nat_gas_use") + "," + rs.getString("Total_Size") + ";";
+				+ "," + rs.getString("emission_nat_gas_use") + "," + rs.getString("Total_Size") + "," + rs.getString("Lon") 
+				+ "," + rs.getString("Lat") + ";";
 	}
 } catch (SQLException e) {
 	e.printStackTrace();

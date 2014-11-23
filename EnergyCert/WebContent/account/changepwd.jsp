@@ -2,7 +2,7 @@
 <% String link = request.getParameter("link");
 String uid = null;
 if (link!=null) {
-	RetrievedObject ro = SQLManager.retrieveRecords("password_link", "link=\'" + link + "\'");
+	RetrievedObject ro = SQLManager.retrieveRecords("password_link", "Link=\'" + link + "\'");
 	ResultSet rs = ro.getResultSet();
 	try {
 		if (rs.next()) {
