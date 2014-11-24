@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
 	pageEncoding="US-ASCII"%>
 <%@ page import="db.*,java.util.*,java.sql.*,visual.*"%>
-<%@include file="../protectusers.jsp"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -28,12 +27,15 @@
 	//Only if there is information then show.
 	String site1 = (String) request.getParameter("site");
 	String site = site1.replaceAll("_", " ");
+	String company1 = (String) request.getParameter("company");
+	String company = company1.replaceAll("_"," ");
 %>
 <script>
 	google.load('visualization', '1.0', {'packages':['table']});
 	var site = "<%=site%>";
 	var chartSRC = "";
 	var tableSRC = "";
+	var company = "<%=company%>";
 
 	// methods for dynamically adding options to text box
 	var addOption = function(selectbox, text, value) {
@@ -143,7 +145,7 @@
 
 		var retrieveWarehouseData = function(callback) {
 			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "warehouseData?warehouse="
-					+ site;
+					+ site + "&company="+ company;
 			request.onreadystatechange = function() {
 				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);

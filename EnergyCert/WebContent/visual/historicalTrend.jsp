@@ -192,7 +192,7 @@
 
 		var retrieveWarehouseData = function(callback) {
 			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "warehouseData?warehouse="
-					+ warehouse;
+					+ warehouse + "&company="+company;
 			request.onreadystatechange = function() {
 				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);
@@ -213,7 +213,7 @@
 		var sendEmail = function(form) {
 			var email = form.Email.value;
 			var request = new XMLHttpRequest(), typeValue = "get", urlValue = "emailWarehouseData?site="
-					+ warehouse + "&email= " + email;
+					+ warehouse + "&email= " + email + "&company="+ company;
 			request.onreadystatechange = function() {
 				if (request.readyState == 4 && request.status == 200) {
 					var result = JSON.parse(request.responseText);

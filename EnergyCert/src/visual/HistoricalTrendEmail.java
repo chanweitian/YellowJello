@@ -42,6 +42,8 @@ public class HistoricalTrendEmail extends HttpServlet {
 		String site1 = req.getParameter("site");
 		String site = site1.replaceAll(" ", "_");
 		String email = req.getParameter("email");
+		String company1 = req.getParameter("company");
+		String company = company1.replaceAll(" ", "_");
 		
 		final String username = "gtl.fypeia@gmail.com";
 		final String password = "pa55w0rd#";
@@ -52,7 +54,7 @@ public class HistoricalTrendEmail extends HttpServlet {
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.port", "587");
 		 
-		final String link = "http://apps.greentransformationlab.com/EnergyCert/visual/historicalTrendEmail.jsp?site=" + site;
+		final String link = "http://apps.greentransformationlab.com/EnergyCert/visual/historicalTrendEmail.jsp?site=" + site + "&company=" + company;
 		
 		Session session = Session.getInstance(props,
 		  new javax.mail.Authenticator() {
@@ -69,7 +71,7 @@ public class HistoricalTrendEmail extends HttpServlet {
 				InternetAddress.parse(email));
 			message.setSubject("Sharing Historical Trend for Site : "+site);
 			message.setText("Hi,"
-				+ "\n\n Click here to view the warehouse portfolio:  http://apps.greentransformationlab.com/EnergyCert/visual/historicalTrendEmail.jsp?site="+site
+				+ "\n\n Click here to view the warehouse portfolio:  http://apps.greentransformationlab.com/EnergyCert/visual/historicalTrendEmail.jsp?site="+site + "&company=" + company
 				+ "\n\n Thank you.");
  
 			Transport.send(message);

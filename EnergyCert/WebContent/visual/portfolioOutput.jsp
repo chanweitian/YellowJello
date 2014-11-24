@@ -94,8 +94,8 @@
 	
 	<div class="form-group">
         <div class="row">
-            <div class="col-md-4 selectContainer">
-                <label class="control-label">Select the Year of Visualization</label>
+            <div class="col-md-3 selectContainer">
+                <label class="control-label">Select Year</label>
                 <select id="year" onChange="setYear(this.value)" class="form-control">
 				<script>
 					//dynamically generates dropdown options
@@ -112,7 +112,7 @@
 	
 	<div class="form-group">
         <div class="row">
-            <div class="col-lg-5 control-label">
+            <div class="col-lg-3 control-label">
                 <label class="control-label">Filter the Data by</label>
                 <select id="filter" onChange="yearAndFilter(this.value)" class="form-control">
 					<option selected>No filter (show all data)</option>
@@ -121,13 +121,13 @@
 				</select>
             </div>
 		<form id="country" style="display: none;">
-            <div class="col-md-4 selectContainer">
+            <div class="col-md-3 selectContainer">
                 <label class="control-label">Select the Country Desired</label>
                 <select id="country" onChange="" class="form-control">
 				</select>
             </div>
             
-            <div class="col-md-4 selectContainer">
+            <div class="col-md-3 selectContainer">
                 <label class="control-label">Select the Axis Desired:</label>
                  <select id="axis" class="form-control">
 					<option>Carbon Emission</option>
@@ -141,13 +141,13 @@
         </form>
         
         <form id="region" style="display: none;">
-            <div class="col-md-4 selectContainer">
+            <div class="col-md-3 selectContainer">
                 <label class="control-label">Select the Region Desired</label>
                 <select id="region" onChange="" class="form-control">
 				</select>
             </div>
             
-            <div class="col-md-4 selectContainer">
+            <div class="col-md-3 selectContainer">
                 <label class="control-label">Select the Axis Desired:</label>
                 <select id="axis" class="form-control">
 					<option>Carbon Emission</option>
@@ -162,7 +162,7 @@
         
         <form id="showAll">
             
-            <div class="col-md-4 selectContainer">
+            <div class="col-md-3 selectContainer">
                 <label class="control-label">Select the Axis Desired:</label>
                 <select id="axis" class="form-control">
 					<option>Carbon Emission</option>

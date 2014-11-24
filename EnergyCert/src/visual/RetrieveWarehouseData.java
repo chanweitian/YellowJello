@@ -39,7 +39,7 @@ public class RetrieveWarehouseData extends HttpServlet {
 		// TODO Auto-generated method stub
 		try {
 			HttpSession session = request.getSession();
-			String companyName = (String) session.getAttribute("company");
+			String companyName = (String) request.getParameter("company");
 			String warehouse = (String) request.getParameter("warehouse");
 			RetrievedObject ro = SQLManager.retrieveRecords(
 					"site s, questionnaire q",
