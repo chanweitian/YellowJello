@@ -136,7 +136,7 @@ public class ProcessAddWhServlet extends HttpServlet {
 				String values = "\'" + warehouseID + "\',\'" + company
 						+ "\',\'" + site + "\',\'" + country + "\',\'" + region
 						+ "\',\'" + street + "\',\'" + city + "\',\'" + postal
-						+ "\',\'" + totalSize + "\'";
+						+ "\',\'" + totalSize + "\',NULL,NULL";
 				
 				SQLManager.insertRecord("site", values);
 				addWhMsg = "Site added. SiteID: " + warehouseID;

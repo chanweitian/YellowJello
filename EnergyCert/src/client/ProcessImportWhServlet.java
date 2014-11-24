@@ -295,7 +295,7 @@ public class ProcessImportWhServlet extends HttpServlet {
 					String values = "\'" + warehouseID + "\',\'" + company
 							+ "\',\'" + site + "\',\'" + country + "\',\'"
 							+ region + "\',\'" + street + "\',\'" + city
-							+ "\',\'" + postal + "\',\'" + size + "\'";
+							+ "\',\'" + postal + "\',\'" + size + "\',NULL,NULL";
 					SQLManager.insertRecord("site", values);
 					importWhMsg += "Site added. SiteID: " + warehouseID
 							+ "<br />";
