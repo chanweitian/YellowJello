@@ -266,7 +266,7 @@ function initialize(data) {
             
             //define the text and style for all infoboxes
             boxText.style.cssText = "border: 1px solid black; margin-top: 8px; background:#333; color:#FFF; font-family:Arial; font-size:12px; padding: 5px; border-radius:6px; -webkit-border-radius:6px; -moz-border-radius:6px;";
-            boxText.innerHTML = "Site Name: " + markerData[i].siteName + "<br>" + "Energy Rating: " + markerData[i].energyRating + "<br>" + "Region: " + markerData[i].region + "<br>" + "Electricity Usage: "  + markerData[i].elec + "<br>" + "Natural Gas Use: " + markerData[i].gas + "<br>" + "Size: " + markerData[i].size;
+            boxText.innerHTML = "Site Name: " + markerData[i].siteName + "<br>" + "Energy Rating: " + markerData[i].energyRating + "<br>" + "Region: " + markerData[i].region + "<br>" + "Electricity Usage: "  + markerData[i].elec + " kWh<br>" + "Natural Gas Use: " + markerData[i].gas + " kWh<br>" + "Size: " + markerData[i].size + "  m<sup>2</sup>";
             
             //Define the infobox
             newMarkers[i].infobox = new InfoBox(infoboxOptions);
